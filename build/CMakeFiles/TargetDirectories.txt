@@ -1,0 +1,3 @@
+/home/rgiraud/B-OOP-400/Arcade/build/CMakeFiles/arcade.dir
+/home/rgiraud/B-OOP-400/Arcade/build/CMakeFiles/edit_cache.dir
+/home/rgiraud/B-OOP-400/Arcade/build/CMakeFiles/rebuild_cache.dir
