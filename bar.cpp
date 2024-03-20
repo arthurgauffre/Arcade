@@ -6,20 +6,31 @@
 */
 
 #include <iostream>
+#include "IDisplayModule.hpp"
+
+class BarDisplayModule : public IDisplayModule {
+public:
+    BarDisplayModule() = default;
+    ~BarDisplayModule() override = default;
+
+    void init() override {
+        std::cout << "[ libbar ] Initializing bar display module..." << std::endl;
+    }
+
+    void stop() override {
+        std::cout << "[ libbar ] Stopping bar display module..." << std::endl;
+    }
+
+    const std::string &getName() const override {
+        static std::string name = "BarDisplayModule";
+        return name;
+    }
+};
 
 extern "C" {
-    // Constructor function
-    void __attribute__((constructor)) constructor() {
-        std::cout << "[ libbar ] Loading bar library ..." << std::endl;
-    }
-
-    // Destructor function
-    void __attribute__((destructor)) destructor() {
-        std::cout << "[ libbar ] Closing bar ..." << std::endl;
-    }
-
     // Entry point function
-    void entryPoint() {
-        std::cout << "[ libbar ] Entry point for bar !" << std::endl;
+    IDisplayModule *entryPoint() {
+        std::cout << "[ libbar ] Creating instance of BarDisplayModule..." << std::endl;
+        return new BarDisplayModule();
     }
 }

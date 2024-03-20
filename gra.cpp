@@ -6,20 +6,31 @@
 */
 
 #include <iostream>
+#include "IDisplayModule.hpp"
+
+class GraDisplayModule : public IDisplayModule {
+public:
+    GraDisplayModule() = default;
+    ~GraDisplayModule() override = default;
+
+    void init() override {
+        std::cout << "[ libgra ] Initializing gra display module..." << std::endl;
+    }
+
+    void stop() override {
+        std::cout << "[ libgra ] Stopping gra display module..." << std::endl;
+    }
+
+    const std::string &getName() const override {
+        static std::string name = "GraDisplayModule";
+        return name;
+    }
+};
 
 extern "C" {
-    // Constructor function
-    void __attribute__((constructor)) constructor() {
-        std::cout << "[ libgra ] Loading gra library ..." << std::endl;
-    }
-
-    // Destructor function
-    void __attribute__((destructor)) destructor() {
-        std::cout << "[ libgra ] Gra's getting out ..." << std::endl;
-    }
-
     // Entry point function
-    void entryPoint() {
-        std::cout << "[ libgra ] Another entry point !" << std::endl;
+    IDisplayModule *entryPoint() {
+        std::cout << "[ libgra ] Creating instance of GraDisplayModule..." << std::endl;
+        return new GraDisplayModule();
     }
 }
