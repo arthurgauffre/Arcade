@@ -1,6 +1,7 @@
 *.vscode
 vgcore.*
 *.o
+*.so
 
 a.out
 arcade
