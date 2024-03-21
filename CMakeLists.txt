@@ -15,7 +15,8 @@ add_executable(arcade
 )
 
 # Add include directory
-target_include_directories(arcade PUBLIC include)
+include_directories(${CMAKE_SOURCE_DIR}/include)
+include_directories(${CMAKE_SOURCE_DIR}/include/ErrorHandling)
 
 add_custom_command(TARGET arcade POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy

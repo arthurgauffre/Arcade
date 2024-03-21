@@ -6,7 +6,7 @@
 */
 
 #include <iostream>
-#include "ErrorHandling/ErrorHandling.hpp"
+#include "ErrorHandling.hpp"
 
 int main(int const argc, char const *const *argv)
 {
