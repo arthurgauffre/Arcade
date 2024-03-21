@@ -10,7 +10,7 @@ project(arcade
 
 # Ajoute l'exécutable
 add_executable(arcade 
-    main.cpp
+    src/main.cpp
 )
 
 add_custom_command(TARGET arcade POST_BUILD
