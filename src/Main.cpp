@@ -11,7 +11,7 @@
 int main(int const argc, char const *const *argv)
 {
     if (argc != 2) {
-        std::cout << "USAGE: ./arcade <library_path>" << std::endl;
+        std::cerr << "USAGE: ./arcade <library_path>" << std::endl;
         return 84;
     }
     if (arcade::checkFunc(argv) == -1)
