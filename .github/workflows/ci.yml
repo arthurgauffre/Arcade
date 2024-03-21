@@ -49,10 +49,10 @@ jobs:
           repository: ''
 
       - name: Compile repository  # <---- compile the repository with Makefile
-        run: make
+        run: cmake -S . -B build
 
-      - name: Clean repository  # <---- clean the repo via make rule clean
-        run: make clean
+      - name: build project
+        run: cmake --build build
 
       - name: Check file  # <---- check if the binary exit and can be executed
         run: |
@@ -62,21 +62,6 @@ jobs:
               exit 1
             fi
           done
-
-  # run_tests:  # <---- run criterion's test via make rule tests_run
-  #   runs-on: ubuntu-latest
-  #   timeout-minutes: 2
-  #   container: epitechcontent/epitest-docker:latest
-  #   needs:  check_program_compilation
-  #   steps:
-
-  #     - name: Checkout GH repository
-  #       uses: actions/checkout@master
-  #       with:
-  #         repository: ''
-
-  #     - name: Compile tests binaries
-  #       run: make tests_run
 
   push_to_mirror:  # <---- if the envent is "push", copy the repository to the repository epitech
     runs-on: ubuntu-latest
