@@ -11,6 +11,16 @@ arcade::AGameModule::AGameModule() : arcade::IModule() {}
 
 arcade::AGameModule::~AGameModule() {}
 
+void arcade::AGameModule::setGameStatus(arcade::AGameModule::GameStatus status)
+{
+  this->_gameStatus = status;
+}
+
+arcade::AGameModule::GameStatus arcade::AGameModule::getDisplayStatus() const
+{
+  return this->_gameStatus;
+}
+
 const arcade::IModule::ModuleType arcade::AGameModule::getType() const
 {
   return arcade::IModule::ModuleType::GAME;
@@ -18,10 +28,10 @@ const arcade::IModule::ModuleType arcade::AGameModule::getType() const
 
 void arcade::AGameModule::sendInput(arcade::IModule::KeyboardInput input)
 {
-    return;
+  return;
 }
 
 arcade::IModule::GameData arcade::AGameModule::sendGameData()
 {
-    return arcade::IModule::GameData();
+  return arcade::IModule::GameData();
 }

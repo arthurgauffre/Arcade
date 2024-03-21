@@ -13,9 +13,10 @@ public:
   CoreModule();
   ~CoreModule();
   enum CoreStatus { RUNNING, SELECTION };
-
+  void setCoreStatus(CoreStatus status);
+  CoreStatus getCoreStatus() const;
 protected:
-private:
+  CoreStatus _coreStatus;
 };
 
 #endif /* !COREMODULE_HPP_ */
