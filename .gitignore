@@ -3,5 +3,6 @@ vgcore.*
 *.o
 
 a.out
+arcade
 
 build

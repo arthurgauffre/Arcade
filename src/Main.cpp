@@ -6,13 +6,15 @@
 */
 
 #include <iostream>
+#include "ErrorHandling/ErrorHandling.hpp"
 
 int main(int const argc, char const *const *argv)
 {
     if (argc != 2) {
-        std::cerr << "Usage: " << argv[0] << " <library_path>" << std::endl;
+        std::cout << "USAGE: ./arcade <library_path>" << std::endl;
         return 84;
     }
-    std::cout << "Hello World" << std::endl;
+    if (arcade::checkFunc(argv) == -1)
+        return 84;
     return 0;
 }

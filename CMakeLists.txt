@@ -10,7 +10,8 @@ project(arcade
 
 # Ajoute l'exécutable
 add_executable(arcade 
-    src/main.cpp
+    src/Main.cpp
+    src/ErrorHandling.cpp
 )
 
 # Add include directory
