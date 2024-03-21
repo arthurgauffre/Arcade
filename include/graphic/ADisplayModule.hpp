@@ -28,7 +28,7 @@ public:
   arcade::IModule::KeyboardInput getInput()const;
   void sendGameData(arcade::IModule::GameData data);
 
-  std::string *displayMenu();
+  virtual std::string *displayMenu() = 0;
   protected:
     arcade::IModule::GameData _gameData;
     arcade::IModule::KeyboardInput _input;
