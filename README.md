@@ -15,6 +15,7 @@ In case of confusion or curiosity, a document detailing the ins and outs of this
 
 ## Execution:
 cmake -S. -B build
-./build/arcade
+cmake --build build
+./arcade
 
 #### Email address of the team leader of the group we collaborated with for the interface: tom.mendy@epitech.eu
