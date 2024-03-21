@@ -45,6 +45,10 @@ add_custom_command(TARGET arcade POST_BUILD
     ${CMAKE_SOURCE_DIR}
 )
 
+# add required packages
+find_package(Curses REQUIRED)
+find_package(SDL2 REQUIRED)
+
 # move the shared libraries to the lib directory
 add_custom_command(TARGET arcade POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy
