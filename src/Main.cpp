@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include "ErrorHandling.hpp"
+#include "proto.hpp"
 
 int main(int const argc, char const *const *argv)
 {
@@ -16,5 +17,5 @@ int main(int const argc, char const *const *argv)
     }
     if (arcade::checkFunc(argv) == -1)
         return 84;
-    return 0;
+    return launch_arcade(argv[1]);
 }

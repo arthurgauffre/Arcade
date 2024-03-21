@@ -9,9 +9,10 @@ project(Arcade
 )
 
 # Ajoute l'exécutable
-add_executable(arcade 
+add_executable(arcade
     src/Main.cpp
     src/ErrorHandling.cpp
+    src/core_program/launch_arcade.cpp
 )
 
 # Add include directory
@@ -36,7 +37,6 @@ add_library(arcade_ncurses SHARED
 add_library(arcade_sdl2 SHARED
     lib/graphics/sdl2/SDL2.cpp
 )
-
 
 # move the executable to the root directory
 add_custom_command(TARGET arcade POST_BUILD
