@@ -2,7 +2,7 @@
 cmake_minimum_required(VERSION 3.27)
 
 # Définit le nom du projet
-project(arcade 
+project(Arcade 
     LANGUAGES CXX
     VERSION 1.0
     DESCRIPTION "Arcade game project"
@@ -17,9 +17,33 @@ add_executable(arcade
 # Add include directory
 include_directories(${CMAKE_SOURCE_DIR}/include)
 include_directories(${CMAKE_SOURCE_DIR}/include/ErrorHandling)
+include_directories(${CMAKE_SOURCE_DIR}/include/game)
 
+# Add shared libraries
+add_library(arcade_pacman SHARED
+    lib/games/pacman/Pacman.cpp
+)
+
+add_library(arcade_snake SHARED
+    lib/games/snake/Snake.cpp
+)
+
+# move the executable to the root directory
 add_custom_command(TARGET arcade POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy
     $<TARGET_FILE:arcade>
     ${CMAKE_SOURCE_DIR}
+)
+
+# move the shared libraries to the lib directory
+add_custom_command(TARGET arcade POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy
+    $<TARGET_FILE:arcade_pacman>
+    ${CMAKE_SOURCE_DIR}/lib/arcade_pacman.so
+)
+
+add_custom_command(TARGET arcade POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy
+    $<TARGET_FILE:arcade_snake>
+    ${CMAKE_SOURCE_DIR}/lib/arcade_snake.so
 )
