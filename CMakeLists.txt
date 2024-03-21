@@ -12,3 +12,15 @@ project(arcade
 add_executable(arcade 
     main.cpp
 )
+
+add_custom_command(TARGET arcade POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy
+    $<TARGET_FILE:arcade>
+    ${CMAKE_SOURCE_DIR}
+)
+
+# add_custom_command(TARGET arcade POST_BUILD
+#     COMMAND ${CMAKE_COMMAND} -E copy_directory
+#     ${CMAKE_SOURCE_DIR}/assets
+#     $<TARGET_FILE_DIR:arcade>/assets
+# )
