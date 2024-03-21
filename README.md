@@ -13,7 +13,8 @@ After pressing enter, you will be able to see boxes showing you the available gr
 You may then select a game and/or change the graphics library if you deisre. Another box will also be present, allowing you to enter your name.
 In case of confusion or curiosity, a document detailing the ins and outs of this program is available in the doc directory: ./doc/Documentation.pdf
 
-#### Email address of the team leader of the group we collaborated with for the interface: tom.mendy@epitech.eu
-
+## Execution:
 cmake -S. -B build
 ./build/arcade
+
+#### Email address of the team leader of the group we collaborated with for the interface: tom.mendy@epitech.eu
