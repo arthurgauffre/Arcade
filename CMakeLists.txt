@@ -56,7 +56,6 @@ target_link_libraries(arcade
     AGameModule
     ncurses
     SDL2
-    SDL2_ttf
 )
 
 # move the executable to the root directory

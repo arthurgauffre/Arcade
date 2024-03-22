@@ -23,6 +23,7 @@ public:
 
 protected:
 private:
+  
 };
 }; // namespace arcade
 

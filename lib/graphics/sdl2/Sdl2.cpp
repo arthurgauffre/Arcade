@@ -8,19 +8,34 @@
 #include "Sdl2.hpp"
 #include <iostream>
 
-arcade::Sdl2::Sdl2() : IModule(), ADisplayModule() {}
+arcade::Sdl2::Sdl2() : IModule(), ADisplayModule(){}
 
 arcade::Sdl2::~Sdl2() {}
+
+static void display_menu()
+{
+    while (1) {
+        SDL_Event event;
+        if (SDL_PollEvent(&event)) {
+            if (event.type == SDL_QUIT) {
+                return;
+            }
+        }
+    }
+}
 
 void arcade::Sdl2::display()
 {
     switch (this->getDisplayStatus()) {
-    case arcade::ADisplayModule::DisplayStatus::RUNNING:
-    /* code */
-    break;
+        case arcade::ADisplayModule::DisplayStatus::RUNNING:
+        /* code */
+        break;
+        case arcade::ADisplayModule::DisplayStatus::SELECTION:
+        display_menu();
+        break;
 
-    default:
-    break;
+        default:
+        break;
     }
 }
 

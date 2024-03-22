@@ -16,10 +16,20 @@
 
 int launch_arcade(char const *const lib_path)
 {
+    arcade::ADisplayModule *display;
+    arcade::AGameModule *game;
     DLLoader<arcade::IModule> loader(lib_path);
     arcade::IModule *entryPoint = loader.getInstance("entryPoint");
-    entryPoint->init();
-    sleep(5);
-    entryPoint->stop();
+    if (entryPoint->getType() != arcade::IModule::ModuleType::GRAPHIC) {
+        std::cerr << "Error: Library is not a graphic library" << std::endl;
+        return 84;
+    
+    }
+    display = dynamic_cast<arcade::ADisplayModule *>(entryPoint);
+    if (display == nullptr)
+        return 84;
+    display->init();
+    display->display();
+    display->stop();
     return 0;
 }
