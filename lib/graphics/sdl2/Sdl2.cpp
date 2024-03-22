@@ -2,21 +2,21 @@
 ** EPITECH PROJECT, 2024
 ** Arcade
 ** File description:
-** SDL2
+** Sdl2
 */
 
-#include "SDL2.hpp"
+#include "Sdl2.hpp"
 #include <memory>
 
-arcade::SDL2::SDL2() : IModule(), ADisplayModule()
+arcade::Sdl2::Sdl2() : IModule(), ADisplayModule()
 {
 }
 
-arcade::SDL2::~SDL2()
+arcade::Sdl2::~Sdl2()
 {
 }
 
-void arcade::SDL2::init()
+void arcade::Sdl2::init()
 {
     // if (SDL_Init(SDL_INIT_VIDEO) < 0) {
     //     std::cerr << "SDL initialization failed: " << SDL_GetError() << std::endl;
@@ -57,50 +57,52 @@ void arcade::SDL2::init()
     return;
 }
 
-void arcade::SDL2::stop()
+void arcade::Sdl2::stop()
 {
     return;
 }
 
-const arcade::IModule::LibName arcade::SDL2::getName() const
+const arcade::IModule::LibName arcade::Sdl2::getName() const
 {
     return arcade::IModule::LibName::SDL;
 }
 
-std::string *arcade::SDL2::displayMenu()
+std::string *arcade::Sdl2::displayMenu()
 {
     std::string *menu = {NULL};
-    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-        std::cerr << "SDL initialization failed: " << SDL_GetError() << std::endl;
-        return nullptr;
-    }
+    // if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+    //     std::cerr << "SDL initialization failed: " << SDL_GetError() << std::endl;
+    //     return nullptr;
+    // }
 
-    // Create a window
-    SDL_Window *window = SDL_CreateWindow("Arcade Menu", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1920, 1080, SDL_WINDOW_SHOWN);
-    if (!window) {
-        std::cerr << "Failed to create window: " << SDL_GetError() << std::endl;
-        SDL_Quit();
-        return nullptr;
-    }
+    // // Create a window
+    // SDL_Window *window = SDL_CreateWindow("Arcade Menu", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1920, 1080, SDL_WINDOW_SHOWN);
+    // if (!window) {
+    //     std::cerr << "Failed to create window: " << SDL_GetError() << std::endl;
+    //     SDL_Quit();
+    //     return nullptr;
+    // }
 
-    // Main loop
-    bool quit = false;
-    while (!quit) {
-        SDL_Event event;
-        while (SDL_PollEvent(&event)) {
-            if (event.type == SDL_QUIT) {
-                quit = true;
-            }
-        }
-        SDL_Delay(16);
-    }
-    SDL_DestroyWindow(window);
-    SDL_Quit();
+    // // Main loop
+    // bool quit = false;
+    // while (!quit) {
+    //     SDL_Event event;
+    //     while (SDL_PollEvent(&event)) {
+    //         if (event.type == SDL_QUIT) {
+    //             quit = true;
+    //         }
+    //     }
+    //     SDL_Delay(16);
+    // }
+    // SDL_DestroyWindow(window);
+    // SDL_Quit();
+    printf("SDL2 menu\n");
     return menu;
 }
 
-extern "C" std::unique_ptr<arcade::SDL2> entryPoint()
+// extern "C" std::unique_ptr<arcade::Sdl2> entryPoint()
+extern "C" arcade::Sdl2* entryPoint()
 {
-    return std::make_unique<arcade::SDL2>();
+    return new arcade::Sdl2();
+    // return std::make_unique<arcade::Sdl2>();
 }
-// delete uniquej pointer

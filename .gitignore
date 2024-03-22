@@ -2,6 +2,9 @@
 vgcore.*
 *.o
 *.so
+*.a
+
+restart.sh
 
 a.out
 arcade

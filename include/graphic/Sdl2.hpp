@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2024
 ** Arcade
 ** File description:
-** SDL2
+** Sdl2
 */
 
 #ifndef SDL2_HPP_
@@ -13,10 +13,10 @@
 #include <iostream>
 
 namespace arcade {
-class SDL2 : virtual public arcade::ADisplayModule {
+class Sdl2 : virtual public arcade::ADisplayModule {
 public:
-  SDL2();
-  ~SDL2();
+  Sdl2();
+  ~Sdl2();
 
   void init();
   void stop();

@@ -15,8 +15,8 @@
 namespace arcade {
 class IModule {
 public:
-  IModule();
-  ~IModule();
+  IModule(){};
+  virtual ~IModule(){};
   virtual void init() = 0;
   virtual void stop() = 0;
   struct GameData {

@@ -35,7 +35,27 @@ add_library(arcade_ncurses SHARED
 )
 
 add_library(arcade_sdl2 SHARED
-    lib/graphics/sdl2/SDL2.cpp
+    lib/graphics/sdl2/Sdl2.cpp
+)
+
+add_library(ADisplayModule STATIC
+    lib/graphics/ADisplayModule.cpp
+)
+
+add_library(AGameModule STATIC
+    lib/games/AGameModule.cpp
+)
+
+# Add link libraries
+target_link_libraries(arcade
+    arcade_pacman
+    arcade_snake
+    arcade_ncurses
+    arcade_sdl2
+    ADisplayModule
+    AGameModule
+    ${CURSES_LIBRARIES}
+    ${SDL2_LIBRARIES}
 )
 
 # move the executable to the root directory
@@ -72,4 +92,16 @@ add_custom_command(TARGET arcade POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy
     $<TARGET_FILE:arcade_sdl2>
     ${CMAKE_SOURCE_DIR}/lib/arcade_sdl2.so
+)
+
+add_custom_command(TARGET arcade POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy
+    $<TARGET_FILE:ADisplayModule>
+    ${CMAKE_SOURCE_DIR}/lib/ADisplayModule.a
+)
+
+add_custom_command(TARGET arcade POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy
+    $<TARGET_FILE:AGameModule>
+    ${CMAKE_SOURCE_DIR}/lib/AGameModule.a
 )
