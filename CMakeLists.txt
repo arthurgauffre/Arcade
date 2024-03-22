@@ -54,8 +54,8 @@ target_link_libraries(arcade
     arcade_sdl2
     ADisplayModule
     AGameModule
-    ${CURSES_LIBRARIES}
-    ${SDL2_LIBRARIES}
+    ncurses
+    SDL2
 )
 
 # move the executable to the root directory
@@ -94,6 +94,7 @@ add_custom_command(TARGET arcade POST_BUILD
     ${CMAKE_SOURCE_DIR}/lib/arcade_sdl2.so
 )
 
+# move the static libraries to the lib directory
 add_custom_command(TARGET arcade POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy
     $<TARGET_FILE:ADisplayModule>
