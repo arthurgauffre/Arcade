@@ -2,20 +2,22 @@
 ** EPITECH PROJECT, 2024
 ** Arcade
 ** File description:
-** SDL2
+** SFML
 */
 
-#ifndef SDL2_HPP_
-#define SDL2_HPP_
+#ifndef SFML_HPP_
+#define SFML_HPP_
 
 #include "ADisplayModule.hpp"
-#include <SDL2/SDL.h>
+#include <SFML/Graphics.hpp>
 
 namespace arcade {
-class Sdl2 : virtual public arcade::ADisplayModule {
+class Sfml : virtual public arcade::ADisplayModule {
 public:
-  Sdl2();
-  ~Sdl2();
+  Sfml();
+  ~Sfml();
+
+  arcade::IModule::KeyboardInput getInput();
   void init();
   void stop();
   void display();
@@ -23,7 +25,9 @@ public:
 
 protected:
 private:
+  sf::Texture _texture;
+  sf::Font _font;
 };
 }; // namespace arcade
 
-#endif /* !SDL2_HPP_ */
+#endif /* !SFML_HPP_ */

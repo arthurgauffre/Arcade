@@ -7,7 +7,10 @@
 
 #include "AGameModule.hpp"
 
-arcade::AGameModule::AGameModule() : arcade::IModule() {}
+arcade::AGameModule::AGameModule() : arcade::IModule()
+{
+  this->_gameStatus = GameStatus::RUNNING;
+}
 
 arcade::AGameModule::~AGameModule() {}
 

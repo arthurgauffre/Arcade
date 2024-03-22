@@ -2,64 +2,81 @@
 ** EPITECH PROJECT, 2024
 ** Arcade
 ** File description:
-** Sdl2
+** SDL2
 */
 
 #include "Sdl2.hpp"
-#include <memory>
+#include <iostream>
 
-arcade::Sdl2::Sdl2() : IModule(), ADisplayModule()
-{
-}
+arcade::Sdl2::Sdl2() : IModule(), ADisplayModule() {}
 
-arcade::Sdl2::~Sdl2()
+arcade::Sdl2::~Sdl2() {}
+
+void arcade::Sdl2::display()
 {
+    switch (this->getDisplayStatus()) {
+    case arcade::ADisplayModule::DisplayStatus::RUNNING:
+    /* code */
+    break;
+
+    default:
+    break;
+    }
 }
 
 void arcade::Sdl2::init()
 {
-    // if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-    //     std::cerr << "SDL initialization failed: " << SDL_GetError() << std::endl;
-    //     return;
-    // }
+  // Initialize SDL
+    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+    std::cerr << "SDL could not initialize! SDL_Error: " << SDL_GetError()
+                << std::endl;
+    throw std::exception();
+    }
 
-    // // Create a window
-    // SDL_Window *window = SDL_CreateWindow("Arcade", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1920, 1080, SDL_WINDOW_SHOWN);
-    // if (!window) {
-    //     std::cerr << "Failed to create window: " << SDL_GetError() << std::endl;
-    //     SDL_Quit();
-    //     return;
-    // }
+  // Create window
+  SDL_Window *window = SDL_CreateWindow("Arcade",        // window title
+                                        0,               // initial x position
+                                        0,               // initial y position
+                                        1920,            // width, in pixels
+                                        1080,            // height, in pixels
+                                        SDL_WINDOW_SHOWN // flags - see below
+    );
+    SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    if (!renderer) {
+        std::cerr << "Failed to create renderer: " << SDL_GetError() << std::endl;
+        SDL_DestroyWindow(window);
+        SDL_Quit();
+        return;
+    }
 
-    // // Create a renderer
-    // SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-    // if (!renderer) {
-    //     std::cerr << "Failed to create renderer: " << SDL_GetError() << std::endl;
-    //     SDL_DestroyWindow(window);
-    //     SDL_Quit();
-    //     return;
-    // }
+    // Set background color to black
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_RenderClear(renderer);
+    SDL_RenderPresent(renderer);
 
-    // // Main loop
-    // bool quit = false;
-    // while (!quit) {
-    //     SDL_Event event;
-    //     while (SDL_PollEvent(&event)) {
-    //         if (event.type == SDL_QUIT) {
-    //             quit = true;
-    //         }
-    //     }
-    //     SDL_Delay(16);
-    // }
-    // SDL_DestroyRenderer(renderer);
-    // SDL_DestroyWindow(window);
-    // SDL_Quit();
-    return;
+    if (!window) {
+    std::cerr << "Window could not be created! SDL_Error: " << SDL_GetError()
+                << std::endl;
+    SDL_Quit();
+    throw std::exception();
+    }
+  this->_window = window; // Save window in the class
 }
 
 void arcade::Sdl2::stop()
 {
-    return;
+  SDL_Window *window = static_cast<SDL_Window *>(this->_window);
+    if (window == nullptr) {
+    throw std::exception();
+    }
+
+  // Destroy window
+    SDL_DestroyWindow(window);
+
+    this->_window = nullptr;
+
+    // Quit SDL subsystems
+    SDL_Quit();
 }
 
 const arcade::IModule::LibName arcade::Sdl2::getName() const
@@ -67,42 +84,7 @@ const arcade::IModule::LibName arcade::Sdl2::getName() const
     return arcade::IModule::LibName::SDL;
 }
 
-std::string *arcade::Sdl2::displayMenu()
-{
-    std::string *menu = {NULL};
-    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-        std::cerr << "SDL initialization failed: " << SDL_GetError() << std::endl;
-        return nullptr;
-    }
-
-    // Create a window
-    SDL_Window *window = SDL_CreateWindow("Arcade Menu", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1920, 1080, SDL_WINDOW_SHOWN);
-    if (!window) {
-        std::cerr << "Failed to create window: " << SDL_GetError() << std::endl;
-        SDL_Quit();
-        return nullptr;
-    }
-
-    // Main loop
-    bool quit = false;
-    while (!quit) {
-        SDL_Event event;
-        while (SDL_PollEvent(&event)) {
-            if (event.type == SDL_QUIT) {
-                quit = true;
-            }
-        }
-        SDL_Delay(16);
-    }
-    SDL_DestroyWindow(window);
-    SDL_Quit();
-    printf("SDL2 menu\n");
-    return menu;
-}
-
-// extern "C" std::unique_ptr<arcade::Sdl2> entryPoint()
-extern "C" arcade::Sdl2* entryPoint()
+extern "C" arcade::Sdl2 *entryPoint()
 {
     return new arcade::Sdl2();
-    // return std::make_unique<arcade::Sdl2>();
 }

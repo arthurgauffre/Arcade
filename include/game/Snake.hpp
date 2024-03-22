@@ -15,6 +15,9 @@ class Snake : virtual public arcade::AGameModule {
 public:
   Snake();
   ~Snake();
+  void init();
+  void stop();
+  const arcade::IModule::LibName getName() const;
 
 protected:
 private:

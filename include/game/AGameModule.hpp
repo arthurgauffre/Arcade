@@ -28,10 +28,10 @@ public:
   void sendInput(arcade::IModule::KeyboardInput input);
   arcade::IModule::GameData sendGameData();
 
-  protected:
-    arcade::IModule::GameData _gameData;
-    arcade::IModule::KeyboardInput _input;
-    GameStatus _gameStatus;
+protected:
+  arcade::IModule::GameData _gameData;
+  arcade::IModule::KeyboardInput _input;
+  GameStatus _gameStatus;
 };
 }; // namespace arcade
 

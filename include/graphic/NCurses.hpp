@@ -15,6 +15,10 @@ class NCurses : virtual public arcade::ADisplayModule {
 public:
   NCurses();
   ~NCurses();
+  void init();
+  void stop();
+  void display();
+  const arcade::IModule::LibName getName() const;
 
 protected:
 private:

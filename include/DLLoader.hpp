@@ -4,31 +4,33 @@
 template <typename T>
 class DLLoader {
 private:
-  void *handle;
+    void *handle;
 
 public:
-  DLLoader(const std::string &libPath)
-  {
-    handle = dlopen(libPath.c_str(), RTLD_LAZY);
-    if (!handle) {
-      std::cerr << dlerror() << std::endl;
-      exit(1);
+    DLLoader(const std::string &libPath)
+    {
+        handle = dlopen(libPath.c_str(), RTLD_LAZY);
+        std::cout << libPath << std::endl;
+        std::cout << handle << std::endl;
+        if (!handle) {
+            std::cerr << dlerror() << std::endl;
+            exit(1);
+        }
     }
-  }
 
-  ~DLLoader()
-  {
-    if (handle)
-      dlclose(handle);
-  }
-
-  T *getInstance(const std::string &funcName)
-  {
-    void *sym = dlsym(handle, funcName.c_str());
-    if (!sym) {
-      std::cerr << dlerror() << std::endl;
-      exit(1);
+    ~DLLoader()
+    {
+        if (handle)
+            dlclose(handle);
     }
-    return reinterpret_cast<T *(*)()>(sym)();
-  }
+
+    T *getInstance(const std::string &funcName)
+    {
+        void *sym = dlsym(handle, funcName.c_str());
+        if (!sym) {
+            std::cerr << dlerror() << std::endl;
+            exit(1);
+        }
+        return reinterpret_cast<T *(*)()>(sym)();
+    }
 };
