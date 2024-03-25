@@ -12,6 +12,67 @@ arcade::Sdl2::Sdl2() : IModule(), ADisplayModule() {}
 
 arcade::Sdl2::~Sdl2() {}
 
+static void display_menu(SDL_Renderer *renderer)
+{
+    // Initialize a font
+    TTF_Font* font = TTF_OpenFont("path/to/your/font.ttf", 24); // Replace with the actual path to your font file and desired font size
+    if (font == nullptr) {
+        std::cerr << "Failed to load font: " << TTF_GetError() << std::endl;
+        return;
+    }
+
+    SDL_Color textColor = {255, 255, 255, 255}; // White color for the text
+    SDL_Surface* textSurface = TTF_RenderText_Solid(font, "Hello World", textColor);
+    if (textSurface == nullptr) {
+        std::cerr << "Failed to create text surface: " << TTF_GetError() << std::endl;
+        TTF_CloseFont(font);
+        return;
+    }
+
+    SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
+    if (textTexture == nullptr) {
+        std::cerr << "Failed to create text texture: " << SDL_GetError() << std::endl;
+        SDL_FreeSurface(textSurface);
+        TTF_CloseFont(font);
+        return;
+    }
+
+    int textWidth = textSurface->w;
+    int textHeight = textSurface->h;
+    SDL_FreeSurface(textSurface);
+
+    // Center the text
+    int windowWidth, windowHeight;
+    SDL_GetRendererOutputSize(renderer, &windowWidth, &windowHeight);
+    SDL_Rect renderQuad = { (windowWidth - textWidth) / 2, (windowHeight - textHeight) / 2, textWidth, textHeight };
+
+    while (1) {
+        SDL_Event event;
+        if (SDL_PollEvent(&event)) {
+            if (event.type == SDL_QUIT) {
+                break;
+            }
+            if (event.type == SDL_KEYDOWN) {
+                if (event.key.keysym.sym == SDLK_q) {
+                    break;
+                }
+            }
+        }
+
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // Clear screen with black color
+        SDL_RenderClear(renderer);
+
+        // Render our text
+        SDL_RenderCopy(renderer, textTexture, nullptr, &renderQuad);
+
+        SDL_RenderPresent(renderer); // Update screen
+    }
+
+    // Cleanup
+    SDL_DestroyTexture(textTexture);
+    TTF_CloseFont(font);
+}
+
 /**
  * @brief display information on the window
  * 

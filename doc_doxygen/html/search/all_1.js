@@ -7,6 +7,5 @@ var searchData=
   ['agamemodule_4',['AGameModule',['../classarcade_1_1AGameModule.html#a77271c7f10b80a86f2f24199a6d4159f',1,'arcade::AGameModule::AGameModule()'],['../classarcade_1_1AGameModule.html',1,'arcade::AGameModule']]],
   ['agamemodule_2ecpp_5',['AGameModule.cpp',['../AGameModule_8cpp.html',1,'']]],
   ['agamemodule_2ehpp_6',['AGameModule.hpp',['../AGameModule_8hpp.html',1,'']]],
-  ['arcade_7',['arcade',['../namespacearcade.html',1,'']]],
-  ['arcadere_8',['arcadeRe',['../Main_8cpp.html#a03e7816025c4a068ea8d584d69881d30',1,'Main.cpp']]]
+  ['arcade_7',['arcade',['../namespacearcade.html',1,'']]]
 ];

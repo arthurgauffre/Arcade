@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['ncurses_0',['NCurses',['../classarcade_1_1NCurses.html#a0209cf11cc80540457ec3b98578a5237',1,'arcade::NCurses']]]
+  ['pacman_0',['Pacman',['../classarcade_1_1Pacman.html#a1ea426d2fd8aa57d6447261b613a51ae',1,'arcade::Pacman']]]
 ];

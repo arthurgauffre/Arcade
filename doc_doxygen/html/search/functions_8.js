@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['main_0',['main',['../Main_8cpp.html#a0c99d968a34e803d378692bde2e3f18f',1,'Main.cpp']]]
+  ['ncurses_0',['NCurses',['../classarcade_1_1NCurses.html#a0209cf11cc80540457ec3b98578a5237',1,'arcade::NCurses']]]
 ];

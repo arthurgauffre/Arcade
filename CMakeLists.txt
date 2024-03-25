@@ -17,9 +17,14 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-gnu-unique")
 include_directories(${CMAKE_SOURCE_DIR}/include)
 include_directories(${CMAKE_SOURCE_DIR}/include/graphic)
 include_directories(${CMAKE_SOURCE_DIR}/include/game)
+include_directories(${CMAKE_SOURCE_DIR}/include/ErrorHandling)
 
 # Main arcade executable
-add_executable(arcade src/Main.cpp)
+add_executable(arcade
+  src/Main.cpp
+  src/core_program/launch_arcade.cpp
+  src/ErrorHandling.cpp
+)
 
 # Core
 add_library(arcade_core SHARED lib/CoreModule.cpp)
