@@ -103,6 +103,7 @@ void arcade::Sdl2::displayMenu()
                         break;
                     case SDLK_RETURN:
                         this->getCoreModule()->handleKeyEvent(arcade::IModule::KeyboardInput::ENTER);
+                        TTF_CloseFont(font);
                         return;
                 }
             }

@@ -13,31 +13,128 @@ arcade::NCurses::~NCurses() {}
 
 void arcade::NCurses::displayMenu()
 {
-  switch (this->getDisplayStatus()) {
-  case arcade::ADisplayModule::DisplayStatus::RUNNING:
-    /* code */
-    break;
-  default:
-    break;
-  }
+    // Initialize NCurses
+    initscr();
+    cbreak();
+    noecho();
+    keypad(stdscr, TRUE);
+
+    // Initialize colors if supported
+    if (has_colors()) {
+        start_color();
+        init_pair(1, COLOR_WHITE, COLOR_BLACK);
+        init_pair(2, COLOR_BLACK, COLOR_WHITE);
+    }
+
+    // Render the menu
+    while (1) {
+        clear();
+
+        // Print graphical library options
+        attron(COLOR_PAIR(1));
+        printw("Select Graphical Library:\n");
+        for (size_t i = 0; i < 3; ++i) {
+            if (i == this->getCoreModule()->getMenuData().indexGraphic) {
+                attron(COLOR_PAIR(2));
+                printw("-> ");
+            } else {
+                attron(COLOR_PAIR(1));
+                printw("   ");
+            }
+            printw("%s\n", this->getCoreModule()->getMenuData()._graphicLibList[i].c_str());
+        }
+
+        // Print game options
+        attron(COLOR_PAIR(1));
+        printw("\nSelect Game:\n");
+        for (size_t i = 0; i < 2; ++i) {
+            if (i == this->getCoreModule()->getMenuData().indexGame) {
+                attron(COLOR_PAIR(2));
+                printw("-> ");
+            } else {
+                attron(COLOR_PAIR(1));
+                printw("   ");
+            }
+            printw("%s\n", this->getCoreModule()->getMenuData()._gameLibList[i].c_str());
+        }
+
+        // Print legend
+        attron(COLOR_PAIR(1));
+        printw("%s", this->getCoreModule()->getMenuData()._description.c_str());
+
+        // Refresh the screen
+        refresh();
+
+        // Handle user input
+        int ch = getch();
+        switch (ch) {
+            case KEY_UP:
+                this->getCoreModule()->handleKeyEvent(arcade::IModule::KeyboardInput::UP);
+                break;
+            case KEY_DOWN:
+                this->getCoreModule()->handleKeyEvent(arcade::IModule::KeyboardInput::DOWN);
+                break;
+            case '\t': // TAB key
+                this->getCoreModule()->handleKeyEvent(arcade::IModule::KeyboardInput::TAB);
+                break;
+            case '\n': // ENTER key
+                this->getCoreModule()->handleKeyEvent(arcade::IModule::KeyboardInput::ENTER);
+                return;
+        }
+
+        // Check for exit condition
+        if (ch == 'q' || ch == 'Q')
+            break;
+    }
+
+    // Clean up NCurses
+    endwin();
 }
 
 void arcade::NCurses::displayGame()
 {
-  switch (this->getDisplayStatus()) {
-  case arcade::ADisplayModule::DisplayStatus::RUNNING:
-    /* code */
-    break;
-  default:
-    break;
-  }
+  // Initialize NCurses
+    initscr();
+    cbreak();
+    noecho();
+    keypad(stdscr, TRUE);
+
+    // Initialize colors if supported
+    if (has_colors()) {
+        start_color();
+        init_pair(1, COLOR_WHITE, COLOR_BLACK);
+        init_pair(2, COLOR_BLACK, COLOR_WHITE);
+    }
+
+    // Render the menu
+    while (1) {
+        clear();
+
+        // Refresh the screen
+        refresh();
+
+        // Handle user input
+        int ch = getch();
+        // Check for exit condition
+
+        if (ch == 'q' || ch == 'Q') {
+            this->getCoreModule()->handleKeyEvent(arcade::IModule::KeyboardInput::CROSS);
+            break;
+        }
+    }
+
+    // Clean up NCurses
+    endwin();
 }
 
 void arcade::NCurses::display()
 {
   switch (this->getDisplayStatus()) {
   case arcade::ADisplayModule::DisplayStatus::RUNNING:
-    /* code */
+    this->displayGame();
+    break;
+  case arcade::ADisplayModule::DisplayStatus::SELECTION:
+    this->displayMenu();
     break;
   default:
     break;
