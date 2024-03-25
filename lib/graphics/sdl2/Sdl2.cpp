@@ -16,6 +16,11 @@ arcade::Sdl2::~Sdl2() {}
  * @brief display the menu on the window
  * 
  */
+#include <iostream>
+#include <SDL.h>
+#include <SDL_ttf.h>
+#include <string>
+
 static void display_menu(SDL_Renderer *renderer)
 {
     // Initialize SDL_ttf
@@ -32,7 +37,41 @@ static void display_menu(SDL_Renderer *renderer)
     }
 
     SDL_Color textColor = {255, 255, 255, 255}; // White color for the text
-    SDL_Surface* textSurface = TTF_RenderText_Solid(font, "Hello World", textColor);
+
+    std::string graphicalLibraries[] = {"arcade_sfml.so", "arcade_sdl2.so", "arcade_ncurses"};
+    std::string games[] = {"arcade_pacman.so", "arcade_snake.so"};
+
+    int selectedGraphicalLibrary = 0;
+    int selectedGame = 0;
+
+    // Function to update menu text based on selected items
+    auto updateMenuText = [&]() {
+        std::string menuText = "Select Graphical Library:\n";
+        for (size_t i = 0; i < 3; ++i) {
+            if (i == selectedGraphicalLibrary) {
+                menuText += "-> " + graphicalLibraries[i] + "\n";
+            } else {
+                menuText += "   " + graphicalLibraries[i] + "\n";
+            }
+        }
+        menuText += "\nSelect Game:\n";
+        for (size_t i = 0; i < 2; ++i) {
+            if (i == selectedGame) {
+                menuText += "-> " + games[i] + "\n";
+            } else {
+                menuText += "   " + games[i] + "\n";
+            }
+        }
+        menuText += "\nLegend:\n";
+        menuText += "Press UP/DOWN to navigate\n";
+        menuText += "Press ENTER to confirm the choice\n";
+        menuText += "Press TAB to switch between Graphical Library and Game selection";
+        return menuText;
+    };
+
+    std::string menuText = updateMenuText();
+
+    SDL_Surface* textSurface = TTF_RenderText_Blended_Wrapped(font, menuText.c_str(), textColor, 500);
     if (textSurface == nullptr) {
         std::cerr << "Failed to create text surface: " << TTF_GetError() << std::endl;
         TTF_CloseFont(font);
@@ -51,11 +90,14 @@ static void display_menu(SDL_Renderer *renderer)
     int textHeight = textSurface->h;
     SDL_FreeSurface(textSurface);
 
-    // Center the text
-    int windowWidth, windowHeight;
-    SDL_GetRendererOutputSize(renderer, &windowWidth, &windowHeight);
-    SDL_Rect renderQuad = { (windowWidth - textWidth) / 2, (windowHeight - textHeight) / 2, textWidth, textHeight };
+    // Position the menu at the top left corner
+    int x = 20;
+    int y = 20;
 
+    SDL_Rect renderQuad = {x, y, textWidth, textHeight };
+
+    // Render the menu
+    int game_or_library = 0;
     while (1) {
         SDL_Event event;
         if (SDL_PollEvent(&event)) {
@@ -63,23 +105,64 @@ static void display_menu(SDL_Renderer *renderer)
                 break;
             }
             if (event.type == SDL_KEYDOWN) {
-                if (event.key.keysym.sym == SDLK_q) {
-                    break;
+                switch (event.key.keysym.sym) {
+                    case SDLK_UP:
+                        if (game_or_library == 0) {
+                            if (selectedGraphicalLibrary > 0) {
+                                --selectedGraphicalLibrary;
+                                menuText = updateMenuText();
+                            }
+                        } else {
+                            if (selectedGame > 0) {
+                                --selectedGame;
+                                menuText = updateMenuText();
+                            }
+                        }
+                        break;
+                    case SDLK_DOWN:
+                        if (game_or_library == 0) {
+                            if (selectedGraphicalLibrary < 2) {
+                                ++selectedGraphicalLibrary;
+                                menuText = updateMenuText();
+                            }
+                        } else {
+                            if (selectedGame < 1) {
+                                ++selectedGame;
+                                menuText = updateMenuText();
+                            }
+                        }
+                        break;
+                    case SDLK_TAB:
+                        if (game_or_library == 0) {
+                            game_or_library = 1;
+                        } else {
+                            game_or_library = 0;
+                        }
+                        menuText = updateMenuText();
+                        break;
+                    case SDLK_RETURN:
+                        std::cout << "Selected Graphical Library: " << graphicalLibraries[selectedGraphicalLibrary] << std::endl;
+                        std::cout << "Selected Game: " << games[selectedGame] << std::endl;
+                        break;
                 }
             }
         }
 
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // Clear screen with black color
+        SDL_SetRenderDrawColor(renderer, 30, 30, 30, 255); // Dark gray background
         SDL_RenderClear(renderer);
 
         // Render our text
+        textSurface = TTF_RenderText_Blended_Wrapped(font, menuText.c_str(), textColor, 500);
+        textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
         SDL_RenderCopy(renderer, textTexture, nullptr, &renderQuad);
 
         SDL_RenderPresent(renderer); // Update screen
+
+        SDL_FreeSurface(textSurface);
+        SDL_DestroyTexture(textTexture);
     }
 
     // Cleanup
-    SDL_DestroyTexture(textTexture);
     TTF_CloseFont(font);
 }
 
