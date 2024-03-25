@@ -10,6 +10,7 @@
 
 #include "ADisplayModule.hpp"
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 
 namespace arcade {
 class Sdl2 : virtual public arcade::ADisplayModule {
@@ -19,8 +20,9 @@ public:
   void init();
   void stop();
   void display();
-  const arcade::IModule::LibName getName() const;
+  arcade::IModule::LibName getName() const;
 
+    SDL_Renderer *renderer;
 protected:
 private:
 };

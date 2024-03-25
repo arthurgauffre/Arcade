@@ -22,8 +22,8 @@ public:
   void setGameStatus(GameStatus status);
   GameStatus getDisplayStatus() const;
 
-  virtual const arcade::IModule::LibName getName() const = 0;
-  const arcade::IModule::ModuleType getType() const;
+  virtual arcade::IModule::LibName getName() const = 0;
+  arcade::IModule::ModuleType getType() const;
 
   void sendInput(arcade::IModule::KeyboardInput input);
   arcade::IModule::GameData sendGameData();

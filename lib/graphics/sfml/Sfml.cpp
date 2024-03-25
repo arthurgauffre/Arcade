@@ -49,7 +49,7 @@ void arcade::Sfml::display()
   this->_window = window;
 }
 
-const arcade::IModule::LibName arcade::Sfml::getName() const
+arcade::IModule::LibName arcade::Sfml::getName() const
 {
   return arcade::IModule::LibName::SFML;
 }

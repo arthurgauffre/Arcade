@@ -28,7 +28,7 @@ arcade::ADisplayModule::~ADisplayModule() {}
  *
  * @return const arcade::IModule::ModuleType
  */
-const arcade::IModule::ModuleType arcade::ADisplayModule::getType() const
+arcade::IModule::ModuleType arcade::ADisplayModule::getType() const
 {
   return arcade::IModule::ModuleType::GRAPHIC;
 }

@@ -36,7 +36,7 @@ void arcade::Snake::stop() { return; }
  *
  * @return const arcade::IModule::LibName
  */
-const arcade::IModule::LibName arcade::Snake::getName() const
+arcade::IModule::LibName arcade::Snake::getName() const
 {
   return arcade::IModule::LibName::SNAKE;
 }

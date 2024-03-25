@@ -36,7 +36,7 @@ void stop() { return; }
  * 
  * @return const arcade::IModule::LibName
  */
-const arcade::IModule::LibName arcade::Pacman::getName() const
+arcade::IModule::LibName arcade::Pacman::getName() const
 {
   return arcade::IModule::LibName::PACMAN;
 }

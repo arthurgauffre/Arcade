@@ -42,7 +42,7 @@ arcade::AGameModule::GameStatus arcade::AGameModule::getDisplayStatus() const
  *
  * @return const arcade::IModule::ModuleType
  */
-const arcade::IModule::ModuleType arcade::AGameModule::getType() const
+arcade::IModule::ModuleType arcade::AGameModule::getType() const
 {
   return arcade::IModule::ModuleType::GAME;
 }

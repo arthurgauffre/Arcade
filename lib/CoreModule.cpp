@@ -44,7 +44,7 @@ void arcade::CoreModule::stop() {}
  *
  * @return const arcade::IModule::LibName
  */
-const arcade::IModule::LibName arcade::CoreModule::getName() const
+arcade::IModule::LibName arcade::CoreModule::getName() const
 {
   return arcade::IModule::LibName::UNKNOWN;
 }
@@ -54,7 +54,7 @@ const arcade::IModule::LibName arcade::CoreModule::getName() const
  *
  * @return const arcade::IModule::ModuleType
  */
-const arcade::IModule::ModuleType arcade::CoreModule::getType() const
+arcade::IModule::ModuleType arcade::CoreModule::getType() const
 {
   return arcade::IModule::ModuleType::CORE;
 }

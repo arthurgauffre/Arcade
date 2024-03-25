@@ -49,7 +49,7 @@ void arcade::NCurses::stop() {
   endwin();    // Restore normal terminal behavior
 }
 
-const arcade::IModule::LibName arcade::NCurses::getName() const
+arcade::IModule::LibName arcade::NCurses::getName() const
 {
   return arcade::IModule::LibName::NCURSES;
 }

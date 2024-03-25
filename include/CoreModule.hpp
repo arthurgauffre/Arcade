@@ -22,8 +22,8 @@ public:
   ~CoreModule();
   void init();
   void stop();
-  const LibName getName() const;
-  const ModuleType getType() const;
+  LibName getName() const;
+  ModuleType getType() const;
   enum CoreStatus { RUNNING, SELECTION };
   void setCoreStatus(CoreStatus status);
   CoreStatus getCoreStatus() const;

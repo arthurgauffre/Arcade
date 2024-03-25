@@ -17,7 +17,7 @@ public:
   ~Snake();
   void init();
   void stop();
-  const arcade::IModule::LibName getName() const;
+  arcade::IModule::LibName getName() const;
 
 protected:
 private:

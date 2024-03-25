@@ -104,8 +104,8 @@ public:
     // CORE
     UNKNOWN
   };
-  virtual const LibName getName() const = 0;
-  virtual const ModuleType getType() const = 0;
+  virtual LibName getName() const = 0;
+  virtual ModuleType getType() const = 0;
 };
 }; // namespace arcade
 

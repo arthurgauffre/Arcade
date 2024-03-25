@@ -67,6 +67,7 @@ target_link_libraries(
   ADisplayModule
   AGameModule
   SDL2
+  SDL2_ttf
   ncurses
   sfml-graphics)
 

@@ -12,10 +12,20 @@ arcade::Sdl2::Sdl2() : IModule(), ADisplayModule() {}
 
 arcade::Sdl2::~Sdl2() {}
 
+/**
+ * @brief display the menu on the window
+ * 
+ */
 static void display_menu(SDL_Renderer *renderer)
 {
+    // Initialize SDL_ttf
+    if (TTF_Init() < 0) {
+        std::cerr << "Failed to initialize SDL_ttf: " << TTF_GetError() << std::endl;
+        return;
+    }
+  
     // Initialize a font
-    TTF_Font* font = TTF_OpenFont("path/to/your/font.ttf", 24); // Replace with the actual path to your font file and desired font size
+    TTF_Font* font = TTF_OpenFont("assets/default/font/font1.ttf", 24); // Replace with the actual path to your font file and desired font size
     if (font == nullptr) {
         std::cerr << "Failed to load font: " << TTF_GetError() << std::endl;
         return;
@@ -83,7 +93,9 @@ void arcade::Sdl2::display()
   case arcade::ADisplayModule::DisplayStatus::RUNNING:
     /* code */
     break;
-
+  case arcade::ADisplayModule::DisplayStatus::SELECTION:
+    display_menu(this->renderer);
+    break;
   default:
     break;
   }
@@ -118,6 +130,16 @@ void arcade::Sdl2::init()
     throw std::exception();
   }
 
+  // Create renderer
+  SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+  if (!renderer) {
+    std::cerr << "Renderer could not be created! SDL_Error: " << SDL_GetError()
+              << std::endl;
+    SDL_DestroyWindow(window);
+    SDL_Quit();
+    throw std::exception();
+  }
+
   // Get window surface
   SDL_Surface *surface = SDL_GetWindowSurface(window);
   // Check if surface is null
@@ -134,6 +156,7 @@ void arcade::Sdl2::init()
     SDL_UpdateWindowSurface(window);
   }
 
+  this->renderer = renderer; // Save renderer in the class
   this->_window = window; // Save window in the class
 }
 
@@ -151,6 +174,9 @@ void arcade::Sdl2::stop()
   // Destroy window
   SDL_DestroyWindow(window);
 
+  // Destroy renderer
+  SDL_DestroyRenderer(this->renderer);
+
   this->_window = nullptr;
 
   // Quit SDL subsystems
@@ -162,7 +188,7 @@ void arcade::Sdl2::stop()
  * 
  * @return const arcade::IModule::LibName
  */
-const arcade::IModule::LibName arcade::Sdl2::getName() const
+arcade::IModule::LibName arcade::Sdl2::getName() const
 {
   return arcade::IModule::LibName::SDL;
 }
