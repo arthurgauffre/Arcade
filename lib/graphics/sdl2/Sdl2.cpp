@@ -18,12 +18,6 @@ arcade::Sdl2::~Sdl2() {}
  */
 static void display_menu(SDL_Renderer *renderer)
 {
-    // Initialize SDL_ttf
-    if (TTF_Init() < 0) {
-        std::cerr << "Failed to initialize SDL_ttf: " << TTF_GetError() << std::endl;
-        return;
-    }
-
     // Initialize a font
     TTF_Font* font = TTF_OpenFont("assets/default/font/font1.ttf", 24); // Replace with the actual path to your font file and desired font size
     if (font == nullptr) {
@@ -185,12 +179,17 @@ void arcade::Sdl2::display()
  */
 void arcade::Sdl2::init()
 {
-  // Initialize SDL
-  if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-    std::cerr << "SDL could not initialize! SDL_Error: " << SDL_GetError()
-              << std::endl;
-    throw std::exception();
-  }
+    if (TTF_Init() < 0) {
+        std::cerr << "Failed to initialize SDL_ttf: " << TTF_GetError() << std::endl;
+        return;
+    }
+
+    // Initialize SDL
+    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+        std::cerr << "SDL could not initialize! SDL_Error: " << SDL_GetError()
+                << std::endl;
+        throw std::exception();
+    }
 
   // Create window
   SDL_Window *window = SDL_CreateWindow("Arcade",        // window title
