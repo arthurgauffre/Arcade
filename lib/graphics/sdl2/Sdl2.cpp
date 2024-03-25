@@ -16,11 +16,6 @@ arcade::Sdl2::~Sdl2() {}
  * @brief display the menu on the window
  * 
  */
-#include <iostream>
-#include <SDL.h>
-#include <SDL_ttf.h>
-#include <string>
-
 static void display_menu(SDL_Renderer *renderer)
 {
     // Initialize SDL_ttf
@@ -28,7 +23,7 @@ static void display_menu(SDL_Renderer *renderer)
         std::cerr << "Failed to initialize SDL_ttf: " << TTF_GetError() << std::endl;
         return;
     }
-  
+
     // Initialize a font
     TTF_Font* font = TTF_OpenFont("assets/default/font/font1.ttf", 24); // Replace with the actual path to your font file and desired font size
     if (font == nullptr) {
@@ -96,8 +91,8 @@ static void display_menu(SDL_Renderer *renderer)
 
     SDL_Rect renderQuad = {x, y, textWidth, textHeight };
 
-    // Render the menu
     int game_or_library = 0;
+    // Render the menu
     while (1) {
         SDL_Event event;
         if (SDL_PollEvent(&event)) {

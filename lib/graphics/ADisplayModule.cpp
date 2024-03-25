@@ -15,6 +15,9 @@ arcade::ADisplayModule::ADisplayModule() : arcade::IModule()
 {
   this->_displayStatus = DisplayStatus::SELECTION;
   this->_window = nullptr;
+  this->_texture = nullptr;
+  this->_event = nullptr;
+  this->_font = nullptr;
 }
 
 /**
@@ -26,7 +29,7 @@ arcade::ADisplayModule::~ADisplayModule() {}
 /**
  * @brief return the type of the module
  *
- * @return const arcade::IModule::ModuleType
+ * @return arcade::IModule::ModuleType
  */
 arcade::IModule::ModuleType arcade::ADisplayModule::getType() const
 {

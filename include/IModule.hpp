@@ -8,7 +8,10 @@
 #ifndef IMODULE_HPP_
 #define IMODULE_HPP_
 
-#include <map> // Include the necessary header file
+#include "Macros.hpp"
+#include <map>
+#include <memory>
+#include <string.h>
 #include <string>
 #include <vector>
 
@@ -35,6 +38,14 @@ public:
   struct GameData {
     std::vector<std::vector<int>> display_info;
     std::map<unsigned int, std::string> sprite_value;
+  };
+
+  struct MenuData {
+    std::vector<std::string> _graphicLibList;
+    std::vector<std::string> _gameLibList;
+    size_t indexGraphic;
+    size_t indexGame;
+    std::string _description;
   };
 
   /**

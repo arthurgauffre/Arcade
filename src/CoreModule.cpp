@@ -6,10 +6,6 @@
 */
 
 #include "CoreModule.hpp"
-#include <NCurses.hpp>
-#include <Pacman.hpp>
-#include <Sdl2.hpp>
-#include <Snake.hpp>
 
 /**
  * @brief Construct a new arcade::Core Module::Core Module object
@@ -18,6 +14,8 @@
 arcade::CoreModule::CoreModule() : arcade::IModule()
 {
   this->_coreStatus = CoreStatus::SELECTION;
+  this->_gameModule = nullptr;
+  this->_graphicModule = nullptr;
 }
 
 /**
@@ -42,7 +40,7 @@ void arcade::CoreModule::stop() {}
 /**
  * @brief get the name of the library
  *
- * @return const arcade::IModule::LibName
+ * @return arcade::IModule::LibName
  */
 arcade::IModule::LibName arcade::CoreModule::getName() const
 {
@@ -52,7 +50,7 @@ arcade::IModule::LibName arcade::CoreModule::getName() const
 /**
  * @brief get the type of the library
  *
- * @return const arcade::IModule::ModuleType
+ * @return arcade::IModule::ModuleType
  */
 arcade::IModule::ModuleType arcade::CoreModule::getType() const
 {
@@ -82,73 +80,38 @@ arcade::CoreModule::CoreStatus arcade::CoreModule::getCoreStatus() const
 /**
  * @brief get the display module
  *
- * @return std::unique_ptr<arcade::ADisplayModule>
+ * @return arcade::ADisplayModule *
  */
-std::unique_ptr<arcade::ADisplayModule> arcade::CoreModule::getDisplayModule()
+arcade::ADisplayModule *arcade::CoreModule::getGraphicModule()
 {
-  return std::move(this->_displayModule);
+  return this->_graphicModule;
 }
 
 /**
  * @brief get the game module
  *
- * @return std::unique_ptr<arcade::AGameModule>
+ * @return arcade::AGameModule *
  */
-std::unique_ptr<arcade::AGameModule> arcade::CoreModule::getGameModule()
+arcade::AGameModule *arcade::CoreModule::getGameModule()
 {
-  return std::move(this->_gameModule);
+  return this->_gameModule;
 }
 
 /**
  * @brief set graphic or game module to the core module
  *
- * @param name of the module (snake, pacman, ncurses, sdl2)
+ * @param module to set
  * @param type of the module (graphic or game)
  */
-void arcade::CoreModule::setModule(arcade::IModule::LibName name,
+void arcade::CoreModule::setModule(arcade::IModule *module,
                                    arcade::IModule::ModuleType type)
 {
   switch (type) {
   case arcade::IModule::ModuleType::GAME:
-    switch (name) {
-    case arcade::IModule::LibName::SNAKE:
-      this->_gameModule = std::move(std::make_unique<arcade::Snake>());
-      break;
-    case arcade::IModule::LibName::NIBBLER:
-      /* code */
-      break;
-    case arcade::IModule::LibName::QIX:
-      /* code */
-      break;
-    case arcade::IModule::LibName::PACMAN:
-      this->_gameModule = std::move(std::make_unique<arcade::Pacman>());
-      break;
-    case arcade::IModule::LibName::CENTIPEDE:
-      /* code */
-      break;
-    case arcade::IModule::LibName::SOLARFOX:
-      /* code */
-      break;
-    default:
-      throw std::exception();
-    }
+    this->_gameModule = dynamic_cast<arcade::AGameModule *>(module);
     break;
-
   case arcade::IModule::ModuleType::GRAPHIC:
-    switch (name) {
-    case arcade::IModule::LibName::SFML:
-      /* code */
-      break;
-    case arcade::IModule::LibName::NCURSES:
-      this->_displayModule = std::move(std::make_unique<arcade::NCurses>());
-      break;
-    case arcade::IModule::LibName::SDL:
-      this->_displayModule = std::move(std::make_unique<arcade::Sdl2>());
-      break;
-    default:
-      throw std::exception();
-    }
-
+    this->_graphicModule = dynamic_cast<arcade::ADisplayModule *>(module);
     break;
   default:
     throw std::exception();
@@ -162,7 +125,7 @@ void arcade::CoreModule::setModule(arcade::IModule::LibName name,
  * @param pathLib path to the libraries
  * @return std::vector<std::string> list of libraries
  */
-std::vector<std::string> getLib(std::string pathLib)
+std::vector<std::string> arcade::CoreModule::getLib(std::string pathLib)
 {
   std::vector<std::string> matchedFiles;
   DIR *dir;
@@ -188,4 +151,30 @@ std::vector<std::string> getLib(std::string pathLib)
     std::cout << file << std::endl;
   }
   return matchedFiles;
+}
+
+void arcade::CoreModule::loadLib(std::string pathLib)
+{
+  DLLoader<arcade::IModule> loader(pathLib);
+  arcade::IModule *module = loader.getInstance("entryPoint");
+  if (module == nullptr)
+    throw std::exception();
+  if (module->getType() == arcade::IModule::ModuleType::GAME) {
+    if (this->_gameModule != nullptr){
+      this->_gameModule->stop();
+      delete (this->_gameModule);
+    }
+    this->_gameModule = dynamic_cast<arcade::AGameModule *>(module);
+    this->_gameModule->init();
+  } else if (module->getType() == arcade::IModule::ModuleType::GRAPHIC) {
+    if (this->_gameModule != nullptr){
+      this->_graphicModule->stop();
+      delete (this->_graphicModule);
+    }
+    this->_graphicModule = dynamic_cast<arcade::ADisplayModule *>(module);
+    this->_graphicModule->init();
+  } else {
+    throw std::exception();
+  }
+  return;
 }

@@ -24,10 +24,8 @@ add_executable(arcade
   src/Main.cpp
   src/core_program/launch_arcade.cpp
   src/ErrorHandling.cpp
+  src/CoreModule.cpp
 )
-
-# Core
-add_library(arcade_core SHARED lib/CoreModule.cpp)
 
 # Games
 add_library(arcade_game SHARED lib/games/AGameModule.cpp)
