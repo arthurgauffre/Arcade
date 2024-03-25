@@ -9,6 +9,7 @@
 #define NCURSES_HPP_
 
 #include "ADisplayModule.hpp"
+#include <ncurses.h>
 
 namespace arcade {
 class NCurses : virtual public arcade::ADisplayModule {

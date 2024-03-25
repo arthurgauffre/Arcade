@@ -1,0 +1,228 @@
+\doxysection{arcade\+::NCurses Class Reference}
+\hypertarget{classarcade_1_1NCurses}{}\label{classarcade_1_1NCurses}\index{arcade::NCurses@{arcade::NCurses}}
+
+
+{\ttfamily \#include $<$NCurses.\+hpp$>$}
+
+Inheritance diagram for arcade\+::NCurses\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{classarcade_1_1NCurses}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classarcade_1_1NCurses_a0209cf11cc80540457ec3b98578a5237}{NCurses}} ()
+\item 
+\mbox{\hyperlink{classarcade_1_1NCurses_a9640b9c9acbd184f93d5f1b04e6f16a8}{\texorpdfstring{$\sim$}{\string~}\+NCurses}} ()
+\item 
+void \mbox{\hyperlink{classarcade_1_1NCurses_a4f3a5729ad7f4ba5d1693acc1eff072d}{init}} ()
+\item 
+void \mbox{\hyperlink{classarcade_1_1NCurses_ad645c117bb29b7d903469f17a348be1f}{stop}} ()
+\item 
+void \mbox{\hyperlink{classarcade_1_1NCurses_a39ccf764accdc81b92767e8e24a5a604}{display}} ()
+\item 
+const \mbox{\hyperlink{classarcade_1_1IModule_adae899b9bcd265559966ca35c6c03188}{arcade\+::\+IModule\+::\+Lib\+Name}} \mbox{\hyperlink{classarcade_1_1NCurses_a4414e2b6830939a7522c299a5ec12c98}{get\+Name}} () const
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classarcade_1_1ADisplayModule}{arcade\+::\+ADisplay\+Module}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classarcade_1_1ADisplayModule_ad87c31e7fceafd4309719b7e2b7fcafa}{ADisplay\+Module}} ()
+\begin{DoxyCompactList}\small\item\em Construct a new \doxylink{classarcade_1_1ADisplayModule_ad87c31e7fceafd4309719b7e2b7fcafa}{arcade\+::\+ADisplay\+Module\+::\+ADisplay\+Module} object. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classarcade_1_1ADisplayModule_a1ce858229bc4614923dc76437cb3b953}{\texorpdfstring{$\sim$}{\string~}\+ADisplay\+Module}} ()
+\begin{DoxyCompactList}\small\item\em Destroy the \doxylink{classarcade_1_1ADisplayModule_ad87c31e7fceafd4309719b7e2b7fcafa}{arcade\+::\+ADisplay\+Module\+::\+ADisplay\+Module} object. \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{classarcade_1_1ADisplayModule_a413ca9438bc623137dcf33d986881a7e}{init}} ()=0
+\item 
+virtual void \mbox{\hyperlink{classarcade_1_1ADisplayModule_a5c2b7961d95bef7848fe5f5f851e96fa}{stop}} ()=0
+\item 
+virtual void \mbox{\hyperlink{classarcade_1_1ADisplayModule_a912546811d4cc81332074daea6b629b4}{display}} ()=0
+\item 
+void \mbox{\hyperlink{classarcade_1_1ADisplayModule_ada3a954dd0c1869452e8c1f1f05c9254}{set\+Display\+Status}} (\mbox{\hyperlink{classarcade_1_1ADisplayModule_afb1111079608402aaa4ebc06e49a7853}{Display\+Status}} status)
+\begin{DoxyCompactList}\small\item\em set the status of the display module \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classarcade_1_1ADisplayModule_afb1111079608402aaa4ebc06e49a7853}{Display\+Status}} \mbox{\hyperlink{classarcade_1_1ADisplayModule_a4873e7ac85abf6469cbcb934091d0118}{get\+Display\+Status}} () const
+\begin{DoxyCompactList}\small\item\em return the status of the display module \end{DoxyCompactList}\item 
+virtual const \mbox{\hyperlink{classarcade_1_1IModule_adae899b9bcd265559966ca35c6c03188}{arcade\+::\+IModule\+::\+Lib\+Name}} \mbox{\hyperlink{classarcade_1_1ADisplayModule_a19e847534b42a78dd1ce27f83400b6c0}{get\+Name}} () const =0
+\item 
+const \mbox{\hyperlink{classarcade_1_1IModule_aa0c142cae609e6917fc737aa3cae9658}{arcade\+::\+IModule\+::\+Module\+Type}} \mbox{\hyperlink{classarcade_1_1ADisplayModule_a3d9dfe800f728d48e5ee58843e65e470}{get\+Type}} () const
+\begin{DoxyCompactList}\small\item\em return the type of the module \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classarcade_1_1IModule_a776096f3951f1c8ee8b2dce4486966e3}{arcade\+::\+IModule\+::\+Keyboard\+Input}} \mbox{\hyperlink{classarcade_1_1ADisplayModule_a23f9116c647320636d2687dd2bfe3ba0}{get\+Input}} () const
+\begin{DoxyCompactList}\small\item\em get input from the user \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classarcade_1_1ADisplayModule_a41aa942c5cba50e60af553a3e9b8db41}{send\+Game\+Data}} (\mbox{\hyperlink{structarcade_1_1IModule_1_1GameData}{arcade\+::\+IModule\+::\+Game\+Data}} data)
+\begin{DoxyCompactList}\small\item\em receive send data of the game module to the display module \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classarcade_1_1IModule}{arcade\+::\+IModule}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classarcade_1_1IModule_aea8193cf3a81dde47727f615c8afda24}{IModule}} ()
+\item 
+virtual \mbox{\hyperlink{classarcade_1_1IModule_a3ddd553fb9a460569f9bae893173ecfb}{\texorpdfstring{$\sim$}{\string~}\+IModule}} ()
+\item 
+virtual void \mbox{\hyperlink{classarcade_1_1IModule_a8dc04c36c0ef171c438451c1213a8dda}{init}} ()=0
+\item 
+virtual void \mbox{\hyperlink{classarcade_1_1IModule_ad01746b59cdd0ccb26bbe8f640131656}{stop}} ()=0
+\item 
+virtual const \mbox{\hyperlink{classarcade_1_1IModule_adae899b9bcd265559966ca35c6c03188}{Lib\+Name}} \mbox{\hyperlink{classarcade_1_1IModule_ab7dbc527005107763b652c2fd2861ff4}{get\+Name}} () const =0
+\item 
+virtual const \mbox{\hyperlink{classarcade_1_1IModule_aa0c142cae609e6917fc737aa3cae9658}{Module\+Type}} \mbox{\hyperlink{classarcade_1_1IModule_a77b073464e0e3b91ebe39793069e5314}{get\+Type}} () const =0
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{classarcade_1_1ADisplayModule}{arcade\+::\+ADisplay\+Module}}}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{classarcade_1_1ADisplayModule_afb1111079608402aaa4ebc06e49a7853}{Display\+Status}} \{ \newline
+\mbox{\hyperlink{classarcade_1_1ADisplayModule_afb1111079608402aaa4ebc06e49a7853a52075b7f981c62799e264e920a4577eb}{RUNNING}}
+, \mbox{\hyperlink{classarcade_1_1ADisplayModule_afb1111079608402aaa4ebc06e49a7853a416edb56a239508103551f6be53d0186}{PAUSED}}
+, \mbox{\hyperlink{classarcade_1_1ADisplayModule_afb1111079608402aaa4ebc06e49a7853a27a0439cba55d52b76a53ca3e6accaa4}{SELECTION}}
+, \mbox{\hyperlink{classarcade_1_1ADisplayModule_afb1111079608402aaa4ebc06e49a7853a96fafd16ff455807c8fe8a289ae5b643}{GAMEOVER}}
+, \newline
+\mbox{\hyperlink{classarcade_1_1ADisplayModule_afb1111079608402aaa4ebc06e49a7853a5ef9c781d342b87dae702c4a48dee493}{WIN}}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{classarcade_1_1IModule}{arcade\+::\+IModule}}}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{classarcade_1_1IModule_a776096f3951f1c8ee8b2dce4486966e3}{Keyboard\+Input}} \{ \newline
+\mbox{\hyperlink{classarcade_1_1IModule_a776096f3951f1c8ee8b2dce4486966e3a60def24b918465880f497170f4823982}{UP}}
+, \mbox{\hyperlink{classarcade_1_1IModule_a776096f3951f1c8ee8b2dce4486966e3a50b858547dd0057409e4abcddd9b4186}{DOWN}}
+, \mbox{\hyperlink{classarcade_1_1IModule_a776096f3951f1c8ee8b2dce4486966e3a43d89a951f2a7329611d7e511b93d66c}{LEFT}}
+, \mbox{\hyperlink{classarcade_1_1IModule_a776096f3951f1c8ee8b2dce4486966e3a7914bc2c8b44c255e2b919f28253401b}{RIGHT}}
+, \newline
+\mbox{\hyperlink{classarcade_1_1IModule_a776096f3951f1c8ee8b2dce4486966e3ae2f0ad59b76044c9e7d355f3a43f3817}{SPACE}}
+, \mbox{\hyperlink{classarcade_1_1IModule_a776096f3951f1c8ee8b2dce4486966e3a6f245ee435cf8186db27f9a6fdbf72b9}{ENTER}}
+, \mbox{\hyperlink{classarcade_1_1IModule_a776096f3951f1c8ee8b2dce4486966e3ad542c20868c6c9f58b83b287ed88518c}{ESCAPE}}
+, \mbox{\hyperlink{classarcade_1_1IModule_a776096f3951f1c8ee8b2dce4486966e3aaf4d1168b651510c4caa3663733a0ecd}{A}}
+, \newline
+\mbox{\hyperlink{classarcade_1_1IModule_a776096f3951f1c8ee8b2dce4486966e3a4e4fe154bc13ed9b31290705af646258}{B}}
+, \mbox{\hyperlink{classarcade_1_1IModule_a776096f3951f1c8ee8b2dce4486966e3ad5c850b1c9f3349a2d940a87c3c9a50e}{C}}
+, \mbox{\hyperlink{classarcade_1_1IModule_a776096f3951f1c8ee8b2dce4486966e3a5fda829221566f3e447e515d93ff138f}{D}}
+, \mbox{\hyperlink{classarcade_1_1IModule_a776096f3951f1c8ee8b2dce4486966e3ab7273f788f5467a24a40ab3d576e0caf}{E}}
+, \newline
+\mbox{\hyperlink{classarcade_1_1IModule_a776096f3951f1c8ee8b2dce4486966e3a9f65757ee8844700cbf57f774ff1f539}{F}}
+, \mbox{\hyperlink{classarcade_1_1IModule_a776096f3951f1c8ee8b2dce4486966e3acd0017723656c82290c5a1b54c394970}{G}}
+, \mbox{\hyperlink{classarcade_1_1IModule_a776096f3951f1c8ee8b2dce4486966e3ae7ad42c0ac87add07c262189b2c414c5}{H}}
+, \mbox{\hyperlink{classarcade_1_1IModule_a776096f3951f1c8ee8b2dce4486966e3a753849209dec3440c6393b46b127b055}{I}}
+, \newline
+\mbox{\hyperlink{classarcade_1_1IModule_a776096f3951f1c8ee8b2dce4486966e3a4182a7d87fdd5c43cafb61ba2922bab6}{J}}
+, \mbox{\hyperlink{classarcade_1_1IModule_a776096f3951f1c8ee8b2dce4486966e3a26cb577992daf9dce8e7991981c7a5eb}{K}}
+, \mbox{\hyperlink{classarcade_1_1IModule_a776096f3951f1c8ee8b2dce4486966e3a8138cea0ffe52f6b7caf1255229fde57}{L}}
+, \mbox{\hyperlink{classarcade_1_1IModule_a776096f3951f1c8ee8b2dce4486966e3a179b1daa40d78930dacdb5974007f595}{M}}
+, \newline
+\mbox{\hyperlink{classarcade_1_1IModule_a776096f3951f1c8ee8b2dce4486966e3a07189d0bea4b243720d5a20d8a1aeba4}{N}}
+, \mbox{\hyperlink{classarcade_1_1IModule_a776096f3951f1c8ee8b2dce4486966e3a096dd88ea80ab58622511c5b629d2c45}{O}}
+, \mbox{\hyperlink{classarcade_1_1IModule_a776096f3951f1c8ee8b2dce4486966e3a085266d39b14fe2476ecc02ad66f7e8c}{P}}
+, \mbox{\hyperlink{classarcade_1_1IModule_a776096f3951f1c8ee8b2dce4486966e3a49e53cca56c39ab5f8ba92770f49289b}{Q}}
+, \newline
+\mbox{\hyperlink{classarcade_1_1IModule_a776096f3951f1c8ee8b2dce4486966e3a1b3a7094bbcee232c45e98d4569a2472}{R}}
+, \mbox{\hyperlink{classarcade_1_1IModule_a776096f3951f1c8ee8b2dce4486966e3ab421143c168808f3a6b2f5d7df282d6d}{S}}
+, \mbox{\hyperlink{classarcade_1_1IModule_a776096f3951f1c8ee8b2dce4486966e3a99ccbacde1d8d131306f288fda11b33c}{T}}
+, \mbox{\hyperlink{classarcade_1_1IModule_a776096f3951f1c8ee8b2dce4486966e3a8a3cba3f5aef768be9cbeab5a2dbae98}{U}}
+, \newline
+\mbox{\hyperlink{classarcade_1_1IModule_a776096f3951f1c8ee8b2dce4486966e3a83c34fa8874354938e9980bf11aa915d}{V}}
+, \mbox{\hyperlink{classarcade_1_1IModule_a776096f3951f1c8ee8b2dce4486966e3a50fd909ee47a17f6102a01d992906b3c}{W}}
+, \mbox{\hyperlink{classarcade_1_1IModule_a776096f3951f1c8ee8b2dce4486966e3a98dc53b6b2bb95a8e6b729edce996438}{X}}
+, \mbox{\hyperlink{classarcade_1_1IModule_a776096f3951f1c8ee8b2dce4486966e3adc7811c4b2a70fdf5c8fc46b5ec975af}{Y}}
+, \newline
+\mbox{\hyperlink{classarcade_1_1IModule_a776096f3951f1c8ee8b2dce4486966e3ab5379839c52b868f8263e8df27973e46}{Z}}
+, \mbox{\hyperlink{classarcade_1_1IModule_a776096f3951f1c8ee8b2dce4486966e3aac7b45e9284c2d77c5010626c28d3324}{NONE}}
+ \}
+\begin{DoxyCompactList}\small\item\em all the possible keyboard inputs \end{DoxyCompactList}\item 
+enum \mbox{\hyperlink{classarcade_1_1IModule_aa0c142cae609e6917fc737aa3cae9658}{Module\+Type}} \{ \mbox{\hyperlink{classarcade_1_1IModule_aa0c142cae609e6917fc737aa3cae9658a5649f103e855bdd3ab70abc3fe494be7}{GRAPHIC}}
+, \mbox{\hyperlink{classarcade_1_1IModule_aa0c142cae609e6917fc737aa3cae9658a108cf02e28ad673336e3a679e7e25479}{GAME}}
+, \mbox{\hyperlink{classarcade_1_1IModule_aa0c142cae609e6917fc737aa3cae9658a80f36b81904c8025332faa9cd5c18f0d}{CORE}}
+ \}
+\begin{DoxyCompactList}\small\item\em all the possible module types \end{DoxyCompactList}\item 
+enum \mbox{\hyperlink{classarcade_1_1IModule_adae899b9bcd265559966ca35c6c03188}{Lib\+Name}} \{ \newline
+\mbox{\hyperlink{classarcade_1_1IModule_adae899b9bcd265559966ca35c6c03188a8c9e1fb6d95608cd6d710e327e8d7de0}{SNAKE}}
+, \mbox{\hyperlink{classarcade_1_1IModule_adae899b9bcd265559966ca35c6c03188a44799de47f5926b2ca0dad9898357f1a}{NIBBLER}}
+, \mbox{\hyperlink{classarcade_1_1IModule_adae899b9bcd265559966ca35c6c03188a74c0d04f3e36985060ee4cae5aafc728}{PACMAN}}
+, \mbox{\hyperlink{classarcade_1_1IModule_adae899b9bcd265559966ca35c6c03188adea37396cea7d988b814e35b5b6d5ab0}{QIX}}
+, \newline
+\mbox{\hyperlink{classarcade_1_1IModule_adae899b9bcd265559966ca35c6c03188af0253b1da05ef2cd00ccf580dafec12f}{CENTIPEDE}}
+, \mbox{\hyperlink{classarcade_1_1IModule_adae899b9bcd265559966ca35c6c03188a3d6739f52c7946b9411eabfddf85a7ac}{SOLARFOX}}
+, \mbox{\hyperlink{classarcade_1_1IModule_adae899b9bcd265559966ca35c6c03188a771072b28623f1dd5e59816732303b17}{NCURSES}}
+, \mbox{\hyperlink{classarcade_1_1IModule_adae899b9bcd265559966ca35c6c03188ab08d5a595309f0769f25d20d11b009d8}{SDL}}
+, \newline
+\mbox{\hyperlink{classarcade_1_1IModule_adae899b9bcd265559966ca35c6c03188a62c01e28c18f4e11e4bf82ee719ab15a}{SFML}}
+, \mbox{\hyperlink{classarcade_1_1IModule_adae899b9bcd265559966ca35c6c03188add83f89791f9b3ea3f98e9adac7968fe}{OPENGL}}
+, \mbox{\hyperlink{classarcade_1_1IModule_adae899b9bcd265559966ca35c6c03188a2907caaba5670680697565bb10c9becd}{UNKNOWN}}
+ \}
+\begin{DoxyCompactList}\small\item\em all the possible library names \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Protected Attributes inherited from \mbox{\hyperlink{classarcade_1_1ADisplayModule}{arcade\+::\+ADisplay\+Module}}}
+\begin{DoxyCompactItemize}
+\item 
+void \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{classarcade_1_1ADisplayModule_a2e2d609ddc5f34e386737064898ff566}{\+\_\+window}}
+\item 
+void \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{classarcade_1_1ADisplayModule_ada3de0f6ce9c3afa6174f81ce7acaaa9}{\+\_\+texture}}
+\item 
+void \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{classarcade_1_1ADisplayModule_af101f7ee0bf4b18afab70276c65a8d57}{\+\_\+event}}
+\item 
+\mbox{\hyperlink{structarcade_1_1IModule_1_1GameData}{arcade\+::\+IModule\+::\+Game\+Data}} \mbox{\hyperlink{classarcade_1_1ADisplayModule_ae00d0b7ba3c920deeb204f682bd817cd}{\+\_\+game\+Data}}
+\item 
+\mbox{\hyperlink{classarcade_1_1IModule_a776096f3951f1c8ee8b2dce4486966e3}{arcade\+::\+IModule\+::\+Keyboard\+Input}} \mbox{\hyperlink{classarcade_1_1ADisplayModule_aee3f3d28ad769fc6dee2e339545c0c54}{\+\_\+input}}
+\item 
+\mbox{\hyperlink{classarcade_1_1ADisplayModule_afb1111079608402aaa4ebc06e49a7853}{Display\+Status}} \mbox{\hyperlink{classarcade_1_1ADisplayModule_a0569d77053d78d80673d25153d547a12}{\+\_\+display\+Status}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classarcade_1_1NCurses_a0209cf11cc80540457ec3b98578a5237}\label{classarcade_1_1NCurses_a0209cf11cc80540457ec3b98578a5237} 
+\index{arcade::NCurses@{arcade::NCurses}!NCurses@{NCurses}}
+\index{NCurses@{NCurses}!arcade::NCurses@{arcade::NCurses}}
+\doxysubsubsection{\texorpdfstring{NCurses()}{NCurses()}}
+{\footnotesize\ttfamily arcade\+::\+NCurses\+::\+NCurses (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\Hypertarget{classarcade_1_1NCurses_a9640b9c9acbd184f93d5f1b04e6f16a8}\label{classarcade_1_1NCurses_a9640b9c9acbd184f93d5f1b04e6f16a8} 
+\index{arcade::NCurses@{arcade::NCurses}!````~NCurses@{\texorpdfstring{$\sim$}{\string~}NCurses}}
+\index{````~NCurses@{\texorpdfstring{$\sim$}{\string~}NCurses}!arcade::NCurses@{arcade::NCurses}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}NCurses()}{\string~NCurses()}}
+{\footnotesize\ttfamily arcade\+::\+NCurses\+::\texorpdfstring{$\sim$}{\string~}\+NCurses (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classarcade_1_1NCurses_a39ccf764accdc81b92767e8e24a5a604}\label{classarcade_1_1NCurses_a39ccf764accdc81b92767e8e24a5a604} 
+\index{arcade::NCurses@{arcade::NCurses}!display@{display}}
+\index{display@{display}!arcade::NCurses@{arcade::NCurses}}
+\doxysubsubsection{\texorpdfstring{display()}{display()}}
+{\footnotesize\ttfamily void arcade\+::\+NCurses\+::display (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{classarcade_1_1ADisplayModule_a912546811d4cc81332074daea6b629b4}{arcade\+::\+ADisplay\+Module}}.
+
+\Hypertarget{classarcade_1_1NCurses_a4414e2b6830939a7522c299a5ec12c98}\label{classarcade_1_1NCurses_a4414e2b6830939a7522c299a5ec12c98} 
+\index{arcade::NCurses@{arcade::NCurses}!getName@{getName}}
+\index{getName@{getName}!arcade::NCurses@{arcade::NCurses}}
+\doxysubsubsection{\texorpdfstring{getName()}{getName()}}
+{\footnotesize\ttfamily const \mbox{\hyperlink{classarcade_1_1IModule_adae899b9bcd265559966ca35c6c03188}{arcade\+::\+IModule\+::\+Lib\+Name}} arcade\+::\+NCurses\+::get\+Name (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{classarcade_1_1ADisplayModule_a19e847534b42a78dd1ce27f83400b6c0}{arcade\+::\+ADisplay\+Module}}.
+
+\Hypertarget{classarcade_1_1NCurses_a4f3a5729ad7f4ba5d1693acc1eff072d}\label{classarcade_1_1NCurses_a4f3a5729ad7f4ba5d1693acc1eff072d} 
+\index{arcade::NCurses@{arcade::NCurses}!init@{init}}
+\index{init@{init}!arcade::NCurses@{arcade::NCurses}}
+\doxysubsubsection{\texorpdfstring{init()}{init()}}
+{\footnotesize\ttfamily void arcade\+::\+NCurses\+::init (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{classarcade_1_1ADisplayModule_a413ca9438bc623137dcf33d986881a7e}{arcade\+::\+ADisplay\+Module}}.
+
+\Hypertarget{classarcade_1_1NCurses_ad645c117bb29b7d903469f17a348be1f}\label{classarcade_1_1NCurses_ad645c117bb29b7d903469f17a348be1f} 
+\index{arcade::NCurses@{arcade::NCurses}!stop@{stop}}
+\index{stop@{stop}!arcade::NCurses@{arcade::NCurses}}
+\doxysubsubsection{\texorpdfstring{stop()}{stop()}}
+{\footnotesize\ttfamily void arcade\+::\+NCurses\+::stop (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{classarcade_1_1ADisplayModule_a5c2b7961d95bef7848fe5f5f851e96fa}{arcade\+::\+ADisplay\+Module}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/home/arthur/tek2/\+OOP/projects/\+Arcade/include/graphic/\mbox{\hyperlink{NCurses_8hpp}{NCurses.\+hpp}}\item 
+/home/arthur/tek2/\+OOP/projects/\+Arcade/lib/graphics/ncurses/\mbox{\hyperlink{NCurses_8cpp}{NCurses.\+cpp}}\end{DoxyCompactItemize}

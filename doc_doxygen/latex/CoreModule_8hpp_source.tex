@@ -1,0 +1,49 @@
+\doxysection{Core\+Module.\+hpp}
+\hypertarget{CoreModule_8hpp_source}{}\label{CoreModule_8hpp_source}\index{/home/arthur/tek2/OOP/projects/Arcade/include/CoreModule.hpp@{/home/arthur/tek2/OOP/projects/Arcade/include/CoreModule.hpp}}
+\mbox{\hyperlink{CoreModule_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{**\ EPITECH\ PROJECT,\ 2024}}
+\DoxyCodeLine{00003\ \textcolor{comment}{**\ Arcade}}
+\DoxyCodeLine{00004\ \textcolor{comment}{**\ File\ description:}}
+\DoxyCodeLine{00005\ \textcolor{comment}{**\ CoreModule}}
+\DoxyCodeLine{00006\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#ifndef\ COREMODULE\_HPP\_}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#define\ COREMODULE\_HPP\_}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{ADisplayModule_8hpp}{ADisplayModule.hpp}}"{}}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{AGameModule_8hpp}{AGameModule.hpp}}"{}}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{IModule_8hpp}{IModule.hpp}}"{}}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ <iostream>}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ <dirent.h>}}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespacearcade}{arcade}}\ \{}
+\DoxyCodeLine{00019\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classarcade_1_1CoreModule}{CoreModule}}\ :\ \textcolor{keyword}{virtual}\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classarcade_1_1IModule}{arcade::IModule}}\ \{}
+\DoxyCodeLine{00020\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00021\ \ \ \mbox{\hyperlink{classarcade_1_1CoreModule_a3bac1c3bef6b0b67711f7ea9143e948b}{CoreModule}}();}
+\DoxyCodeLine{00022\ \ \ \mbox{\hyperlink{classarcade_1_1CoreModule_a722601cb86c6dc4edcac0799ced3ab0e}{\string~CoreModule}}();}
+\DoxyCodeLine{00023\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classarcade_1_1CoreModule_a60ff04c5417cc4c6fff34ae28996b3e9}{init}}();}
+\DoxyCodeLine{00024\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classarcade_1_1CoreModule_a7e4ee094c2d761e61f0a4f1d0b261fd0}{stop}}();}
+\DoxyCodeLine{00025\ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{classarcade_1_1IModule_adae899b9bcd265559966ca35c6c03188}{LibName}}\ \mbox{\hyperlink{classarcade_1_1CoreModule_aeff75d9d842710dafd12269181ba7701}{getName}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00026\ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{classarcade_1_1IModule_aa0c142cae609e6917fc737aa3cae9658}{ModuleType}}\ \mbox{\hyperlink{classarcade_1_1CoreModule_a262ddb167b7bc73791d8ae5b95045f3c}{getType}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00027\ \ \ \textcolor{keyword}{enum}\ \mbox{\hyperlink{classarcade_1_1CoreModule_acebf1e114821bb751eab43be214ec692}{CoreStatus}}\ \{\ \mbox{\hyperlink{classarcade_1_1CoreModule_acebf1e114821bb751eab43be214ec692af2267e39cdefbe5ba29c378b156652bf}{RUNNING}},\ \mbox{\hyperlink{classarcade_1_1CoreModule_acebf1e114821bb751eab43be214ec692a3a695b2bf4ae5d40a9ff24c4f25ac37e}{SELECTION}}\ \};}
+\DoxyCodeLine{00028\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classarcade_1_1CoreModule_a2bc1d4848672f11888f18c3b5d696708}{setCoreStatus}}(\mbox{\hyperlink{classarcade_1_1CoreModule_acebf1e114821bb751eab43be214ec692}{CoreStatus}}\ status);}
+\DoxyCodeLine{00029\ \ \ \mbox{\hyperlink{classarcade_1_1CoreModule_acebf1e114821bb751eab43be214ec692}{CoreStatus}}\ \mbox{\hyperlink{classarcade_1_1CoreModule_a18c91ff6017551bc7782de8d2f7a4189}{getCoreStatus}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00030\ \ \ std::unique\_ptr<ADisplayModule>\ \mbox{\hyperlink{classarcade_1_1CoreModule_ade1ecffc863a9c2cc2773dc61bbfd9a3}{getDisplayModule}}();}
+\DoxyCodeLine{00031\ \ \ std::unique\_ptr<AGameModule>\ \mbox{\hyperlink{classarcade_1_1CoreModule_a832136e87e3f7a2f050662128a38f532}{getGameModule}}();}
+\DoxyCodeLine{00032\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classarcade_1_1CoreModule_a7e8f81ff90c08e7307bf15e74ee835a4}{setModule}}(\mbox{\hyperlink{classarcade_1_1IModule_adae899b9bcd265559966ca35c6c03188}{arcade::IModule::LibName}}\ name,}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classarcade_1_1IModule_aa0c142cae609e6917fc737aa3cae9658}{arcade::IModule::ModuleType}}\ type);}
+\DoxyCodeLine{00034\ \ \ std::vector<std::string>\ \mbox{\hyperlink{classarcade_1_1CoreModule_a13c026174e1509817e9c191d1cb195db}{getLib}}(std::string\ pathLib);}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00037\ \ \ \mbox{\hyperlink{classarcade_1_1CoreModule_acebf1e114821bb751eab43be214ec692}{CoreStatus}}\ \mbox{\hyperlink{classarcade_1_1CoreModule_ac776d41360f7a4bbfa1d5c3b2fb3053f}{\_coreStatus}};}
+\DoxyCodeLine{00038\ \ \ std::unique\_ptr<arcade::ADisplayModule>\ \mbox{\hyperlink{classarcade_1_1CoreModule_ad56371c15ccb84e35adea81d945c5842}{\_displayModule}};}
+\DoxyCodeLine{00039\ \ \ std::unique\_ptr<arcade::AGameModule>\ \mbox{\hyperlink{classarcade_1_1CoreModule_a6d1aeca3680eb8e1a98aa7dd8433d3d0}{\_gameModule}};}
+\DoxyCodeLine{00040\ \};}
+\DoxyCodeLine{00041\ \};\ \textcolor{comment}{//\ namespace\ arcade}}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ !COREMODULE\_HPP\_\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

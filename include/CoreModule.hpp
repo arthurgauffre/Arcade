@@ -12,11 +12,18 @@
 #include "AGameModule.hpp"
 #include "IModule.hpp"
 #include <memory>
+#include <iostream>
+#include <dirent.h>
+
 namespace arcade {
 class CoreModule : virtual public arcade::IModule {
 public:
   CoreModule();
   ~CoreModule();
+  void init();
+  void stop();
+  const LibName getName() const;
+  const ModuleType getType() const;
   enum CoreStatus { RUNNING, SELECTION };
   void setCoreStatus(CoreStatus status);
   CoreStatus getCoreStatus() const;
@@ -24,6 +31,7 @@ public:
   std::unique_ptr<AGameModule> getGameModule();
   void setModule(arcade::IModule::LibName name,
                  arcade::IModule::ModuleType type);
+  std::vector<std::string> getLib(std::string pathLib);
 
 protected:
   CoreStatus _coreStatus;
