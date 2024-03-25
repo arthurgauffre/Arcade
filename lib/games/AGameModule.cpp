@@ -67,3 +67,23 @@ arcade::IModule::GameData arcade::AGameModule::sendGameData()
 {
   return arcade::IModule::GameData();
 }
+
+/**
+ * @brief set the core module to the game module
+ *
+ * @param coreModule
+ */
+void arcade::AGameModule::setCoreModule(arcade::CoreModule *coreModule)
+{
+  this->_coreModule = coreModule;
+}
+
+/**
+ * @brief get the core module
+ *
+ * @return arcade::CoreModule *
+ */
+arcade::CoreModule *arcade::AGameModule::getCoreModule() const
+{
+  return this->_coreModule;
+}

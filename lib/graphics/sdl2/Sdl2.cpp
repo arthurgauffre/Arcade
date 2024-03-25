@@ -16,7 +16,7 @@ arcade::Sdl2::~Sdl2() {}
  * @brief display the menu on the window
  * 
  */
-static void display_menu(SDL_Renderer *renderer)
+void arcade::Sdl2::displayMenu()
 {
     // Initialize a font
     TTF_Font* font = TTF_OpenFont("assets/default/font/font1.ttf", 24); // Replace with the actual path to your font file and desired font size
@@ -27,28 +27,22 @@ static void display_menu(SDL_Renderer *renderer)
 
     SDL_Color textColor = {255, 255, 255, 255}; // White color for the text
 
-    std::string graphicalLibraries[] = {"arcade_sfml.so", "arcade_sdl2.so", "arcade_ncurses"};
-    std::string games[] = {"arcade_pacman.so", "arcade_snake.so"};
-
-    int selectedGraphicalLibrary = 0;
-    int selectedGame = 0;
-
     // Function to update menu text based on selected items
     auto updateMenuText = [&]() {
         std::string menuText = "Select Graphical Library:\n";
         for (size_t i = 0; i < 3; ++i) {
-            if (i == selectedGraphicalLibrary) {
-                menuText += "-> " + graphicalLibraries[i] + "\n";
+            if (i == this->getCoreModule()->getMenuData().indexGraphic) {
+                menuText += "-> " + this->getCoreModule()->getMenuData()._graphicLibList[i] + "\n";
             } else {
-                menuText += "   " + graphicalLibraries[i] + "\n";
+                menuText += "   " + this->getCoreModule()->getMenuData()._graphicLibList[i] + "\n";
             }
         }
         menuText += "\nSelect Game:\n";
         for (size_t i = 0; i < 2; ++i) {
-            if (i == selectedGame) {
-                menuText += "-> " + games[i] + "\n";
+            if (i == this->getCoreModule()->getMenuData().indexGame) {
+                menuText += "-> " + this->getCoreModule()->getMenuData()._gameLibList[i] + "\n";
             } else {
-                menuText += "   " + games[i] + "\n";
+                menuText += "   " + this->getCoreModule()->getMenuData()._graphicLibList[i] + "\n";
             }
         }
         menuText += "\nLegend:\n";
@@ -96,43 +90,20 @@ static void display_menu(SDL_Renderer *renderer)
             if (event.type == SDL_KEYDOWN) {
                 switch (event.key.keysym.sym) {
                     case SDLK_UP:
-                        if (game_or_library == 0) {
-                            if (selectedGraphicalLibrary > 0) {
-                                --selectedGraphicalLibrary;
-                                menuText = updateMenuText();
-                            }
-                        } else {
-                            if (selectedGame > 0) {
-                                --selectedGame;
-                                menuText = updateMenuText();
-                            }
-                        }
+                        this->getCoreModule()->handleKeyEvent(arcade::IModule::KeyboardInput::UP);
+                        menuText = updateMenuText();
                         break;
                     case SDLK_DOWN:
-                        if (game_or_library == 0) {
-                            if (selectedGraphicalLibrary < 2) {
-                                ++selectedGraphicalLibrary;
-                                menuText = updateMenuText();
-                            }
-                        } else {
-                            if (selectedGame < 1) {
-                                ++selectedGame;
-                                menuText = updateMenuText();
-                            }
-                        }
+                        this->getCoreModule()->handleKeyEvent(arcade::IModule::KeyboardInput::DOWN);
+                        menuText = updateMenuText();
                         break;
                     case SDLK_TAB:
-                        if (game_or_library == 0) {
-                            game_or_library = 1;
-                        } else {
-                            game_or_library = 0;
-                        }
+                        this->getCoreModule()->handleKeyEvent(arcade::IModule::KeyboardInput::TAB);
                         menuText = updateMenuText();
                         break;
                     case SDLK_RETURN:
-                        std::cout << "Selected Graphical Library: " << graphicalLibraries[selectedGraphicalLibrary] << std::endl;
-                        std::cout << "Selected Game: " << games[selectedGame] << std::endl;
-                        break;
+                        this->getCoreModule()->handleKeyEvent(arcade::IModule::KeyboardInput::ENTER);
+                        return;
                 }
             }
         }
@@ -155,6 +126,38 @@ static void display_menu(SDL_Renderer *renderer)
     TTF_CloseFont(font);
 }
 
+void arcade::Sdl2::displayGame()
+{
+    // Clear the screen
+    SDL_SetRenderDrawColor(renderer, 30, 30, 30, 255); // Dark gray background
+    SDL_RenderClear(renderer);
+
+    // Get the game data
+    arcade::IModule::GameData gameData = this->getCoreModule()->getGameData();
+
+    // Draw the game
+    for (int y = 0; y < gameData.display_info.size(); y++) {
+        for (int x = 0; x < gameData.display_info[y].size(); x++) {
+            SDL_Rect rect = {x * 20, y * 20, 20, 20};
+            SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); // White color
+            SDL_RenderFillRect(renderer, &rect);
+        }
+    }
+
+    while (1) {
+        SDL_Event event;
+        if (SDL_PollEvent(&event)) {
+            if (event.type == SDL_QUIT) {
+                this->getCoreModule()->handleKeyEvent(arcade::IModule::KeyboardInput::CROSS);
+                break;
+            }
+        }
+    }
+
+    // Update the screen
+    SDL_RenderPresent(renderer);
+}
+
 /**
  * @brief display information on the window
  * 
@@ -163,10 +166,10 @@ void arcade::Sdl2::display()
 {
   switch (this->getDisplayStatus()) {
   case arcade::ADisplayModule::DisplayStatus::RUNNING:
-    /* code */
+    this->displayGame();
     break;
   case arcade::ADisplayModule::DisplayStatus::SELECTION:
-    display_menu(this->renderer);
+    this->displayMenu();
     break;
   default:
     break;

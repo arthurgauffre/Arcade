@@ -30,6 +30,28 @@ void arcade::Sfml::stop()
   this->_window = nullptr;
 }
 
+void arcade::Sfml::displayMenu()
+{
+  sf::RenderWindow *window = static_cast<sf::RenderWindow *>(this->_window);
+  if (window == nullptr) {
+    throw std::exception();
+  }
+  window->clear();
+  window->display();
+  this->_window = window;
+}
+
+void arcade::Sfml::displayGame()
+{
+  sf::RenderWindow *window = static_cast<sf::RenderWindow *>(this->_window);
+  if (window == nullptr) {
+    throw std::exception();
+  }
+  window->clear();
+  window->display();
+  this->_window = window;
+}
+
 void arcade::Sfml::display()
 {
   sf::RenderWindow *window = static_cast<sf::RenderWindow *>(this->_window);
@@ -37,8 +59,8 @@ void arcade::Sfml::display()
     throw std::exception();
   }
   window->clear();
-  for (int y = 0; y < this->_gameData.display_info.size(); y++) {
-    for (int x = 0; x < this->_gameData.display_info[y].size(); x++) {
+  for (int y = 0; y < this->_coreModule->getGameData().display_info.size(); y++) {
+    for (int x = 0; x < this->_coreModule->getGameData().display_info[y].size(); x++) {
       sf::RectangleShape rectangle(sf::Vector2f(20, 20));
       rectangle.setPosition(x * 20, y * 20);
       rectangle.setFillColor(sf::Color::White);

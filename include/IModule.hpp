@@ -40,12 +40,19 @@ public:
     std::map<unsigned int, std::string> sprite_value;
   };
 
+  /**
+   * @brief all the possible module types
+   *
+   */
+  enum ModuleType { GRAPHIC, GAME, CORE };
+
   struct MenuData {
     std::vector<std::string> _graphicLibList;
     std::vector<std::string> _gameLibList;
     size_t indexGraphic;
     size_t indexGame;
     std::string _description;
+    ModuleType _type;
   };
 
   /**
@@ -53,6 +60,7 @@ public:
    *
    */
   enum KeyboardInput {
+    CROSS,
     UP,
     DOWN,
     LEFT,
@@ -60,6 +68,7 @@ public:
     SPACE,
     ENTER,
     ESCAPE,
+    TAB,
     A,
     B,
     C,
@@ -88,12 +97,6 @@ public:
     Z,
     NONE
   };
-
-  /**
-   * @brief all the possible module types
-   *
-   */
-  enum ModuleType { GRAPHIC, GAME, CORE };
 
   /**
    * @brief all the possible library names

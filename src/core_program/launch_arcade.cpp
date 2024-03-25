@@ -18,9 +18,11 @@ int launch_arcade(char const *const lib_path)
 {
     arcade::CoreModule core;
 
+    core.getLib("./lib/");
     core.loadLib(lib_path);
     if (core.getGraphicModule() == nullptr)
         return 84;
-    core.getGraphicModule()->display();
+    while (core.getCoreStatus() != arcade::CoreModule::CoreStatus::EXIT)
+        core.getGraphicModule()->display();
     return 0;
 }

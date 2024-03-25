@@ -5,12 +5,15 @@
 ** AGameModule
 */
 
+
 #ifndef AGAMEMODULE_HPP_
 #define AGAMEMODULE_HPP_
 
 #include "IModule.hpp"
+#include "CoreModule.hpp"
 
 namespace arcade {
+  class CoreModule;
 class AGameModule : virtual public arcade::IModule {
 public:
   enum GameStatus { RUNNING, PAUSED, GAMEOVER, WIN };
@@ -28,10 +31,12 @@ public:
   void sendInput(arcade::IModule::KeyboardInput input);
   arcade::IModule::GameData sendGameData();
 
+  void setCoreModule(arcade::CoreModule *coreModule);
+  arcade::CoreModule *getCoreModule() const;
+
 protected:
-  arcade::IModule::GameData _gameData;
-  arcade::IModule::KeyboardInput _input;
   GameStatus _gameStatus;
+  arcade::CoreModule *_coreModule;
 };
 }; // namespace arcade
 

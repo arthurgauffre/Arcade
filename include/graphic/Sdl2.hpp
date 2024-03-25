@@ -13,16 +13,18 @@
 #include <SDL2/SDL_ttf.h>
 
 namespace arcade {
-class Sdl2 : virtual public arcade::ADisplayModule {
+class Sdl2: virtual public arcade::ADisplayModule {
 public:
   Sdl2();
   ~Sdl2();
   void init();
   void stop();
   void display();
+  void displayMenu();
+  void displayGame();
   arcade::IModule::LibName getName() const;
 
-    SDL_Renderer *renderer;
+  SDL_Renderer *renderer;
 protected:
 private:
 };
