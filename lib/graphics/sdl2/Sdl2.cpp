@@ -42,7 +42,7 @@ void arcade::Sdl2::displayMenu()
             if (i == this->getCoreModule()->getMenuData().indexGame) {
                 menuText += "-> " + this->getCoreModule()->getMenuData()._gameLibList[i] + "\n";
             } else {
-                menuText += "   " + this->getCoreModule()->getMenuData()._graphicLibList[i] + "\n";
+                menuText += "   " + this->getCoreModule()->getMenuData()._gameLibList[i] + "\n";
             }
         }
         menuText += "\nLegend:\n";

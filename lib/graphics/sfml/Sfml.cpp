@@ -112,7 +112,7 @@ void arcade::Sfml::displayGame()
             if (event.type == sf::Event::Closed) {
                 this->_window = window;
                 this->getCoreModule()->handleKeyEvent(arcade::IModule::KeyboardInput::CROSS);
-                break;
+                return;
             }
         }
 
