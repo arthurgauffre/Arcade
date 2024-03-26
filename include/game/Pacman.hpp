@@ -15,7 +15,7 @@ class Pacman : virtual public arcade::AGameModule {
 public:
   Pacman();
   ~Pacman();
-  void init(){};
+  void init();
   void stop(){};
   arcade::IModule::LibName getName() const;
 

@@ -30,7 +30,7 @@ void arcade::Sdl2::displayMenu()
     // Function to update menu text based on selected items
     auto updateMenuText = [&]() {
         std::string menuText = "Select Graphical Library:\n";
-        for (size_t i = 0; i < 3; ++i) {
+        for (size_t i = 0; i < this->getCoreModule()->getMenuData()._graphicLibList.size(); i += 1) {
             if (i == this->getCoreModule()->getMenuData().indexGraphic) {
                 menuText += "-> " + this->getCoreModule()->getMenuData()._graphicLibList[i] + "\n";
             } else {
@@ -38,7 +38,7 @@ void arcade::Sdl2::displayMenu()
             }
         }
         menuText += "\nSelect Game:\n";
-        for (size_t i = 0; i < 2; ++i) {
+        for (size_t i = 0; i < this->getCoreModule()->getMenuData()._gameLibList.size(); i += 1) {
             if (i == this->getCoreModule()->getMenuData().indexGame) {
                 menuText += "-> " + this->getCoreModule()->getMenuData()._gameLibList[i] + "\n";
             } else {
@@ -85,7 +85,9 @@ void arcade::Sdl2::displayMenu()
         SDL_Event event;
         if (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
-                break;
+                this->getCoreModule()->handleKeyEvent(arcade::IModule::KeyboardInput::CROSS);
+                TTF_CloseFont(font);
+                return;
             }
             if (event.type == SDL_KEYDOWN) {
                 switch (event.key.keysym.sym) {
@@ -133,9 +135,18 @@ void arcade::Sdl2::displayGame()
     SDL_SetRenderDrawColor(renderer, 30, 30, 30, 255); // Dark gray background
     SDL_RenderClear(renderer);
 
+    // Load the sprite
+    SDL_Surface* yourSpriteSurface = IMG_Load("assets/default/npc/npc1.png"); // Use IMG_Load for PNG files
+
+    // Check if the sprite was loaded successfully
+    if (yourSpriteSurface == nullptr) {
+        // Handle error
+        std::cerr << "Failed to load sprite: " << SDL_GetError() << std::endl;
+        return;
+    }
+
     // Get the game data
     arcade::IModule::GameData gameData = this->getCoreModule()->getGameData();
-
     // Draw the game
     for (int y = 0; y < gameData.display_info.size(); y++) {
         for (int x = 0; x < gameData.display_info[y].size(); x++) {
@@ -144,6 +155,19 @@ void arcade::Sdl2::displayGame()
             SDL_RenderFillRect(renderer, &rect);
         }
     }
+
+    // Render the sprite in the middle of the window
+    SDL_Texture* spriteTexture = SDL_CreateTextureFromSurface(renderer, yourSpriteSurface);
+    if (spriteTexture == nullptr) {
+        // Handle error
+        std::cerr << "Failed to create texture from surface: " << SDL_GetError() << std::endl;
+        SDL_FreeSurface(yourSpriteSurface);
+        return;
+    }
+    SDL_Rect spriteRect = {1920 / 2 - 32 / 2, 1080 / 2 - 32 / 2, 32, 32};
+    SDL_RenderCopy(renderer, spriteTexture, nullptr, &spriteRect);
+    SDL_DestroyTexture(spriteTexture);
+    SDL_FreeSurface(yourSpriteSurface);
 
     while (1) {
         SDL_Event event;
@@ -158,6 +182,7 @@ void arcade::Sdl2::displayGame()
     // Update the screen
     SDL_RenderPresent(renderer);
 }
+
 
 /**
  * @brief display information on the window
@@ -183,8 +208,15 @@ void arcade::Sdl2::display()
  */
 void arcade::Sdl2::init()
 {
+    // Initialize SDL_ttf
     if (TTF_Init() < 0) {
         std::cerr << "Failed to initialize SDL_ttf: " << TTF_GetError() << std::endl;
+        return;
+    }
+
+    // Initialize SDL_image
+    if (IMG_Init(IMG_INIT_PNG) < 0) {
+        std::cerr << "Failed to initialize SDL_image: " << IMG_GetError() << std::endl;
         return;
     }
 

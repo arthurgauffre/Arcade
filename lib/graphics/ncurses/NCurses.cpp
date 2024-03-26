@@ -33,7 +33,7 @@ void arcade::NCurses::displayMenu()
         // Print graphical library options
         attron(COLOR_PAIR(1));
         printw("Select Graphical Library:\n");
-        for (size_t i = 0; i < 3; ++i) {
+        for (size_t i = 0; i < this->getCoreModule()->getMenuData()._graphicLibList.size(); i += 1) {
             if (i == this->getCoreModule()->getMenuData().indexGraphic) {
                 attron(COLOR_PAIR(2));
                 printw("-> ");
@@ -47,7 +47,7 @@ void arcade::NCurses::displayMenu()
         // Print game options
         attron(COLOR_PAIR(1));
         printw("\nSelect Game:\n");
-        for (size_t i = 0; i < 2; ++i) {
+        for (size_t i = 0; i < this->getCoreModule()->getMenuData()._gameLibList.size(); i += 1) {
             if (i == this->getCoreModule()->getMenuData().indexGame) {
                 attron(COLOR_PAIR(2));
                 printw("-> ");
@@ -84,7 +84,8 @@ void arcade::NCurses::displayMenu()
 
         // Check for exit condition
         if (ch == 'q' || ch == 'Q')
-            break;
+            this->getCoreModule()->handleKeyEvent(arcade::IModule::KeyboardInput::ENTER);
+            return;
     }
 
     // Clean up NCurses

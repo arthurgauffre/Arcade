@@ -216,8 +216,8 @@ void arcade::CoreModule::loadLib(std::string pathLib)
       delete (this->_gameModule);
     }
     this->_gameModule = dynamic_cast<arcade::AGameModule *>(module);
-    this->_gameModule->init();
     this->_gameModule->setCoreModule(this);
+    this->_gameModule->init();
   }
   else if (module->getType() == arcade::IModule::ModuleType::GRAPHIC)
   {
@@ -227,8 +227,8 @@ void arcade::CoreModule::loadLib(std::string pathLib)
       delete (this->_graphicModule);
     }
     this->_graphicModule = dynamic_cast<arcade::ADisplayModule *>(module);
-    this->_graphicModule->init();
     this->_graphicModule->setCoreModule(this);
+    this->_graphicModule->init();
   }
   else
   {
@@ -272,6 +272,9 @@ void arcade::CoreModule::handleKeySelection(arcade::IModule::KeyboardInput key)
         this->_menuData._type = arcade::IModule::ModuleType::GAME;
       else
         this->_menuData._type = arcade::IModule::ModuleType::GRAPHIC;
+      break;
+    case arcade::IModule::KeyboardInput::CROSS:
+      this->_coreStatus = CoreStatus::EXIT;
       break;
   }
 }
@@ -323,4 +326,14 @@ arcade::IModule::MenuData arcade::CoreModule::getMenuData() const
 arcade::IModule::GameData arcade::CoreModule::getGameData() const
 {
   return this->_gameData;
+}
+
+/**
+ * @brief set the game data
+ *
+ * @param gameData game data to set
+ */
+void arcade::CoreModule::setGameData(arcade::IModule::GameData gameData)
+{
+  this->_gameData = gameData;
 }

@@ -43,6 +43,8 @@ public:
   arcade::IModule::MenuData getMenuData() const;
   arcade::IModule::GameData getGameData() const;
 
+  void setGameData(arcade::IModule::GameData gameData);
+
 protected:
   CoreStatus _coreStatus;
   arcade::ADisplayModule *_graphicModule;

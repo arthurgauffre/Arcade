@@ -53,7 +53,8 @@ void arcade::Sfml::displayMenu()
         sf::Event event;
         while (window->pollEvent(event)) {
             if (event.type == sf::Event::Closed) {
-                window->close();
+                this->getCoreModule()->handleKeyEvent(arcade::IModule::KeyboardInput::CROSS);
+                return;
             }
             if (event.type == sf::Event::KeyPressed) {
                 switch (event.key.code) {
@@ -76,7 +77,7 @@ void arcade::Sfml::displayMenu()
 
         // Update text
         std::string menuText = "Select Graphical Library:\n";
-        for (size_t i = 0; i < 3; ++i) {
+        for (size_t i = 0; i < this->getCoreModule()->getMenuData()._graphicLibList.size(); i += 1) {
             if (i == this->getCoreModule()->getMenuData().indexGraphic) {
                 menuText += "-> " + this->getCoreModule()->getMenuData()._graphicLibList[i] + "\n";
             } else {
@@ -84,7 +85,7 @@ void arcade::Sfml::displayMenu()
             }
         }
         menuText += "\nSelect Game:\n";
-        for (size_t i = 0; i < 2; ++i) {
+        for (size_t i = 0; i < this->getCoreModule()->getMenuData()._gameLibList.size(); i += 1) {
             if (i == this->getCoreModule()->getMenuData().indexGame) {
                 menuText += "-> " + this->getCoreModule()->getMenuData()._gameLibList[i] + "\n";
             } else {
