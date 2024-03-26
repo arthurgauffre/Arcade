@@ -105,21 +105,55 @@ void arcade::Sfml::displayMenu()
 void arcade::Sfml::displayGame()
 {
     sf::RenderWindow *window = static_cast<sf::RenderWindow *>(this->_window);
+    if (window == nullptr) {
+        throw std::exception();
+    }
+    // Clear the window
+    window->clear(sf::Color(30, 30, 30)); // Dark gray background
 
-    // Render the menu
-    while (window->isOpen()) {
-        sf::Event event;
-        while (window->pollEvent(event)) {
-            if (event.type == sf::Event::Closed) {
-                this->_window = window;
-                this->getCoreModule()->handleKeyEvent(arcade::IModule::KeyboardInput::CROSS);
-                return;
-            }
+    // Load the textures
+    std::map<int, sf::Texture> textures;
+    for (auto& sprite : this->getCoreModule()->getGameData().sprite_value) {
+        sf::Texture texture;
+        if (!texture.loadFromFile(sprite.second)) {
+            // Handle error
+            std::cerr << "Failed to load texture: " << sprite.second << std::endl;
+            continue;
         }
+        textures[sprite.first] = std::move(texture);
+    }
 
-        // Draw
-        window->clear(sf::Color::Black);
-        window->display();
+    // Render the sprites in the middle of the window
+    int x = 1920 / 2 - 30 * this->getCoreModule()->getGameData().display_info[0].size() / 2;
+    int y = 1080 / 2 - 30 * this->getCoreModule()->getGameData().display_info.size() / 2;
+    
+    for (size_t i = 0; i < this->getCoreModule()->getGameData().display_info.size(); i++) {
+        for (size_t j = 0; j < this->getCoreModule()->getGameData().display_info[i].size(); j++) {
+            sf::Sprite sprite;
+            sprite.setTexture(textures[this->getCoreModule()->getGameData().display_info[i][j]]);
+            sprite.setPosition(x + j * 30, y + i * 30);
+
+            // Calculate the scale factors
+            float scaleX = 30.0f / textures[this->getCoreModule()->getGameData().display_info[i][j]].getSize().x;
+            float scaleY = 30.0f / textures[this->getCoreModule()->getGameData().display_info[i][j]].getSize().y;
+
+            // Set the scale factors
+            sprite.setScale(scaleX, scaleY);
+            
+            window->draw(sprite);
+        }
+    }
+
+    // Display the window
+    window->display();
+
+    // Handle events
+    sf::Event event;
+    while (window->pollEvent(event)) {
+        if (event.type == sf::Event::Closed) {
+            this->getCoreModule()->handleKeyEvent(arcade::IModule::KeyboardInput::CROSS);
+            window->close();
+        }
     }
 }
 

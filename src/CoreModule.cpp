@@ -221,8 +221,7 @@ void arcade::CoreModule::loadLib(std::string pathLib)
   }
   else if (module->getType() == arcade::IModule::ModuleType::GRAPHIC)
   {
-    if (this->_gameModule != nullptr)
-    {
+    if (this->_gameModule != nullptr) {
       this->_graphicModule->stop();
       delete (this->_graphicModule);
     }

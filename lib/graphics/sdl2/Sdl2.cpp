@@ -136,39 +136,25 @@ void arcade::Sdl2::displayGame()
     SDL_RenderClear(renderer);
 
     // Load the sprite
-    SDL_Surface* yourSpriteSurface = IMG_Load("assets/default/npc/npc1.png"); // Use IMG_Load for PNG files
-
-    // Check if the sprite was loaded successfully
-    if (yourSpriteSurface == nullptr) {
-        // Handle error
-        std::cerr << "Failed to load sprite: " << SDL_GetError() << std::endl;
-        return;
-    }
-
-    // Get the game data
-    arcade::IModule::GameData gameData = this->getCoreModule()->getGameData();
-    // Draw the game
-    for (int y = 0; y < gameData.display_info.size(); y++) {
-        for (int x = 0; x < gameData.display_info[y].size(); x++) {
-            SDL_Rect rect = {x * 20, y * 20, 20, 20};
-            SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); // White color
-            SDL_RenderFillRect(renderer, &rect);
-        }
-    }
+    std::map<int, SDL_Surface*> spriteSurfaces;
+    for (std::pair<int, std::string> sprite : this->getCoreModule()->getGameData().sprite_value)
+        spriteSurfaces[sprite.first] = IMG_Load(sprite.second.c_str());
 
     // Render the sprite in the middle of the window
-    SDL_Texture* spriteTexture = SDL_CreateTextureFromSurface(renderer, yourSpriteSurface);
-    if (spriteTexture == nullptr) {
-        // Handle error
-        std::cerr << "Failed to create texture from surface: " << SDL_GetError() << std::endl;
-        SDL_FreeSurface(yourSpriteSurface);
-        return;
-    }
-    SDL_Rect spriteRect = {1920 / 2 - 32 / 2, 1080 / 2 - 32 / 2, 32, 32};
-    SDL_RenderCopy(renderer, spriteTexture, nullptr, &spriteRect);
-    SDL_DestroyTexture(spriteTexture);
-    SDL_FreeSurface(yourSpriteSurface);
+    SDL_Texture* spriteTexture = nullptr;
+    SDL_Rect spriteRect;
 
+    // Update the screen
+    int x = 1920 / 2 - 30 * this->getCoreModule()->getGameData().display_info.size() / 2;
+    int y = 1080 / 2 - 30 * this->getCoreModule()->getGameData().display_info[0].size() / 2;
+    for (int i = 0; i < this->getCoreModule()->getGameData().display_info.size(); i++) {
+        for (int j = 0; j < this->getCoreModule()->getGameData().display_info[i].size(); j++) {
+            spriteTexture = SDL_CreateTextureFromSurface(renderer, spriteSurfaces[this->getCoreModule()->getGameData().display_info[i][j]]);
+            spriteRect = {x + j * 30, y + i * 30, 30, 30};
+            SDL_RenderCopy(renderer, spriteTexture, nullptr, &spriteRect);
+        }
+    }
+    SDL_RenderPresent(renderer);
     while (1) {
         SDL_Event event;
         if (SDL_PollEvent(&event)) {
@@ -178,11 +164,10 @@ void arcade::Sdl2::displayGame()
             }
         }
     }
-
-    // Update the screen
-    SDL_RenderPresent(renderer);
+    SDL_DestroyTexture(spriteTexture);
+    for (std::pair<int, std::string> sprite : this->getCoreModule()->getGameData().sprite_value)
+        SDL_FreeSurface(spriteSurfaces[sprite.first]);
 }
-
 
 /**
  * @brief display information on the window

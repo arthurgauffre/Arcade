@@ -25,44 +25,41 @@ arcade::Pacman::~Pacman() {}
  */
 void arcade::Pacman::init()
 {
-    // // Initialize the game
-    // arcade::IModule::GameData data;
-    // // Define the sprite values for walls, coins, Pacman, and coins that allow Pacman to eat ghosts
-    // data.sprite_value['W'] = "assets/default/map/map1.png";  // Wall
-    // data.sprite_value['M'] = "assets/default/item/map5.png";  // Coin
-    // data.sprite_value['C'] = "assets/default/item/item3.png";  // Coin
-    // data.sprite_value['P'] = "assets/default/npc/npc1.png";  // Pacman
-    // data.sprite_value['G'] = "assets/default/npc/npc2.png";  // Ghost
+  // Initialize the game
+  arcade::IModule::GameData data;
+  // Define the sprite values for walls, coins, Pacman, and coins that allow Pacman to eat ghosts
+  data.sprite_value['W'] = "assets/default/map/map1.png";  // Wall
+  data.sprite_value['M'] = "assets/default/map/map5.png";  // Map
+  data.sprite_value['C'] = "assets/default/item/item3.png";  // Coin
+  data.sprite_value['P'] = "assets/default/npc/npc1.png";  // Pacman
 
-    // // Define the map
-    // std::vector<std::vector<int>> pacmanMap = {
-    //     {'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W'},
-    //     {'W', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'W'},
-    //     {'W', 'C', 'W', 'C', 'W', 'C', 'W', 'C', 'W', 'C', 'W', 'C', 'W', 'C', 'W', 'C', 'W'},
-    //     {'W', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'W'},
-    //     {'W', 'C', 'W', 'C', 'W', 'C', 'W', 'W', 'W', 'W', 'W', 'C', 'W', 'C', 'W', 'C', 'W'},
-    //     {'W', 'C', 'C', 'C', 'C', 'C', 'C', 'W', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'W'},
-    //     {'W', 'W', 'W', 'W', 'W', 'W', 'C', 'W', 'W', 'W', 'C', 'W', 'W', 'W', 'W', 'W', 'W'},
-    //     {'W', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'W'},
-    //     {'W', 'C', 'W', 'C', 'W', 'C', 'W', 'C', 'W', 'C', 'W', 'C', 'W', 'C', 'W', 'C', 'W'},
-    //     {'W', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'W'},
-    //     {'W', 'C', 'W', 'W', 'W', 'C', 'W', 'C', 'W', 'C', 'W', 'W', 'W', 'C', 'W', 'C', 'W'},
-    //     {'W', 'C', 'C', 'C', 'W', 'C', 'C', 'C', 'C', 'C', 'C', 'W', 'C', 'C', 'C', 'C', 'W'},
-    //     {'W', 'C', 'W', 'C', 'C', 'C', 'W', 'C', 'W', 'C', 'W', 'C', 'C', 'C', 'W', 'C', 'W'},
-    //     {'W', 'C', 'C', 'C', 'C', 'C', 'W', 'C', 'C', 'C', 'W', 'C', 'C', 'C', 'C', 'C', 'W'},
-    //     {'W', 'C', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'C', 'W'},
-    //     {'W', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'W'},
-    //     {'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W'}
-    // };
+  // Define the map
+  data.display_info = {
+      {'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W'},
+      {'W', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'W'},
+      {'W', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'C', 'M', 'W'},
+      {'W', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'W'},
+      {'W', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'W'},
+      {'W', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'W'},
+      {'W', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'W'},
+      {'W', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'W'},
+      {'W', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'W'},
+      {'W', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'W'},
+      {'W', 'M', 'M', 'M', 'M', 'M', 'M', 'P', 'P', 'P', 'P', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'W'},
+      {'W', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'W'},
+      {'W', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'W'},
+      {'W', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'W'},
+      {'W', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'W'},
+      {'W', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'W'},
+      {'W', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'W'},
+      {'W', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'W'},
+      {'W', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'W'},
+      {'W', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'W'},
+      {'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W'}
+  };
 
-    // // Copy the map to the display_info map
-    // for (size_t i = 0; i < pacmanMap.size(); i += 1) {
-    //     for (size_t j = 0; j < pacmanMap[i].size(); ++j) {
-    //         data.display_info[i][j] = pacmanMap[i][j];
-    //     }
-    // }
-
-    return;
+  this->getCoreModule()->setGameData(data);
+  return;
 }
 
 /**

@@ -92,39 +92,54 @@ void arcade::NCurses::displayMenu()
     endwin();
 }
 
-void arcade::NCurses::displayGame()
-{
-  // Initialize NCurses
+void arcade::NCurses::displayGame() {
+    // Initialize ncurses
     initscr();
     cbreak();
     noecho();
     keypad(stdscr, TRUE);
 
-    // Initialize colors if supported
-    if (has_colors()) {
-        start_color();
-        init_pair(1, COLOR_WHITE, COLOR_BLACK);
-        init_pair(2, COLOR_BLACK, COLOR_WHITE);
-    }
+    // Clear the screen
+    clear();
 
-    // Render the menu
+    // Get the game data
+    arcade::IModule::GameData gameData = this->getCoreModule()->getGameData();
+
+    // Calculate the starting coordinates to print the map in the middle
+    int startY = (LINES - gameData.display_info.size()) / 2;
+    int startX = (COLS - gameData.display_info[0].size()) / 2;
+
     while (1) {
-        clear();
+        // Render the game
+        for (int y = 0; y < gameData.display_info.size(); y++) {
+            for (int x = 0; x < gameData.display_info[y].size(); x++) {
+                // Get the symbol corresponding to the current cell
+                char symbol = gameData.display_info[y][x];
+                // Print the symbol at the appropriate position
+                mvprintw(startY + y, startX + x, "%c", symbol);
+            }
+        }
 
-        // Refresh the screen
+        // Refresh the screen to display changes
         refresh();
 
-        // Handle user input
+        // Handle input
         int ch = getch();
-        // Check for exit condition
-
-        if (ch == 'q' || ch == 'Q') {
+        if (ch == KEY_LEFT) {
+            // Handle left arrow key
+        } else if (ch == KEY_RIGHT) {
+            // Handle right arrow key
+        } else if (ch == KEY_UP) {
+            // Handle up arrow key
+        } else if (ch == KEY_DOWN) {
+            // Handle down arrow key
+        } else if (ch == 'q') {
             this->getCoreModule()->handleKeyEvent(arcade::IModule::KeyboardInput::CROSS);
             break;
         }
     }
 
-    // Clean up NCurses
+    // Clean up ncurses
     endwin();
 }
 
