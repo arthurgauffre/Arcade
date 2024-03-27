@@ -9,41 +9,32 @@
 #ifndef ADISPLAYMODULE_HPP_
 #define ADISPLAYMODULE_HPP_
 
-#include "IModule.hpp"
-#include "CoreModule.hpp"
+#include "IDisplayModule.hpp"
 
 namespace arcade {
   class CoreModule;
-class ADisplayModule : virtual public arcade::IModule {
+class ADisplayModule : virtual public arcade::IDisplayModule {
 public:
-  enum DisplayStatus { RUNNING, PAUSED, SELECTION, GAMEOVER, WIN };
   ADisplayModule();
   ~ADisplayModule();
-  virtual void init() = 0;
-  virtual void stop() = 0;
 
-  void display();
-  virtual void displayMenu() = 0;
-  virtual void displayGame() = 0;
   void setDisplayStatus(DisplayStatus status);
   DisplayStatus getDisplayStatus() const;
 
-  virtual arcade::IModule::LibName getName() const = 0;
-  arcade::IModule::ModuleType getType() const;
-
-  arcade::IModule::KeyboardInput getInput() const;
-  void sendGameData(arcade::IModule::GameData data);
-  void sendMenuData(arcade::IModule::MenuData data);
+  void sendGameData(arcade::GameData data);
+  void sendMenuData(arcade::MenuData data);
 
   void setCoreModule(arcade::CoreModule *coreModule);
   arcade::CoreModule *getCoreModule() const;
 
+  virtual void clearWindow() = 0;
+  virtual void displayWindow() = 0;
+  virtual arcade::KeyboardInput getInput() = 0;
+  virtual void drawSprite(const std::string path, int x, int y, int width, int height) = 0;
+  virtual void drawText(const std::string text, int x, int y, int size) = 0;
+
 protected:
-  void *_window;
-  void *_texture;
-  void *_event;
-  void *_font;
-  arcade::IModule::KeyboardInput _input;
+  arcade::KeyboardInput _input;
   DisplayStatus _displayStatus;
   arcade::CoreModule *_coreModule;
 };

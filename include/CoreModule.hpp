@@ -5,53 +5,47 @@
 ** CoreModule
 */
 
-
 #ifndef COREMODULE_HPP_
 #define COREMODULE_HPP_
 
-#include "IModule.hpp"
-#include "ADisplayModule.hpp"
-#include "AGameModule.hpp"
-#include "DLLoader.hpp"
-#include <dirent.h>
-#include <iostream>
+#include "ICoreModule.hpp"
 
-namespace arcade {
-  class ADisplayModule;
-  class AGameModule;
-class CoreModule : virtual public arcade::IModule {
-public:
-  CoreModule();
-  ~CoreModule();
-  void init();
-  void stop();
-  LibName getName() const;
-  ModuleType getType() const;
-  enum CoreStatus { RUNNING, SELECTION, EXIT };
-  void setCoreStatus(CoreStatus status);
-  CoreStatus getCoreStatus() const;
-  ADisplayModule *getGraphicModule();
-  AGameModule *getGameModule();
-  void setModule(arcade::IModule *module, arcade::IModule::ModuleType type);
-  void getLib(std::string pathLib);
-  void loadLib(std::string pathLib);
-  void addLibList(std::string pathLib);
-  void handleKeyEvent(arcade::IModule::KeyboardInput key);
-  void handleKeySelection(arcade::IModule::KeyboardInput key);
-  void handleKeyRunning(arcade::IModule::KeyboardInput key);
+namespace arcade
+{
+  class CoreModule: virtual public ICoreModule
+  {
+  public:
+    CoreModule();
+    ~CoreModule();
 
-  arcade::IModule::MenuData getMenuData() const;
-  arcade::IModule::GameData getGameData() const;
+    void setCoreStatus(CoreStatus status);
+    CoreStatus getCoreStatus() const;
 
-  void setGameData(arcade::IModule::GameData gameData);
+    arcade::IDisplayModule *getGraphicModule();
+    arcade::IGameModule *getGameModule();
 
-protected:
-  CoreStatus _coreStatus;
-  arcade::ADisplayModule *_graphicModule;
-  arcade::AGameModule *_gameModule;
-  arcade::IModule::MenuData _menuData;
-  arcade::IModule::GameData _gameData;
-};
+    void setGraphicModule(std::unique_ptr<arcade::IDisplayModule> module);
+    void setGameModule(std::unique_ptr<arcade::IGameModule> module);
+
+    void getLib(std::string pathLib);
+    void loadLib(std::string pathLib);
+    void addLibList(std::string pathLib);
+
+    void handleKeyEvent(arcade::KeyboardInput key);
+    void handleKeySelection(arcade::KeyboardInput key);
+    void handleKeyRunning(arcade::KeyboardInput key);
+
+    arcade::MenuData getMenuData() const;
+
+    void setGameData(arcade::GameData gameData);
+    arcade::GameData getGameData() const;
+
+    int coreLoop();
+    void runningLoop();
+    void updateRunning();
+    void selectionLoop();
+    void updateSelection();
+  };
 }; // namespace arcade
 
 #endif /* !COREMODULE_HPP_ */

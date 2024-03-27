@@ -16,9 +16,7 @@ public:
   Pacman();
   ~Pacman();
   void init();
-  void stop(){};
   void updateGame();
-  arcade::IModule::LibName getName() const;
 
 protected:
 private:

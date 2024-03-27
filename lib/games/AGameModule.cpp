@@ -11,7 +11,7 @@
  * @brief Construct a new arcade::A Game Module::A Game Module object
  *
  */
-arcade::AGameModule::AGameModule() : arcade::IModule()
+arcade::AGameModule::AGameModule()
 {
   this->_gameStatus = GameStatus::RUNNING;
 }
@@ -38,34 +38,23 @@ arcade::AGameModule::GameStatus arcade::AGameModule::getDisplayStatus() const
 }
 
 /**
- * @brief get the name of the game library
- *
- * @return const arcade::IModule::ModuleType
- */
-arcade::IModule::ModuleType arcade::AGameModule::getType() const
-{
-  return arcade::IModule::ModuleType::GAME;
-}
-
-/**
  * @brief receive input from the graphic module
  *
  * @param input KeyboardInput
  */
-void arcade::AGameModule::sendInput(arcade::IModule::KeyboardInput input)
+void arcade::AGameModule::sendInput(arcade::KeyboardInput input)
 {
   return;
 }
 
-
 /**
  * @brief send the game data to the graphic module
  *
- * @return arcade::IModule::GameData
+ * @return arcade::GameData
  */
-arcade::IModule::GameData arcade::AGameModule::sendGameData()
+arcade::GameData arcade::AGameModule::sendGameData()
 {
-  return arcade::IModule::GameData();
+  return arcade::GameData();
 }
 
 /**
@@ -122,7 +111,7 @@ arcade::AGameModule::timer arcade::AGameModule::getTimer() const
  *
  * @param direction
  */
-void arcade::AGameModule::setDirection(arcade::IModule::KeyboardInput direction)
+void arcade::AGameModule::setDirection(arcade::KeyboardInput direction)
 {
   this->_direction = direction;
 }
@@ -130,9 +119,9 @@ void arcade::AGameModule::setDirection(arcade::IModule::KeyboardInput direction)
 /**
  * @brief get the direction of the game
  *
- * @return arcade::IModule::KeyboardInput
+ * @return arcade::KeyboardInput
  */
-arcade::IModule::KeyboardInput arcade::AGameModule::getDirection() const
+arcade::KeyboardInput arcade::AGameModule::getDirection() const
 {
   return this->_direction;
 }

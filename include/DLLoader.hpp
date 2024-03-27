@@ -1,5 +1,17 @@
+/*
+** EPITECH PROJECT, 2024
+** Arcade
+** File description:
+** DLLoader
+*/
+
+#ifndef DLLOADER_HPP_
+#define DLLOADER_HPP_
+
 #include <dlfcn.h>
 #include <iostream>
+#include <memory>
+#include "Arcade.hpp"
 
 template <typename T>
 class DLLoader {
@@ -22,13 +34,15 @@ public:
       dlclose(handle);
   }
 
-  T *getInstance(const std::string &funcName)
+  T getInstance(const std::string &funcName)
   {
     void *sym = dlsym(handle, funcName.c_str());
     if (!sym) {
       std::cerr << dlerror() << std::endl;
       exit(1);
     }
-    return reinterpret_cast<T *(*)()>(sym)();
+    return reinterpret_cast<T (*)()>(sym)();
   }
 };
+
+#endif /* !DLLOADER_HPP_ */

@@ -16,14 +16,14 @@ class NCurses : virtual public arcade::ADisplayModule {
 public:
   NCurses();
   ~NCurses();
-  void init();
-  void stop();
-  void displayMenu();
-  void displayGame();
-  arcade::IModule::LibName getName() const;
+  void clearWindow();
+  arcade::KeyboardInput getInput();
+  void displayWindow();
+  void drawSprite(const std::string path, int x, int y, int width, int height);
+  void drawText(const std::string text, int x, int y, int size);
 
 protected:
-private:
+  WINDOW *_window;
 };
 }; // namespace arcade
 

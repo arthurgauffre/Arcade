@@ -18,14 +18,15 @@ class Sdl2: virtual public arcade::ADisplayModule {
 public:
   Sdl2();
   ~Sdl2();
-  void init();
-  void stop();
-  void displayMenu();
-  void displayGame();
-  arcade::IModule::LibName getName() const;
+  void clearWindow();
+  void displayWindow();
+  arcade::KeyboardInput getInput();
+  void drawText(const std::string text, int x, int y, int size);
+  void drawSprite(const std::string path, int x, int y, int width, int height);
 
-  SDL_Renderer *renderer;
 protected:
+  SDL_Renderer *_renderer;
+  SDL_Window *_window;
 private:
 };
 }; // namespace arcade

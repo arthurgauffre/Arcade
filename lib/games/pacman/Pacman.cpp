@@ -11,22 +11,12 @@
  * @brief Construct a new arcade::Pacman::Pacman object
  * 
  */
-arcade::Pacman::Pacman() : arcade::IModule(), arcade::AGameModule() {}
+arcade::Pacman::Pacman() : arcade::AGameModule() {}
 
-/**
- * @brief Destroy the arcade::Pacman::Pacman object
- * 
- */
-arcade::Pacman::~Pacman() {}
-
-/**
- * @brief initialize the game
- * 
- */
 void arcade::Pacman::init()
 {
   // Initialize the game
-  arcade::IModule::GameData data;
+  arcade::GameData data;
   // Define the sprite values for walls, coins, Pacman, and coins that allow Pacman to eat ghosts
   data.sprite_value['W'] = "assets/default/map/map1.png";  // Wall
   data.sprite_value['M'] = "assets/default/map/map5.png";  // Map
@@ -63,20 +53,10 @@ void arcade::Pacman::init()
 }
 
 /**
- * @brief stop the game
+ * @brief Destroy the arcade::Pacman::Pacman object
  * 
  */
-void stop() { return; }
-
-/**
- * @brief return the name of the game
- * 
- * @return const arcade::IModule::LibName
- */
-arcade::IModule::LibName arcade::Pacman::getName() const
-{
-  return arcade::IModule::LibName::PACMAN;
-}
+arcade::Pacman::~Pacman() {}
 
 /**
  * @brief update the game
@@ -91,4 +71,17 @@ void arcade::Pacman::updateGame()
  * @brief generate entry point for the game library
  * 
  */
-extern "C" arcade::Pacman *entryPoint() { return new arcade::Pacman(); }
+extern "C" std::unique_ptr<arcade::IGameModule> entryPoint()
+{
+  return std::make_unique<arcade::Pacman>();
+}
+
+extern "C" arcade::ModuleType getType()
+{
+  return arcade::ModuleType::GAME;
+}
+
+extern "C" std::string getName()
+{
+  return "snake";
+}

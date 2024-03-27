@@ -17,17 +17,15 @@ public:
   Sfml();
   ~Sfml();
 
-  arcade::IModule::KeyboardInput getInput();
-  void init();
-  void stop();
-  void displayMenu();
-  void displayGame();
-  arcade::IModule::LibName getName() const;
+  void clearWindow();
+  void displayWindow();
+  arcade::KeyboardInput getInput();
+  void drawSprite(const std::string path, int x, int y, int width, int height);
+  void drawText(const std::string text, int x, int y, int size);
 
 protected:
-private:
+  sf::RenderWindow *_window;
   sf::Texture _texture;
-  sf::Font _font;
 };
 }; // namespace arcade
 

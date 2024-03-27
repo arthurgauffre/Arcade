@@ -11,70 +11,52 @@
  * @brief Construct a new arcade::Core Module::Core Module object
  *
  */
-arcade::CoreModule::CoreModule() : arcade::IModule()
+arcade::CoreModule::CoreModule() : arcade::ICoreModule()
 {
   this->_coreStatus = CoreStatus::SELECTION;
   this->_gameModule = nullptr;
   this->_graphicModule = nullptr;
   this->_menuData._description = "\nLegend:\nPress UP/DOWN to navigate\n\
-  Press ENTER to confirm the choice\n\
-  Press TAB to switch between Graphical Library and Game selection";
+Press ENTER to confirm the choice\n\
+Press TAB to switch between Graphical Library and Game selection";
   this->_menuData.indexGame = 0;
   this->_menuData.indexGraphic = 0;
-  this->_menuData._type = arcade::IModule::ModuleType::GRAPHIC;
+  this->_menuData._type = arcade::ModuleType::GRAPHIC;
 }
 
 /**
  * @brief Destroy the arcade::Core Module::Core Module object
  *
  */
-arcade::CoreModule::~CoreModule() { this->stop(); }
+arcade::CoreModule::~CoreModule() {}
 
 /**
- * @brief load the libraries in the given path
+ * @brief set graphic or game module to the core module
  *
- * @param pathLib path to the libraries
+ * @param module to set
+ * @param type of the module (graphic or game)
  */
-void arcade::CoreModule::init() {}
 
-/**
- * @brief stop the core module
- *
- */
-void arcade::CoreModule::stop()
+void arcade::CoreModule::setGraphicModule(
+    std::unique_ptr<arcade::IDisplayModule> module)
 {
-  if (this->_gameModule != nullptr)
-  {
-    this->_gameModule->stop();
-    delete (this->_gameModule);
-    this->_gameModule = nullptr;
-  }
-  if (this->_gameModule != nullptr)
-  {
-    this->_graphicModule->stop();
-    delete (this->_graphicModule);
-    this->_graphicModule = nullptr;
-  }
+  this->_graphicModule = module.release();
+}
+
+void arcade::CoreModule::setGameModule(
+    std::unique_ptr<arcade::IGameModule> module)
+{
+  this->_gameModule = module.release();
 }
 
 /**
- * @brief get the name of the library
+ * @brief set the game data
  *
- * @return arcade::IModule::LibName
+ * @param gameData game data to set
  */
-arcade::IModule::LibName arcade::CoreModule::getName() const
+void arcade::CoreModule::setGameData(arcade::GameData gameData)
 {
-  return arcade::IModule::LibName::UNKNOWN;
-}
-
-/**
- * @brief get the type of the library
- *
- * @return arcade::IModule::ModuleType
- */
-arcade::IModule::ModuleType arcade::CoreModule::getType() const
-{
-  return arcade::IModule::ModuleType::CORE;
+  this->_gameData = gameData;
 }
 
 /**
@@ -102,7 +84,7 @@ arcade::CoreModule::CoreStatus arcade::CoreModule::getCoreStatus() const
  *
  * @return arcade::ADisplayModule *
  */
-arcade::ADisplayModule *arcade::CoreModule::getGraphicModule()
+arcade::IDisplayModule *arcade::CoreModule::getGraphicModule()
 {
   return this->_graphicModule;
 }
@@ -112,50 +94,23 @@ arcade::ADisplayModule *arcade::CoreModule::getGraphicModule()
  *
  * @return arcade::AGameModule *
  */
-arcade::AGameModule *arcade::CoreModule::getGameModule()
+arcade::IGameModule *arcade::CoreModule::getGameModule()
 {
   return this->_gameModule;
 }
 
-/**
- * @brief set graphic or game module to the core module
- *
- * @param module to set
- * @param type of the module (graphic or game)
- */
-void arcade::CoreModule::setModule(arcade::IModule *module,
-                                   arcade::IModule::ModuleType type)
-{
-  switch (type)
-  {
-  case arcade::IModule::ModuleType::GAME:
-    this->_gameModule = dynamic_cast<arcade::AGameModule *>(module);
-    break;
-  case arcade::IModule::ModuleType::GRAPHIC:
-    this->_graphicModule = dynamic_cast<arcade::ADisplayModule *>(module);
-    break;
-  default:
-    throw std::exception();
-  }
-  return;
-}
-
 void arcade::CoreModule::addLibList(std::string pathLib)
 {
-  DLLoader<arcade::IModule> loader(pathLib);
-  arcade::IModule *module = loader.getInstance("entryPoint");
-  if (module == nullptr)
-    throw std::exception();
-  if (module->getType() == arcade::IModule::ModuleType::GAME)
-  {
+  DLLoader<arcade::ModuleType> loader(pathLib);
+  arcade::ModuleType module = loader.getInstance("getType");
+  switch (module) {
+  case arcade::ModuleType::GAME:
     this->_menuData._gameLibList.push_back(pathLib);
-  }
-  else if (module->getType() == arcade::IModule::ModuleType::GRAPHIC)
-  {
+    break;
+  case arcade::ModuleType::GRAPHIC:
     this->_menuData._graphicLibList.push_back(pathLib);
-  }
-  else
-  {
+    break;
+  default:
     throw std::exception();
   }
 }
@@ -172,30 +127,23 @@ void arcade::CoreModule::getLib(std::string pathLib)
   struct dirent *entry;
 
   dir = opendir(pathLib.c_str());
-  if (dir == nullptr)
-  {
+  if (dir == nullptr) {
     perror("opendir");
     throw std::exception();
   }
-  while ((entry = readdir(dir)) != nullptr)
-  {
+  while ((entry = readdir(dir)) != nullptr) {
     if (strncmp(entry->d_name, "arcade_", strlen("arcade_")) == 0 &&
-        strncmp(&(entry->d_name[strlen(entry->d_name) - 3]), ".so", 3) == OK)
-    {
+        strncmp(&(entry->d_name[strlen(entry->d_name) - 3]), ".so", 3) == OK) {
       matchedFiles.push_back(std::string(entry->d_name));
     }
   }
   closedir(dir);
 
-  for (std::string file : matchedFiles)
-  {
+  for (std::string file : matchedFiles) {
     file = pathLib + file;
-    try
-    {
+    try {
       this->addLibList(file);
-    }
-    catch (const std::exception &e)
-    {
+    } catch (const std::exception &e) {
       std::cerr << e.what() << '\n';
       throw std::exception();
     }
@@ -204,43 +152,39 @@ void arcade::CoreModule::getLib(std::string pathLib)
 
 void arcade::CoreModule::loadLib(std::string pathLib)
 {
-  DLLoader<arcade::IModule> loader(pathLib);
-  arcade::IModule *module = loader.getInstance("entryPoint");
-  if (module == nullptr)
-    throw std::exception();
-  if (module->getType() == arcade::IModule::ModuleType::GAME)
-  {
+  std::cout << "start Load lib" << pathLib << std::endl;
+  DLLoader<arcade::ModuleType> loaderTypeModule(pathLib);
+  arcade::ModuleType module = loaderTypeModule.getInstance("getType");
+  DLLoader<std::unique_ptr<arcade::IDisplayModule>> loaderGraphic(pathLib);
+  DLLoader<std::unique_ptr<arcade::IGameModule>> loaderGame(pathLib);
+  switch (module) {
+  case arcade::ModuleType::GAME:
     if (this->_gameModule != nullptr)
-    {
-      this->_gameModule->stop();
-      delete (this->_gameModule);
-    }
-    this->_gameModule = dynamic_cast<arcade::AGameModule *>(module);
+      delete this->_gameModule;
+    this->_gameModule = std::move(loaderGame.getInstance("entryPoint")).release();
     this->_gameModule->setCoreModule(this);
     this->_gameModule->init();
-  }
-  else if (module->getType() == arcade::IModule::ModuleType::GRAPHIC)
-  {
-    if (this->_gameModule != nullptr) {
-      this->_graphicModule->stop();
-      delete (this->_graphicModule);
-    }
-    this->_graphicModule = dynamic_cast<arcade::ADisplayModule *>(module);
+    break;
+  case arcade::ModuleType::GRAPHIC:
+    if (this->_graphicModule != nullptr)
+      delete this->_graphicModule;
+    this->_graphicModule = std::move(loaderGraphic.getInstance("entryPoint")).release();
     this->_graphicModule->setCoreModule(this);
-    this->_graphicModule->init();
-  }
-  else
-  {
+    break;
+  default:
     throw std::exception();
+    break;
   }
-  return;
+  this->_menuData.indexGame = this->_menuData._gameLibList.size() / 2;
+  this->_menuData.indexGraphic = this->_menuData._graphicLibList.size() / 2;
+  std::cout << "finish Load lib " << pathLib << std::endl;
 }
 
-void arcade::CoreModule::handleKeySelection(arcade::IModule::KeyboardInput key)
+void arcade::CoreModule::handleKeySelection(arcade::KeyboardInput key)
 {
   switch (key) {
-    case arcade::IModule::KeyboardInput::UP:
-      if (this->_menuData._type == arcade::IModule::ModuleType::GRAPHIC) {
+    case arcade::KeyboardInput::UP:
+      if (this->_menuData._type == arcade::ModuleType::GRAPHIC) {
           if (this->_menuData.indexGraphic > 0)
               --this->_menuData.indexGraphic;
       } else {
@@ -248,8 +192,8 @@ void arcade::CoreModule::handleKeySelection(arcade::IModule::KeyboardInput key)
               --this->_menuData.indexGame;
       }
       break;
-    case arcade::IModule::KeyboardInput::DOWN:
-      if (this->_menuData._type == arcade::IModule::ModuleType::GRAPHIC) {
+    case arcade::KeyboardInput::DOWN:
+      if (this->_menuData._type == arcade::ModuleType::GRAPHIC) {
           if (this->_menuData.indexGraphic < this->_menuData._graphicLibList.size() - 1)
               ++this->_menuData.indexGraphic;
       } else {
@@ -257,34 +201,37 @@ void arcade::CoreModule::handleKeySelection(arcade::IModule::KeyboardInput key)
               ++this->_menuData.indexGame;
       }
       break;
-    case arcade::IModule::KeyboardInput::ENTER:
+    case arcade::KeyboardInput::ENTER:
       if (this->_menuData._gameLibList.size() == 0 ||
           this->_menuData._graphicLibList.size() == 0)
         throw std::exception();
+      printf("1\n");
       this->loadLib(this->_menuData._gameLibList[this->_menuData.indexGame]);
+      printf("2\n");
       this->loadLib(this->_menuData._graphicLibList[this->_menuData.indexGraphic]);
+      printf("3\n");
       this->_coreStatus = CoreStatus::RUNNING;
-      this->getGraphicModule()->setDisplayStatus(arcade::ADisplayModule::DisplayStatus::RUNNING);
+      this->getGraphicModule()->setDisplayStatus(arcade::IDisplayModule::DisplayStatus::RUNNING);
       break;
-    case arcade::IModule::KeyboardInput::TAB:
-      if (this->_menuData._type == arcade::IModule::ModuleType::GRAPHIC)
-        this->_menuData._type = arcade::IModule::ModuleType::GAME;
+    case arcade::KeyboardInput::TAB:
+      if (this->_menuData._type == arcade::ModuleType::GRAPHIC)
+        this->_menuData._type = arcade::ModuleType::GAME;
       else
-        this->_menuData._type = arcade::IModule::ModuleType::GRAPHIC;
+        this->_menuData._type = arcade::ModuleType::GRAPHIC;
       break;
-    case arcade::IModule::KeyboardInput::CROSS:
+    case arcade::KeyboardInput::CROSS:
       this->_coreStatus = CoreStatus::EXIT;
       break;
   }
 }
 
-void arcade::CoreModule::handleKeyRunning(arcade::IModule::KeyboardInput key)
+void arcade::CoreModule::handleKeyRunning(arcade::KeyboardInput key)
 {
   switch (key) {
-    // case arcade::IModule::KeyboardInput::ESCAPE:
+    // case arcade::KeyboardInput::ESCAPE:
     //   this->_coreStatus = CoreStatus::SELECTION;
     //   break;
-    case arcade::IModule::KeyboardInput::CROSS:
+    case arcade::KeyboardInput::CROSS:
       this->_coreStatus = CoreStatus::EXIT;
       break;
     default:
@@ -292,7 +239,7 @@ void arcade::CoreModule::handleKeyRunning(arcade::IModule::KeyboardInput key)
   }
 }
 
-void arcade::CoreModule::handleKeyEvent(arcade::IModule::KeyboardInput key)
+void arcade::CoreModule::handleKeyEvent(arcade::KeyboardInput key)
 {
   switch (this->_coreStatus)
   {
@@ -310,9 +257,9 @@ void arcade::CoreModule::handleKeyEvent(arcade::IModule::KeyboardInput key)
 /**
  * @brief get the menu data
  *
- * @return arcade::IModule::MenuData
+ * @return arcade::MenuData
  */
-arcade::IModule::MenuData arcade::CoreModule::getMenuData() const
+arcade::MenuData arcade::CoreModule::getMenuData() const
 {
   return this->_menuData;
 }
@@ -320,19 +267,148 @@ arcade::IModule::MenuData arcade::CoreModule::getMenuData() const
 /**
  * @brief get the game data
  *
- * @return arcade::IModule::GameData
+ * @return arcade::GameData
  */
-arcade::IModule::GameData arcade::CoreModule::getGameData() const
+arcade::GameData arcade::CoreModule::getGameData() const
 {
   return this->_gameData;
 }
 
 /**
- * @brief set the game data
+ * @brief core loop
  *
- * @param gameData game data to set
+ * @return int
  */
-void arcade::CoreModule::setGameData(arcade::IModule::GameData gameData)
+int arcade::CoreModule::coreLoop()
 {
-  this->_gameData = gameData;
+  while (this->_coreStatus != CoreStatus::EXIT)
+  {
+    switch (this->_coreStatus)
+    {
+    case CoreStatus::SELECTION:
+      this->selectionLoop();
+      break;
+    case CoreStatus::RUNNING:
+      this->runningLoop();
+      break;
+    default:
+      throw std::exception();
+    }
+  }
+  return 0;
+}
+
+/**
+ * @brief update selection
+ *
+ */
+void arcade::CoreModule::updateSelection()
+{
+  std::string selection;
+  std::string graphic = "selected graphic library:\n";
+  std::string game = "selected game library:\n";
+  this->getGraphicModule()->clearWindow();
+  for (size_t i = 0; i < this->_menuData._graphicLibList.size(); i += 1)
+  {
+    if (i == this->_menuData.indexGraphic)
+      graphic += "-> " + this->_menuData._graphicLibList[i] + "\n";
+    else
+      graphic += "   " + this->_menuData._graphicLibList[i] + "\n";
+  }
+  for (size_t i = 0; i < this->_menuData._gameLibList.size(); i += 1)
+  {
+    if (i == this->_menuData.indexGame)
+      game += "-> " + this->_menuData._gameLibList[i] + "\n";
+    else
+      game += "   " + this->_menuData._gameLibList[i] + "\n";
+  }
+  selection = graphic + "\n" + game + "\n" + this->_menuData._description;
+  this->getGraphicModule()->drawText(selection, 0, 0, 20);
+  this->getGraphicModule()->displayWindow();
+}
+
+
+/**
+ * @brief selection loop
+ *
+ */
+void arcade::CoreModule::selectionLoop()
+{
+  this->updateSelection();
+  while (this->_coreStatus == CoreStatus::SELECTION)
+  {
+    switch (this->getGraphicModule()->getInput())
+    {
+      case arcade::KeyboardInput::UP:
+        this->handleKeyEvent(arcade::KeyboardInput::UP);
+        this->updateSelection();
+        break;
+      case arcade::KeyboardInput::DOWN:
+        this->handleKeyEvent(arcade::KeyboardInput::DOWN);
+        this->updateSelection();
+        break;
+      case arcade::KeyboardInput::TAB:
+        this->handleKeyEvent(arcade::KeyboardInput::TAB);
+        this->updateSelection();
+        break;
+      case arcade::KeyboardInput::ENTER:
+        this->handleKeyEvent(arcade::KeyboardInput::ENTER);
+        break;
+      case arcade::KeyboardInput::CROSS:
+        this->handleKeyEvent(arcade::KeyboardInput::CROSS);
+        break;
+    }
+  }
+}
+
+void arcade::CoreModule::updateRunning()
+{
+  this->getGameModule()->updateGame();
+  this->getGraphicModule()->clearWindow();
+  for (size_t i = 0; i < this->getGameData().display_info.size(); i += 1)
+  {
+    for (size_t j = 0; j < this->getGameData().display_info[i].size(); j += 1)
+      this->getGraphicModule()->drawSprite(this->getGameData().sprite_value[this->getGameData().display_info[i][j]], j * 30, i * 30, 30, 30);
+  }
+  this->getGraphicModule()->displayWindow();
+}
+
+/**
+ * @brief running loop
+ *
+ */
+void arcade::CoreModule::runningLoop()
+{
+  this->getGraphicModule()->clearWindow();
+  for (size_t i = 0; i < this->getGameData().display_info.size(); i += 1)
+  {
+    for (size_t j = 0; j < this->getGameData().display_info[i].size(); j += 1)
+      this->getGraphicModule()->drawSprite(this->getGameData().sprite_value[this->getGameData().display_info[i][j]], j * 30, i * 30, 30, 30);
+  }
+  this->getGraphicModule()->displayWindow();
+  while (this->_coreStatus == CoreStatus::RUNNING)
+  {
+    this->updateRunning();
+    switch (this->getGraphicModule()->getInput())
+    {
+      case arcade::KeyboardInput::UP:
+        this->handleKeyEvent(arcade::KeyboardInput::UP);
+        break;
+      case arcade::KeyboardInput::DOWN:
+        this->handleKeyEvent(arcade::KeyboardInput::DOWN);
+        break;
+      case arcade::KeyboardInput::LEFT:
+        this->handleKeyEvent(arcade::KeyboardInput::LEFT);
+        break;
+      case arcade::KeyboardInput::RIGHT:
+        this->handleKeyEvent(arcade::KeyboardInput::RIGHT);
+        break;
+      case arcade::KeyboardInput::ENTER:
+        this->handleKeyEvent(arcade::KeyboardInput::ENTER);
+        break;
+      case arcade::KeyboardInput::CROSS:
+        this->handleKeyEvent(arcade::KeyboardInput::CROSS);
+        break;
+    }
+  }
 }

@@ -8,10 +8,6 @@
 #include <dlfcn.h>
 #include <iostream>
 #include "CoreModule.hpp"
-#include "ADisplayModule.hpp"
-#include "AGameModule.hpp"
-#include "IModule.hpp"
-#include "Sdl2.hpp"
 #include <unistd.h>
 
 int launch_arcade(char const *const lib_path)
@@ -22,7 +18,5 @@ int launch_arcade(char const *const lib_path)
     core.loadLib(lib_path);
     if (core.getGraphicModule() == nullptr)
         return 84;
-    while (core.getCoreStatus() != arcade::CoreModule::CoreStatus::EXIT)
-        core.getGraphicModule()->display();
-    return 0;
+    return core.coreLoop();
 }

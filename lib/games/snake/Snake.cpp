@@ -11,22 +11,12 @@
  * @brief Construct a new arcade::Snake::Snake object
  *
  */
-arcade::Snake::Snake() : arcade::IModule(), arcade::AGameModule() {}
+arcade::Snake::Snake() : arcade::AGameModule() {}
 
-/**
- * @brief Destroy the arcade::Snake::Snake object
- *
- */
-arcade::Snake::~Snake() {}
-
-/**
- * @brief init the game
- *
- */
 void arcade::Snake::init()
 {
   // Initialize the game
-  arcade::IModule::GameData data;
+  arcade::GameData data;
   // Define the sprite values for walls, coins, Pacman, and coins that allow Pacman to eat ghosts
   data.sprite_value['W'] = "assets/default/map/map1.png";  // Wall
   data.sprite_value['M'] = "assets/default/map/map5.png";  // Map
@@ -75,25 +65,15 @@ void arcade::Snake::init()
 
   this->getCoreModule()->setGameData(data);
   this->setSnake(snake);
-  this->setDirection(arcade::IModule::KeyboardInput::RIGHT);
+  this->setDirection(arcade::KeyboardInput::RIGHT);
   return;
 }
 
 /**
- * @brief stop the game
+ * @brief Destroy the arcade::Snake::Snake object
  *
  */
-void arcade::Snake::stop() { return; }
-
-/**
- * @brief return the name of the game library
- *
- * @return const arcade::IModule::LibName
- */
-arcade::IModule::LibName arcade::Snake::getName() const
-{
-  return arcade::IModule::LibName::SNAKE;
-}
+arcade::Snake::~Snake() {}
 
 /**
  * @brief move the snake
@@ -107,20 +87,20 @@ std::vector<std::vector<int>> arcade::Snake::moveSnake(std::vector<std::vector<i
   std::pair<int, int> tail = snake[snake.size() - 1];
   std::pair<int, int> new_head = head;
   std::pair<int, int> new_tail = tail;
-  arcade::IModule::KeyboardInput direction = this->getDirection();
+  arcade::KeyboardInput direction = this->getDirection();
 
   // print the snake
   for (int i = 0; i < snake.size(); i++) {
     printf("snake[%d] = (%d, %d)\n", i, snake[i].first, snake[i].second);
   }
   // Move the snake
-  if (direction == arcade::IModule::KeyboardInput::UP)
+  if (direction == arcade::KeyboardInput::UP)
     new_head = std::make_pair(head.first - 1, head.second);
-  else if (direction == arcade::IModule::KeyboardInput::DOWN)
+  else if (direction == arcade::KeyboardInput::DOWN)
     new_head = std::make_pair(head.first + 1, head.second);
-  else if (direction == arcade::IModule::KeyboardInput::LEFT)
+  else if (direction == arcade::KeyboardInput::LEFT)
     new_head = std::make_pair(head.first, head.second - 1);
-  else if (direction == arcade::IModule::KeyboardInput::RIGHT)
+  else if (direction == arcade::KeyboardInput::RIGHT)
     new_head = std::make_pair(head.first, head.second + 1);
 
   // Check if the snake is eating a coin
@@ -141,7 +121,7 @@ std::vector<std::vector<int>> arcade::Snake::moveSnake(std::vector<std::vector<i
   // Check if the snake is hitting a wall
   printf("display_info[new_head.first][new_head.second] = %c\n", display_info[new_head.first][new_head.second]);
   if (display_info[new_head.first][new_head.second] == 'W') {
-    this->getCoreModule()->getGraphicModule()->setDisplayStatus(arcade::ADisplayModule::DisplayStatus::GAMEOVER);
+    this->getCoreModule()->getGraphicModule()->setDisplayStatus(arcade::IDisplayModule::DisplayStatus::GAMEOVER);
     return display_info;
   }
 
@@ -174,7 +154,7 @@ std::vector<std::vector<int>> arcade::Snake::moveSnake(std::vector<std::vector<i
  */
 void arcade::Snake::updateGame()
 {
-  arcade::IModule::GameData data = this->getCoreModule()->getGameData();
+  arcade::GameData data = this->getCoreModule()->getGameData();
   this->updateTimer();
   if (this->getTimer().duration.count() >= 500) {
     this->resetTimer();
@@ -209,4 +189,14 @@ void arcade::Snake::setSnake(std::vector<std::pair<int, int>> snake)
  * @brief generate entry point for the game library
  *
  */
-extern "C" arcade::Snake *entryPoint() { return new arcade::Snake(); }
+extern "C" std::unique_ptr<arcade::IGameModule> entryPoint()
+{
+  return std::make_unique<arcade::Snake>();
+}
+
+extern "C" arcade::ModuleType getType()
+{
+  return arcade::ModuleType::GAME;
+}
+
+extern "C" std::string getName() { return "snake"; }
