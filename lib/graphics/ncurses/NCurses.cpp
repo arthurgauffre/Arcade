@@ -143,20 +143,6 @@ void arcade::NCurses::displayGame() {
     endwin();
 }
 
-void arcade::NCurses::display()
-{
-  switch (this->getDisplayStatus()) {
-  case arcade::ADisplayModule::DisplayStatus::RUNNING:
-    this->displayGame();
-    break;
-  case arcade::ADisplayModule::DisplayStatus::SELECTION:
-    this->displayMenu();
-    break;
-  default:
-    break;
-  }
-}
-
 void arcade::NCurses::init() {
   initscr(); // Initialize the screen for ncurses
   cbreak();  // Disable line buffering

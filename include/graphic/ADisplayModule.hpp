@@ -22,7 +22,7 @@ public:
   virtual void init() = 0;
   virtual void stop() = 0;
 
-  virtual void display() = 0;
+  void display();
   virtual void displayMenu() = 0;
   virtual void displayGame() = 0;
   void setDisplayStatus(DisplayStatus status);

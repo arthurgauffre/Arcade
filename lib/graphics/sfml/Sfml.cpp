@@ -157,19 +157,6 @@ void arcade::Sfml::displayGame()
     }
 }
 
-void arcade::Sfml::display()
-{
-  switch (this->getDisplayStatus()) {
-  case arcade::ADisplayModule::DisplayStatus::RUNNING:
-    this->displayGame();
-    break;
-  case arcade::ADisplayModule::DisplayStatus::SELECTION:
-    this->displayMenu();
-    break;
-  default:
-    break;
-  }
-}
 arcade::IModule::LibName arcade::Sfml::getName() const
 {
   return arcade::IModule::LibName::SFML;

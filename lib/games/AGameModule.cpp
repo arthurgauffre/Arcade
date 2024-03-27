@@ -87,3 +87,52 @@ arcade::CoreModule *arcade::AGameModule::getCoreModule() const
 {
   return this->_coreModule;
 }
+
+/**
+ * @brief update the timer
+ *
+ */
+void arcade::AGameModule::updateTimer()
+{
+  this->_timer.end = std::chrono::steady_clock::now();
+  this->_timer.duration = std::chrono::duration_cast<std::chrono::milliseconds>(this->_timer.end - this->_timer.start);
+}
+
+/**
+ * @brief reset the timer
+ *
+ */
+void arcade::AGameModule::resetTimer()
+{
+  this->_timer.start = this->_timer.end;
+}
+
+/**
+ * @brief get the timer
+ *
+ * @return arcade::AGameModule::timer
+ */
+arcade::AGameModule::timer arcade::AGameModule::getTimer() const
+{
+  return this->_timer;
+}
+
+/**
+ * @brief set the direction of the game
+ *
+ * @param direction
+ */
+void arcade::AGameModule::setDirection(arcade::IModule::KeyboardInput direction)
+{
+  this->_direction = direction;
+}
+
+/**
+ * @brief get the direction of the game
+ *
+ * @return arcade::IModule::KeyboardInput
+ */
+arcade::IModule::KeyboardInput arcade::AGameModule::getDirection() const
+{
+  return this->_direction;
+}

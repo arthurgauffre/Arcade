@@ -147,15 +147,18 @@ void arcade::Sdl2::displayGame()
     // Update the screen
     int x = 1920 / 2 - 30 * this->getCoreModule()->getGameData().display_info.size() / 2;
     int y = 1080 / 2 - 30 * this->getCoreModule()->getGameData().display_info[0].size() / 2;
-    for (int i = 0; i < this->getCoreModule()->getGameData().display_info.size(); i++) {
-        for (int j = 0; j < this->getCoreModule()->getGameData().display_info[i].size(); j++) {
-            spriteTexture = SDL_CreateTextureFromSurface(renderer, spriteSurfaces[this->getCoreModule()->getGameData().display_info[i][j]]);
-            spriteRect = {x + j * 30, y + i * 30, 30, 30};
-            SDL_RenderCopy(renderer, spriteTexture, nullptr, &spriteRect);
+    auto updateGameDisplay = [&]() {
+        SDL_RenderClear(renderer);
+        for (int i = 0; i < this->getCoreModule()->getGameData().display_info.size(); i++) {
+            for (int j = 0; j < this->getCoreModule()->getGameData().display_info[i].size(); j++) {
+                spriteTexture = SDL_CreateTextureFromSurface(renderer, spriteSurfaces[this->getCoreModule()->getGameData().display_info[i][j]]);
+                spriteRect = {x + j * 30, y + i * 30, 30, 30};
+                SDL_RenderCopy(renderer, spriteTexture, nullptr, &spriteRect);
+            }
         }
-    }
-    SDL_RenderPresent(renderer);
+    };
     while (1) {
+        SDL_RenderPresent(renderer);
         SDL_Event event;
         if (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
@@ -163,28 +166,15 @@ void arcade::Sdl2::displayGame()
                 break;
             }
         }
+        if (this->getCoreModule()->getGraphicModule()->getDisplayStatus() == arcade::ADisplayModule::DisplayStatus::GAMEOVER) {
+            break;
+        }
+        this->getCoreModule()->getGameModule()->updateGame();
+        updateGameDisplay();
     }
     SDL_DestroyTexture(spriteTexture);
     for (std::pair<int, std::string> sprite : this->getCoreModule()->getGameData().sprite_value)
         SDL_FreeSurface(spriteSurfaces[sprite.first]);
-}
-
-/**
- * @brief display information on the window
- * 
- */
-void arcade::Sdl2::display()
-{
-  switch (this->getDisplayStatus()) {
-  case arcade::ADisplayModule::DisplayStatus::RUNNING:
-    this->displayGame();
-    break;
-  case arcade::ADisplayModule::DisplayStatus::SELECTION:
-    this->displayMenu();
-    break;
-  default:
-    break;
-  }
 }
 
 /**

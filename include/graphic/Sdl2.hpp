@@ -20,7 +20,6 @@ public:
   ~Sdl2();
   void init();
   void stop();
-  void display();
   void displayMenu();
   void displayGame();
   arcade::IModule::LibName getName() const;

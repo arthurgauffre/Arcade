@@ -97,3 +97,27 @@ arcade::CoreModule *arcade::ADisplayModule::getCoreModule() const
 {
   return this->_coreModule;
 }
+
+/**
+ * @brief get the status of the display module
+ *
+ * @return DisplayStatus
+ */
+void arcade::ADisplayModule::display()
+{
+  switch (this->getDisplayStatus()) {
+  case arcade::ADisplayModule::DisplayStatus::RUNNING:
+    this->displayGame();
+    break;
+  case arcade::ADisplayModule::DisplayStatus::SELECTION:
+    this->displayMenu();
+    break;
+  case arcade::ADisplayModule::DisplayStatus::PAUSED:
+    break;
+  case arcade::ADisplayModule::DisplayStatus::GAMEOVER:
+    this->getCoreModule()->setCoreStatus(arcade::CoreModule::CoreStatus::EXIT);
+    break;
+  default:
+    break;
+  }
+}

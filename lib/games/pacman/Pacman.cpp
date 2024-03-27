@@ -79,6 +79,15 @@ arcade::IModule::LibName arcade::Pacman::getName() const
 }
 
 /**
+ * @brief update the game
+ * 
+ */
+void arcade::Pacman::updateGame()
+{
+  return;
+}
+
+/**
  * @brief generate entry point for the game library
  * 
  */
