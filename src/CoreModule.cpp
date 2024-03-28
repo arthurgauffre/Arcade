@@ -380,6 +380,8 @@ void arcade::CoreModule::runningLoop()
   while (this->_coreStatus == CoreStatus::RUNNING)
   {
     this->updateRunning();
+    if (this->getGameModule()->getGameStatus() == arcade::IGameModule::GameStatus::GAMEOVER)
+      this->_coreStatus = CoreStatus::SELECTION;
     switch (input = this->getGraphicModule()->getInput())
     {
       case arcade::KeyboardInput::UP:

@@ -32,7 +32,7 @@ void arcade::AGameModule::setGameStatus(arcade::AGameModule::GameStatus status)
  *
  * @return arcade::AGameModule::GameStatus
  */
-arcade::AGameModule::GameStatus arcade::AGameModule::getDisplayStatus() const
+arcade::AGameModule::GameStatus arcade::AGameModule::getGameStatus() const
 {
   return this->_gameStatus;
 }
