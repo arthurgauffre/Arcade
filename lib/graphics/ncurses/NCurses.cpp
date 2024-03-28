@@ -18,10 +18,6 @@ arcade::NCurses::NCurses() : arcade::ADisplayModule()
   // Create a new window
   int height = 10;
   int width = 10;
-  int starty =
-      (LINES - height) / 2; // Calculate vertical position to center the window
-  int startx =
-      (COLS - width) / 2;                    // Calculate horizontal position to center the window
   WINDOW *win = newwin(height, width, 0, 0); // Create a new window
 
   // Resize the window to fit the terminal size
