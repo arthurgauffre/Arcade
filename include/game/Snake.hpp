@@ -20,6 +20,7 @@ public:
   std::vector<std::pair<int, int>> getSnake() const;
   void setSnake(std::vector<std::pair<int, int>> snake);
   std::vector<std::vector<int>> moveSnake(std::vector<std::vector<int>> display_info);
+  void handdleKeyEvents(arcade::KeyboardInput key);
 
 protected:
 private:

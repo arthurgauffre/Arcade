@@ -49,7 +49,9 @@ namespace arcade
     virtual void resetTimer() = 0;
     virtual timer getTimer() const = 0;
 
-  virtual void init() = 0;
+    virtual void handdleKeyEvents(arcade::KeyboardInput key) = 0;
+
+    virtual void init() = 0;
 
   protected:
     timer _timer;

@@ -27,25 +27,26 @@ void arcade::Sfml::clearWindow()
   this->_window->clear(sf::Color::Black);
 }
 
-void arcade::Sfml::drawSprite(const std::string path, int x, int y, int width, int height)
+void arcade::Sfml::drawSprite(std::pair<char, std::string> sprite, int x, int y, int width, int height, int rotation)
 {
     sf::Texture texture;
-    if (!texture.loadFromFile(path)) {
+    if (!texture.loadFromFile(sprite.second)) {
         // Handle error
-        std::cerr << "Failed to load texture: " << path << std::endl;
+        std::cerr << "Failed to load texture: " << sprite.second << std::endl;
         return;
     }
 
-    sf::Sprite sprite;
-    sprite.setTexture(texture);
-    sprite.setPosition(x, y);
+    sf::Sprite mySprite;
+    mySprite.setTexture(texture);
+    mySprite.setPosition(x, y);
 
     // Calculate the scale factors
     float scaleX = static_cast<float>(width) / texture.getSize().x;
     float scaleY = static_cast<float>(height) / texture.getSize().y;
-    sprite.setScale(scaleX, scaleY);
+    mySprite.setScale(scaleX, scaleY);
+    mySprite.setRotation(rotation);
 
-    this->_window->draw(sprite);
+    this->_window->draw(mySprite);
 }
 
 void arcade::Sfml::displayWindow()

@@ -37,6 +37,8 @@ namespace arcade
     arcade::KeyboardInput getDirection() const;
 
     virtual void init() = 0;
+    virtual void handdleKeyEvents(arcade::KeyboardInput key) = 0;
+
   };
 }; // namespace arcade
 

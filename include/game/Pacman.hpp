@@ -17,7 +17,7 @@ public:
   ~Pacman();
   void init();
   void updateGame();
-
+  void handdleKeyEvents(arcade::KeyboardInput key){};
 protected:
 private:
 };

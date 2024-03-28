@@ -152,7 +152,6 @@ void arcade::CoreModule::getLib(std::string pathLib)
 
 void arcade::CoreModule::loadLib(std::string pathLib)
 {
-  std::cout << "start Load lib" << pathLib << std::endl;
   DLLoader<arcade::ModuleType> loaderTypeModule(pathLib);
   arcade::ModuleType module = loaderTypeModule.getInstance("getType");
   DLLoader<std::unique_ptr<arcade::IDisplayModule>> loaderGraphic(pathLib);
@@ -175,9 +174,6 @@ void arcade::CoreModule::loadLib(std::string pathLib)
     throw std::exception();
     break;
   }
-  this->_menuData.indexGame = this->_menuData._gameLibList.size() / 2;
-  this->_menuData.indexGraphic = this->_menuData._graphicLibList.size() / 2;
-  std::cout << "finish Load lib " << pathLib << std::endl;
 }
 
 void arcade::CoreModule::handleKeySelection(arcade::KeyboardInput key)
@@ -205,11 +201,8 @@ void arcade::CoreModule::handleKeySelection(arcade::KeyboardInput key)
       if (this->_menuData._gameLibList.size() == 0 ||
           this->_menuData._graphicLibList.size() == 0)
         throw std::exception();
-      printf("1\n");
       this->loadLib(this->_menuData._gameLibList[this->_menuData.indexGame]);
-      printf("2\n");
       this->loadLib(this->_menuData._graphicLibList[this->_menuData.indexGraphic]);
-      printf("3\n");
       this->_coreStatus = CoreStatus::RUNNING;
       this->getGraphicModule()->setDisplayStatus(arcade::IDisplayModule::DisplayStatus::RUNNING);
       break;
@@ -363,12 +356,16 @@ void arcade::CoreModule::selectionLoop()
 
 void arcade::CoreModule::updateRunning()
 {
+  std::pair<char, std::string> sprite;
   this->getGameModule()->updateGame();
   this->getGraphicModule()->clearWindow();
   for (size_t i = 0; i < this->getGameData().display_info.size(); i += 1)
   {
-    for (size_t j = 0; j < this->getGameData().display_info[i].size(); j += 1)
-      this->getGraphicModule()->drawSprite(this->getGameData().sprite_value[this->getGameData().display_info[i][j]], j * 30, i * 30, 30, 30);
+    for (size_t j = 0; j < this->getGameData().display_info[i].size(); j += 1) {
+      sprite.first = this->getGameData().display_info[i][j];
+      sprite.second = this->getGameData().sprite_value[this->getGameData().display_info[i][j]];
+      this->getGraphicModule()->drawSprite(sprite, j * 30, i * 30, 30, 30, 0);
+    }
   }
   this->getGraphicModule()->displayWindow();
 }
@@ -379,17 +376,12 @@ void arcade::CoreModule::updateRunning()
  */
 void arcade::CoreModule::runningLoop()
 {
+  arcade::KeyboardInput input;
   this->getGraphicModule()->clearWindow();
-  for (size_t i = 0; i < this->getGameData().display_info.size(); i += 1)
-  {
-    for (size_t j = 0; j < this->getGameData().display_info[i].size(); j += 1)
-      this->getGraphicModule()->drawSprite(this->getGameData().sprite_value[this->getGameData().display_info[i][j]], j * 30, i * 30, 30, 30);
-  }
-  this->getGraphicModule()->displayWindow();
   while (this->_coreStatus == CoreStatus::RUNNING)
   {
     this->updateRunning();
-    switch (this->getGraphicModule()->getInput())
+    switch (input = this->getGraphicModule()->getInput())
     {
       case arcade::KeyboardInput::UP:
         this->handleKeyEvent(arcade::KeyboardInput::UP);
@@ -410,5 +402,6 @@ void arcade::CoreModule::runningLoop()
         this->handleKeyEvent(arcade::KeyboardInput::CROSS);
         break;
     }
+    this->getGameModule()->handdleKeyEvents(input);
   }
 }

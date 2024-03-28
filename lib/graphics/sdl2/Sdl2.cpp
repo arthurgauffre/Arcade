@@ -108,9 +108,9 @@ void arcade::Sdl2::clearWindow()
  * @param width width of the sprite
  * @param height height of the sprite
  */
-void arcade::Sdl2::drawSprite(const std::string path, int x, int y, int width, int height)
+void arcade::Sdl2::drawSprite(std::pair<char, std::string> sprite, int x, int y, int width, int height, int rotation)
 {
-    SDL_Surface* surface = IMG_Load(path.c_str());
+    SDL_Surface* surface = IMG_Load(sprite.second.c_str());
     if (surface == nullptr) {
         std::cerr << "Failed to load image: " << IMG_GetError() << std::endl;
         return;
@@ -124,7 +124,8 @@ void arcade::Sdl2::drawSprite(const std::string path, int x, int y, int width, i
     }
 
     SDL_Rect rect = {x, y, width, height};
-    SDL_RenderCopy(this->_renderer, texture, nullptr, &rect);
+    SDL_RenderCopyEx(this->_renderer, texture, nullptr, &rect, rotation, nullptr, SDL_FLIP_NONE);
+    // SDL_RenderCopy(this->_renderer, texture, nullptr, &rect);
 
     SDL_DestroyTexture(texture);
     SDL_FreeSurface(surface);
@@ -206,40 +207,6 @@ arcade::KeyboardInput arcade::Sdl2::getInput()
                     return arcade::KeyboardInput::ENTER;
                 case SDLK_TAB:
                     return arcade::KeyboardInput::TAB;
-                case SDLK_ESCAPE:
-                    return arcade::KeyboardInput::ESCAPE;
-                case SDLK_SPACE:
-                    return arcade::KeyboardInput::SPACE;
-                case SDLK_a:
-                    return arcade::KeyboardInput::A;
-                case SDLK_b:
-                    return arcade::KeyboardInput::B;
-                case SDLK_c:
-                    return arcade::KeyboardInput::C;
-                case SDLK_d:
-                    return arcade::KeyboardInput::D;
-                case SDLK_e:
-                    return arcade::KeyboardInput::E;
-                case SDLK_f:
-                    return arcade::KeyboardInput::F;
-                case SDLK_g:
-                    return arcade::KeyboardInput::G;
-                case SDLK_h:
-                    return arcade::KeyboardInput::H;
-                case SDLK_i:
-                    return arcade::KeyboardInput::I;
-                case SDLK_j:
-                    return arcade::KeyboardInput::J;
-                case SDLK_k:
-                    return arcade::KeyboardInput::K;
-                case SDLK_l:
-                    return arcade::KeyboardInput::L;
-                case SDLK_m:
-                    return arcade::KeyboardInput::M;
-                case SDLK_n:
-                    return arcade::KeyboardInput::N;
-                case SDLK_o:
-                    return arcade::KeyboardInput::O;
             }
         }
     }
