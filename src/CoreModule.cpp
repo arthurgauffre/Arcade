@@ -204,7 +204,6 @@ void arcade::CoreModule::handleKeySelection(arcade::KeyboardInput key)
       this->loadLib(this->_menuData._gameLibList[this->_menuData.indexGame]);
       this->loadLib(this->_menuData._graphicLibList[this->_menuData.indexGraphic]);
       this->_coreStatus = CoreStatus::RUNNING;
-      this->getGraphicModule()->setDisplayStatus(arcade::IDisplayModule::DisplayStatus::RUNNING);
       break;
     case arcade::KeyboardInput::TAB:
       if (this->_menuData._type == arcade::ModuleType::GRAPHIC)
@@ -381,6 +380,8 @@ void arcade::CoreModule::runningLoop()
   while (this->_coreStatus == CoreStatus::RUNNING)
   {
     this->updateRunning();
+    if (this->getGameModule()->getGameStatus() == arcade::IGameModule::GameStatus::GAMEOVER)
+      this->_coreStatus = CoreStatus::SELECTION;
     switch (input = this->getGraphicModule()->getInput())
     {
       case arcade::KeyboardInput::UP:

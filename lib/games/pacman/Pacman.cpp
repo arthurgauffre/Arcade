@@ -19,48 +19,47 @@ void arcade::Pacman::init()
   arcade::GameData data;
   // Define the sprite values for walls, coins, Pacman, and coins that allow Pacman to eat ghosts
   data.sprite_value['W'] = "assets/default/map/wall.png";  // Wall
-  data.sprite_value['M'] = "assets/default/map/map5.png";  // Map
   data.sprite_value['C'] = "assets/default/item/coin.png";  // Coin
   data.sprite_value['P'] = "assets/default/npc/pacman.png";  // Pacman
   data.sprite_value['G'] = "assets/default/npc/ghost_0.png";  // Ghost
+  data.sprite_value['H'] = "assets/default/npc/ghost_1.png";  // Ghost
+  data.sprite_value['I'] = "assets/default/npc/ghost_2.png";  // Ghost
+  data.sprite_value['J'] = "assets/default/npc/ghost_3.png";  // Ghost
+  data.sprite_value['F'] = "assets/default/png/black.png";  // Floor
 
-  std::pair<int, int> pacman = std::make_pair(10, 10);
+  std::pair<int, int> pacman = std::make_pair(10, 9);
   std::vector<std::pair<int, int>> ghosts;
-  ghosts.push_back(std::make_pair(1, 10));
-  ghosts.push_back(std::make_pair(3, 8));
-  ghosts.push_back(std::make_pair(5, 7));
-  ghosts.push_back(std::make_pair(7, 6));
+  ghosts.push_back(std::make_pair(7, 10));
+  ghosts.push_back(std::make_pair(7, 9));
+  ghosts.push_back(std::make_pair(7, 8));
+  ghosts.push_back(std::make_pair(7, 7));
 
   // Define the map
   data.display_info = {
-      {'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W'},
-      {'W', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'W'},
-      {'W', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'C', 'M', 'W'},
-      {'W', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'W'},
-      {'W', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'W'},
-      {'W', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'W'},
-      {'W', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'W'},
-      {'W', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'W'},
-      {'W', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'W'},
-      {'W', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'W'},
-      {'W', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'W'},
-      {'W', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'W'},
-      {'W', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'W'},
-      {'W', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'W'},
-      {'W', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'W'},
-      {'W', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'W'},
-      {'W', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'W'},
-      {'W', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'W'},
-      {'W', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'W'},
-      {'W', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'M', 'W'},
-      {'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W'}
+      {'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W'},
+      {'W', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'W', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'W'},
+      {'W', 'C', 'W', 'W', 'C', 'W', 'W', 'W', 'C', 'W', 'C', 'W', 'W', 'W', 'C', 'W', 'W', 'C', 'W'},
+      {'W', 'C', 'W', 'W', 'C', 'W', 'W', 'W', 'C', 'W', 'C', 'W', 'W', 'W', 'C', 'W', 'W', 'C', 'W'},
+      {'W', 'C', 'W', 'W', 'C', 'W', 'W', 'W', 'C', 'C', 'C', 'W', 'W', 'W', 'C', 'W', 'W', 'C', 'W'},
+      {'W', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'W'},
+      {'W', 'W', 'W', 'W', 'C', 'W', 'C', 'W', 'W', 'W', 'W', 'W', 'C', 'W', 'C', 'W', 'W', 'W', 'W'},
+      {'C', 'C', 'C', 'W', 'C', 'W', 'C', 'W', 'M', 'M', 'M', 'W', 'C', 'W', 'C', 'W', 'C', 'C', 'C'},
+      {'W', 'W', 'W', 'W', 'C', 'W', 'C', 'W', 'M', 'M', 'M', 'W', 'C', 'W', 'C', 'W', 'W', 'W', 'W'},
+      {'W', 'C', 'C', 'C', 'C', 'W', 'C', 'W', 'W', 'W', 'W', 'W', 'C', 'W', 'C', 'C', 'C', 'C', 'W'},
+      {'W', 'C', 'W', 'W', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'W', 'W', 'C', 'W'},
+      {'W', 'C', 'C', 'W', 'C', 'W', 'W', 'W', 'C', 'C', 'C', 'W', 'W', 'W', 'C', 'W', 'C', 'C', 'W'},
+      {'W', 'W', 'C', 'W', 'C', 'C', 'C', 'C', 'C', 'W', 'C', 'C', 'C', 'C', 'C', 'W', 'C', 'W', 'W'},
+      {'W', 'W', 'C', 'W', 'C', 'W', 'C', 'W', 'W', 'W', 'W', 'W', 'C', 'W', 'C', 'W', 'C', 'W', 'W'},
+      {'W', 'C', 'C', 'C', 'C', 'W', 'C', 'C', 'C', 'W', 'C', 'C', 'C', 'W', 'C', 'C', 'C', 'C', 'W'},
+      {'W', 'C', 'W', 'W', 'W', 'W', 'W', 'W', 'C', 'W', 'C', 'W', 'W', 'W', 'W', 'W', 'W', 'C', 'W'},
+      {'W', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'W'},
+      {'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W'},
   };
-
   for (int i = 0; i < ghosts.size(); i++) {
-    data.display_info[ghosts[i].first][ghosts[i].second] = 'G';
+    data.display_info[ghosts[i].second][ghosts[i].first] = 'G' + i;
   }
 
-  data.display_info[pacman.first][pacman.second] = 'P';
+  data.display_info[pacman.second][pacman.first] = 'P';
   this->setPacman(pacman);
   this->setGhosts(ghosts);
   this->setDirection(arcade::KeyboardInput::RIGHT);
@@ -151,10 +150,12 @@ std::vector<std::vector<int>> arcade::Pacman::moveEntities(std::vector<std::vect
       newGhosts[i].second++;
   }
 
-
   // Check if ghost is hitting a wall
   for (int i = 0; i < ghosts.size(); i++) {
     if (display_info[newGhosts[i].first][newGhosts[i].second] == 'W') {
+      newGhosts[i] = ghosts[i];
+    }
+    if (display_info[newGhosts[i].first][newGhosts[i].second] == 'G') {
       newGhosts[i] = ghosts[i];
     }
   }
@@ -166,9 +167,7 @@ std::vector<std::vector<int>> arcade::Pacman::moveEntities(std::vector<std::vect
   
   // clear the map
   if (pacman != newPacman)
-    display_info[pacman.first][pacman.second] = 'M';
-  else
-    display_info[pacman.first][pacman.second] = 'C';
+    display_info[pacman.first][pacman.second] = 'F';
 
   for (int i = 0; i < ghosts.size(); i++) {
     if (ghosts[i] != newGhosts[i])

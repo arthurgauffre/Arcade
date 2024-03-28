@@ -13,7 +13,6 @@
  */
 arcade::ADisplayModule::ADisplayModule()
 {
-  this->_displayStatus = DisplayStatus::SELECTION;
 }
 
 /**
@@ -21,28 +20,6 @@ arcade::ADisplayModule::ADisplayModule()
  *
  */
 arcade::ADisplayModule::~ADisplayModule() {}
-
-/**
- * @brief set the status of the display module
- *
- * @param status of the display module
- */
-void arcade::ADisplayModule::setDisplayStatus(
-    arcade::ADisplayModule::DisplayStatus status)
-{
-  this->_displayStatus = status;
-}
-
-/**
- * @brief return the status of the display module
- *
- * @return arcade::ADisplayModule::DisplayStatus status of the display module
- */
-arcade::ADisplayModule::DisplayStatus
-arcade::ADisplayModule::getDisplayStatus() const
-{
-  return this->_displayStatus;
-}
 
 /**
  * @brief receive send data of the game module to the display module
