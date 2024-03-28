@@ -18,9 +18,6 @@ public:
   ADisplayModule();
   ~ADisplayModule();
 
-  void setDisplayStatus(DisplayStatus status);
-  DisplayStatus getDisplayStatus() const;
-
   void sendGameData(arcade::GameData data);
   void sendMenuData(arcade::MenuData data);
 
@@ -35,7 +32,6 @@ public:
 
 protected:
   arcade::KeyboardInput _input;
-  DisplayStatus _displayStatus;
   arcade::CoreModule *_coreModule;
 };
 }; // namespace arcade
