@@ -37,7 +37,6 @@ public:
   virtual void drawText(const std::string text, int x, int y, int size) = 0;
 
 protected:
-  void *_window;
   DisplayStatus _displayStatus;
   arcade::CoreModule *_coreModule;
   arcade::KeyboardInput _input;

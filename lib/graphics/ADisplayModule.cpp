@@ -14,7 +14,6 @@
 arcade::ADisplayModule::ADisplayModule()
 {
   this->_displayStatus = DisplayStatus::SELECTION;
-  this->_window = nullptr;
 }
 
 /**
