@@ -21,9 +21,8 @@ public:
   void setPacman(std::pair<int, int> snake);
   std::vector<std::pair<int, int>> getGhosts() const;
   void setGhosts(std::vector<std::pair<int, int>> ghosts);
-  std::vector<std::vector<int>> movePacman(std::vector<std::vector<int>> display_info);
+  std::vector<std::vector<int>> moveEntities(std::vector<std::vector<int>> display_info);
   void handdleKeyEvents(arcade::KeyboardInput key);
-  std::vector<std::vector<int>> moveGhosts(std::vector<std::vector<int>> display_info);
 
 protected:
 private:
