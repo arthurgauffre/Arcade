@@ -106,15 +106,18 @@ std::vector<std::vector<int>> arcade::Snake::moveSnake(std::vector<std::vector<i
     snake.push_back(new_tail);
     display_info[new_tail.first][new_tail.second] = 'B';
   }
+
   // Check if the snake is eating itself
-  // for (int i = 1; i < snake.size(); i++) {
-  //   if (new_head == snake[i]) {
-  //     return display_info;
-  //   }
-  // }
+  for (int i = 1; i < snake.size(); i++) {
+    if (new_head == snake[i]) {
+      this->setGameStatus(arcade::IGameModule::GameStatus::GAMEOVER);
+      return display_info;
+    }
+  }
 
   // Check if the snake is hitting a wall
   if (display_info[new_head.first][new_head.second] == 'W') {
+    this->setGameStatus(arcade::IGameModule::GameStatus::GAMEOVER);
     return display_info;
   }
   
