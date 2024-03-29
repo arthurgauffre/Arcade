@@ -32,6 +32,10 @@ void arcade::Snake::init()
   data.sprite_value['N'] = "assets/snake/npc/tail_down.png";  // Tail down (n)
   data.sprite_value['O'] = "assets/snake/npc/tail_left.png";  // Tail left (o)
   data.sprite_value['P'] = "assets/snake/npc/tail_right.png";  // Tail right (p)
+  data.sprite_value['T'] = "assets/snake/npc/body_topleft.png";  // Top left corner
+  data.sprite_value['I'] = "assets/snake/npc/body_topright.png";  // Top right corner
+  data.sprite_value['E'] = "assets/snake/npc/body_bottomleft.png";  // Bottom left corner
+  data.sprite_value['F'] = "assets/snake/npc/body_bottomright.png";  // Bottom right corner
 
   // Define the snake
   std::vector<std::pair<int, int>> snake;
@@ -150,7 +154,8 @@ std::vector<std::vector<int>> arcade::Snake::moveSnake(std::vector<std::vector<i
   for (int i = 0; i < display_info.size(); i++) {
     for (int j = 0; j < display_info[i].size(); j++) {
       if (display_info[i][j] == 'U' || display_info[i][j] == 'D' || display_info[i][j] == 'L' || display_info[i][j] == 'R' || display_info[i][j] == 'H'
-      || display_info[i][j] == 'V' || display_info[i][j] == 'M' || display_info[i][j] == 'N' || display_info[i][j] == 'O' || display_info[i][j] == 'P')
+      || display_info[i][j] == 'V' || display_info[i][j] == 'M' || display_info[i][j] == 'N' || display_info[i][j] == 'O' || display_info[i][j] == 'P'
+      || display_info[i][j] == 'T' || display_info[i][j] == 'I' || display_info[i][j] == 'E' || display_info[i][j] == 'F')
         display_info[i][j] = ' ';
     }
   }
@@ -171,10 +176,28 @@ std::vector<std::vector<int>> arcade::Snake::moveSnake(std::vector<std::vector<i
 
   // update body
   for (i = 1; i < (snake.size() - 1); i++) {
-    if (snake[i].first == snake[i - 1].first)
-      display_info[snake[i].first][snake[i].second] = 'H';
-    else
-      display_info[snake[i].first][snake[i].second] = 'V';
+    if (snake[i - 1].first > snake[i].first && snake[i + 1].second > snake[i].second)
+      display_info[snake[i].first][snake[i].second] = 'T';
+    else if (snake[i - 1].first > snake[i].first && snake[i + 1].second < snake[i].second)
+      display_info[snake[i].first][snake[i].second] = 'I';
+    else if (snake[i - 1].first < snake[i].first && snake[i + 1].second < snake[i].second)
+      display_info[snake[i].first][snake[i].second] = 'F';
+    else if (snake[i - 1].first < snake[i].first && snake[i + 1].second > snake[i].second)
+      display_info[snake[i].first][snake[i].second] = 'E';
+    else if (snake[i + 1].first > snake[i].first && snake[i - 1].second > snake[i].second)
+      display_info[snake[i].first][snake[i].second] = 'T';
+    else if (snake[i + 1].first > snake[i].first && snake[i - 1].second < snake[i].second)
+      display_info[snake[i].first][snake[i].second] = 'I';
+    else if (snake[i + 1].first < snake[i].first && snake[i - 1].second < snake[i].second)
+      display_info[snake[i].first][snake[i].second] = 'F';
+    else if (snake[i + 1].first < snake[i].first && snake[i - 1].second > snake[i].second)
+      display_info[snake[i].first][snake[i].second] = 'E';
+    else {
+      if (snake[i - 1].first == snake[i].first)
+        display_info[snake[i].first][snake[i].second] = 'H';
+      else
+        display_info[snake[i].first][snake[i].second] = 'V';
+    }
   }
 
   // update tail
