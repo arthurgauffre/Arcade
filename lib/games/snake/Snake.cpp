@@ -25,7 +25,8 @@ void arcade::Snake::init()
   data.sprite_value['D'] = "assets/snake/npc/head_down.png";  // Head down
   data.sprite_value['L'] = "assets/snake/npc/head_left.png";  // Head left
   data.sprite_value['R'] = "assets/snake/npc/head_right.png";  // Head right
-  data.sprite_value['B'] = "assets/snake/npc/body.png";  // Body
+  data.sprite_value['H'] = "assets/snake/npc/body_horizontal.png";  // Body horizontal
+  data.sprite_value['V'] = "assets/snake/npc/body_vertical.png";  // Body vertical
 
   // Define the snake
   std::vector<std::pair<int, int>> snake;
@@ -63,7 +64,7 @@ void arcade::Snake::init()
     if (i == 0)
       data.display_info[snake[i].first][snake[i].second] = 'R';
     else
-      data.display_info[snake[i].first][snake[i].second] = 'B';
+      data.display_info[snake[i].first][snake[i].second] = 'H';
   }
 
   this->getCoreModule()->setGameData(data);
@@ -103,11 +104,15 @@ std::vector<std::vector<int>> arcade::Snake::moveSnake(std::vector<std::vector<i
   else if (direction == arcade::KeyboardInput::RIGHT)
     new_head = std::make_pair(head.first, head.second + 1);
 
-  // Check if the snake eats apple
+  // Check if the snake eats apple; elongate body if yes
   if (display_info[new_head.first][new_head.second] == 'A') {
     is_eating = true;
     snake.push_back(new_tail);
-    display_info[new_tail.first][new_tail.second] = 'B';
+
+    if (display_info[snake[snake.size() - 1].first][snake[snake.size() - 1].second] == 'H')
+      display_info[new_tail.first][new_tail.second] = 'H';
+    else
+      display_info[new_tail.first][new_tail.second] = 'V';
   }
 
   // Check if the snake eats itself
@@ -124,10 +129,11 @@ std::vector<std::vector<int>> arcade::Snake::moveSnake(std::vector<std::vector<i
     return display_info;
   }
   
-  // clear the map
+  // clear the map behind snake
   for (int i = 0; i < display_info.size(); i++) {
     for (int j = 0; j < display_info[i].size(); j++) {
-      if (display_info[i][j] == 'U' || display_info[i][j] == 'D' || display_info[i][j] == 'L' || display_info[i][j] == 'R' || display_info[i][j] == 'B')
+      if (display_info[i][j] == 'U' || display_info[i][j] == 'D' || display_info[i][j] == 'L'
+      || display_info[i][j] == 'R' || display_info[i][j] == 'H' || display_info[i][j] == 'V')
         display_info[i][j] = ' ';
     }
   }
@@ -148,7 +154,10 @@ std::vector<std::vector<int>> arcade::Snake::moveSnake(std::vector<std::vector<i
       else if (direction == arcade::KeyboardInput::RIGHT)
         display_info[snake[i].first][snake[i].second] = 'R';
     } else {
-      display_info[snake[i].first][snake[i].second] = 'B';
+        if (snake[i].first == snake[i - 1].first)
+          display_info[snake[i].first][snake[i].second] = 'H';
+        else
+          display_info[snake[i].first][snake[i].second] = 'V';
     }
   }
 
