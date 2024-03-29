@@ -114,6 +114,20 @@ std::vector<std::vector<int>> arcade::Snake::moveSnake(std::vector<std::vector<i
   else if (direction == arcade::KeyboardInput::RIGHT)
     new_head = std::make_pair(head.first, head.second + 1);
 
+  // Check if the snake eats itself
+  for (int i = 1; i < snake.size(); i++) {
+    if (new_head == snake[i]) {
+      this->setGameStatus(arcade::IGameModule::GameStatus::GAMEOVER);
+      return display_info;
+    }
+  }
+
+  // Check if the snake hits a wall
+  if (display_info[new_head.first][new_head.second] == 'W') {
+    this->setGameStatus(arcade::IGameModule::GameStatus::GAMEOVER);
+    return display_info;
+  }
+
   // Check if the snake eats apple; elongate body if yes
   if (display_info[new_head.first][new_head.second] == 'A') {
     is_eating = true;
@@ -134,20 +148,6 @@ std::vector<std::vector<int>> arcade::Snake::moveSnake(std::vector<std::vector<i
       display_info[new_tail.first][new_tail.second] = 'P';
     else
       display_info[new_tail.first][new_tail.second] = 'O';
-  }
-
-  // Check if the snake eats itself
-  for (int i = 1; i < snake.size(); i++) {
-    if (new_head == snake[i]) {
-      this->setGameStatus(arcade::IGameModule::GameStatus::GAMEOVER);
-      return display_info;
-    }
-  }
-
-  // Check if the snake hits a wall
-  if (display_info[new_head.first][new_head.second] == 'W') {
-    this->setGameStatus(arcade::IGameModule::GameStatus::GAMEOVER);
-    return display_info;
   }
   
   // clear the map behind snake
