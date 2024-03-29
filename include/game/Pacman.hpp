@@ -9,6 +9,9 @@
 #define PACMAN_HPP_
 
 #include "AGameModule.hpp"
+#include <queue>
+#include <cmath>
+#include <algorithm>
 
 namespace arcade {
 class Pacman : virtual public arcade::AGameModule {

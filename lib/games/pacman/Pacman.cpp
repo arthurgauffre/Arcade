@@ -32,7 +32,7 @@ void arcade::Pacman::init()
   ghosts.push_back(std::make_pair(7, 10));
   ghosts.push_back(std::make_pair(7, 9));
   ghosts.push_back(std::make_pair(7, 8));
-  ghosts.push_back(std::make_pair(7, 7));
+  ghosts.push_back(std::make_pair(8, 8));
 
   // Define the map
   data.display_info = {
@@ -42,7 +42,7 @@ void arcade::Pacman::init()
       {'W', 'C', 'W', 'W', 'C', 'W', 'W', 'W', 'C', 'W', 'C', 'W', 'W', 'W', 'C', 'W', 'W', 'C', 'W'},
       {'W', 'C', 'W', 'W', 'C', 'W', 'W', 'W', 'C', 'C', 'C', 'W', 'W', 'W', 'C', 'W', 'W', 'C', 'W'},
       {'W', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'W'},
-      {'W', 'W', 'W', 'W', 'C', 'W', 'C', 'W', 'W', 'W', 'W', 'W', 'C', 'W', 'C', 'W', 'W', 'W', 'W'},
+      {'W', 'W', 'W', 'W', 'C', 'W', 'C', 'W', 'W', 'C', 'W', 'W', 'C', 'W', 'C', 'W', 'W', 'W', 'W'},
       {'C', 'C', 'C', 'W', 'C', 'W', 'C', 'W', 'M', 'M', 'M', 'W', 'C', 'W', 'C', 'W', 'C', 'C', 'C'},
       {'W', 'W', 'W', 'W', 'C', 'W', 'C', 'W', 'M', 'M', 'M', 'W', 'C', 'W', 'C', 'W', 'W', 'W', 'W'},
       {'W', 'C', 'C', 'C', 'C', 'W', 'C', 'W', 'W', 'W', 'W', 'W', 'C', 'W', 'C', 'C', 'C', 'C', 'W'},
@@ -55,11 +55,12 @@ void arcade::Pacman::init()
       {'W', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'W'},
       {'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W'},
   };
+
   for (int i = 0; i < ghosts.size(); i++) {
-    data.display_info[ghosts[i].second][ghosts[i].first] = 'G' + i;
+    data.display_info[ghosts[i].first][ghosts[i].second] = 'G' + i;
   }
 
-  data.display_info[pacman.second][pacman.first] = 'P';
+  data.display_info[pacman.first][pacman.second] = 'P';
   this->setPacman(pacman);
   this->setGhosts(ghosts);
   this->setDirection(arcade::KeyboardInput::RIGHT);
@@ -120,6 +121,60 @@ void arcade::Pacman::setPacman(std::pair<int, int> pacman)
   this->_pacman = pacman;
 }
 
+struct Node {
+    int x, y;
+    double f, g, h;
+};
+
+bool operator<(const Node& a, const Node& b) {
+    return a.f > b.f; // Pour la priorité de la file de priorité (min heap)
+}
+
+Node a_star(const std::pair<int, int>& start, const std::pair<int, int>& goal, const std::vector<std::vector<int>>& map) {
+    std::priority_queue<Node> open_list;
+    std::vector<std::vector<bool>> closed_list(map.size(), std::vector<bool>(map[0].size(), false));
+
+    Node start_node = {start.first, start.second, 0.0, 0.0, 0.0};
+    start_node.h = std::abs(start_node.x - goal.first) + std::abs(start_node.y - goal.second);
+    open_list.push(start_node);
+
+    while (!open_list.empty()) {
+        Node current_node = open_list.top();
+        open_list.pop();
+
+        if (current_node.x == goal.first && current_node.y == goal.second) {
+            return current_node;
+        }
+
+        closed_list[current_node.x][current_node.y] = true;
+
+        // Déplacements possibles : haut, bas, gauche, droite
+        std::vector<std::pair<int, int>> neighbors = {{current_node.x, current_node.y - 1},
+                                                      {current_node.x, current_node.y + 1},
+                                                      {current_node.x - 1, current_node.y},
+                                                      {current_node.x + 1, current_node.y}};
+
+        for (const auto& neighbor : neighbors) {
+            if (neighbor.first < 0 || neighbor.first >= map.size() || neighbor.second < 0 || neighbor.second >= map[0].size()) {
+                continue; // Hors des limites de la carte
+            }
+            if (map[neighbor.first][neighbor.second] == 1 || closed_list[neighbor.first][neighbor.second]) {
+                continue; // Mur ou déjà visité
+            }
+
+            Node neighbor_node = {neighbor.first, neighbor.second, 0.0, 0.0, 0.0};
+            neighbor_node.g = current_node.g + 1.0; // Coût du déplacement
+            neighbor_node.h = std::abs(neighbor_node.x - goal.first) + std::abs(neighbor_node.y - goal.second); // Heuristique (distance de Manhattan)
+            neighbor_node.f = neighbor_node.g + neighbor_node.h;
+
+            open_list.push(neighbor_node);
+        }
+    }
+
+    // Si aucun chemin trouvé
+    return start_node;
+}
+
 std::vector<std::vector<int>> arcade::Pacman::moveEntities(std::vector<std::vector<int>> display_info)
 {
   std::pair<int, int> pacman = this->getPacman();
@@ -140,13 +195,14 @@ std::vector<std::vector<int>> arcade::Pacman::moveEntities(std::vector<std::vect
 
   // Move the ghosts
   for (int i = 0; i < ghosts.size(); i++) {
-    if (rand() % 4 == 0)
+    Node node = a_star(ghosts[i], pacman, display_info);
+    if (node.x < ghosts[i].first)
       newGhosts[i].first--;
-    else if (rand() % 4 == 1)
+    else if (node.x > ghosts[i].first)
       newGhosts[i].first++;
-    else if (rand() % 4 == 2)
+    else if (node.y < ghosts[i].second)
       newGhosts[i].second--;
-    else if (rand() % 4 == 3)
+    else if (node.y > ghosts[i].second)
       newGhosts[i].second++;
   }
 
