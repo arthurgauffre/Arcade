@@ -20,11 +20,14 @@ void arcade::Pacman::init()
   // Define the sprite values for walls, coins, Pacman, and coins that allow Pacman to eat ghosts
   data.sprite_value['W'] = "assets/default/map/wall.png";  // Wall
   data.sprite_value['C'] = "assets/default/item/coin.png";  // Coin
-  data.sprite_value['P'] = "assets/default/npc/pacman.png";  // Pacman
-  data.sprite_value['G'] = "assets/default/npc/ghost_0.png";  // Ghost
-  data.sprite_value['H'] = "assets/default/npc/ghost_1.png";  // Ghost
-  data.sprite_value['I'] = "assets/default/npc/ghost_2.png";  // Ghost
-  data.sprite_value['J'] = "assets/default/npc/ghost_3.png";  // Ghost
+  data.sprite_value['U'] = "assets/pacman/npc/pacman_up.png";  // Pacman up
+  data.sprite_value['D'] = "assets/pacman/npc/pacman_down.png";  // Pacman down
+  data.sprite_value['L'] = "assets/pacman/npc/pacman_left.png";  // Pacman left
+  data.sprite_value['R'] = "assets/pacman/npc/pacman_right.png";  // Pacman right
+  data.sprite_value['G'] = "assets/pacman/npc/ghost_0.png";  // Ghost
+  data.sprite_value['H'] = "assets/pacman/npc/ghost_1.png";  // Ghost
+  data.sprite_value['I'] = "assets/pacman/npc/ghost_2.png";  // Ghost
+  data.sprite_value['J'] = "assets/pacman/npc/ghost_3.png";  // Ghost
   data.sprite_value['F'] = "assets/default/png/black.png";  // Floor
 
   std::pair<int, int> pacman = std::make_pair(10, 9);
@@ -60,7 +63,7 @@ void arcade::Pacman::init()
     data.display_info[ghosts[i].first][ghosts[i].second] = 'G' + i;
   }
 
-  data.display_info[pacman.first][pacman.second] = 'P';
+  data.display_info[pacman.first][pacman.second] = 'R';
   this->setPacman(pacman);
   this->setGhosts(ghosts);
   this->setDirection(arcade::KeyboardInput::RIGHT);
@@ -233,7 +236,14 @@ std::vector<std::vector<int>> arcade::Pacman::moveEntities(std::vector<std::vect
   }
 
   // Update the map
-  display_info[newPacman.first][newPacman.second] = 'P';
+  if (direction == arcade::KeyboardInput::UP)
+    display_info[newPacman.first][newPacman.second] = 'U';
+  else if (direction == arcade::KeyboardInput::DOWN)
+    display_info[newPacman.first][newPacman.second] = 'D';
+  else if (direction == arcade::KeyboardInput::LEFT)
+    display_info[newPacman.first][newPacman.second] = 'L';
+  else if (direction == arcade::KeyboardInput::RIGHT)
+    display_info[newPacman.first][newPacman.second] = 'R';
   this->setPacman(newPacman);
   for (int i = 0; i < ghosts.size(); i++) {
     display_info[newGhosts[i].first][newGhosts[i].second] = 'G';
