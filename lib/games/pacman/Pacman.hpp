@@ -34,6 +34,7 @@ public:
   void setGhosts(std::vector<arcade::Node> ghosts);
   std::vector<std::vector<int>> moveEntities(std::vector<std::vector<int>> display_info);
   void handdleKeyEvents(arcade::KeyboardInput key);
+  bool isOver(std::vector<std::vector<int>> display_info);
 
 protected:
 private:
