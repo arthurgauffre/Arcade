@@ -28,4 +28,11 @@ lib/arcade_ncurses.so
 lib/arcade_sfml.so
 lib/arcade_sdl2.so
 
+## Special Keys:
+ESC - exit program
+M - back to menu
+R - restart current game
+L - switch graphics libraries during game
+G - switch games while playing
+
 #### Email address of the team leader of the group we collaborated with for the interface: tom.mendy@epitech.eu
