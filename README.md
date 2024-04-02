@@ -14,14 +14,14 @@ You may then select a game and/or change the graphics library if you deisre. Ano
 In case of confusion or curiosity, a document detailing the ins and outs of this program is available in the doc directory: ./doc/Documentation.pdf
 
 ## Dependencies:
-SDL2
-SDL2_ttf
-SDL2_image
+#### SDL2
+#### SDL2_ttf
+#### SDL2_image
 
 ## Execution:
-cmake -S. -B build
-cmake --build build
-./arcade libraryPath
+#### cmake -S. -B build
+#### cmake --build build
+#### ./arcade libraryPath
 
 ### Available library paths:
 #### lib/arcade_ncurses.so
