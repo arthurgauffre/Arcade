@@ -393,7 +393,7 @@ int arcade::CoreModule::coreLoop()
  */
 void arcade::CoreModule::updateSelection()
 {
-  std::string name;
+  std::string selectName = "name:";
   std::string selection;
   std::string graphic = "selected graphic library:\n";
   std::string game = "selected game library:\n";
@@ -401,19 +401,25 @@ void arcade::CoreModule::updateSelection()
   this->getGraphicModule()->clearWindow();
   for (size_t i = 0; i < this->_menuData._graphicLibList.size(); i += 1)
   {
-    if (i == this->_menuData.indexGraphic)
+    if (i == this->_menuData.indexGraphic && this->_menuData._type == arcade::ModuleType::GRAPHIC)
       graphic += "-> " + this->_menuData._graphicLibList[i] + "\n";
     else
       graphic += "   " + this->_menuData._graphicLibList[i] + "\n";
   }
   for (size_t i = 0; i < this->_menuData._gameLibList.size(); i += 1)
   {
-    if (i == this->_menuData.indexGame)
+    if (i == this->_menuData.indexGame && this->_menuData._type == arcade::ModuleType::GAME)
       game += "-> " + this->_menuData._gameLibList[i] + "\n";
     else
       game += "   " + this->_menuData._gameLibList[i] + "\n";
   }
-  selection = "name: " + this->name + "\n" + graphic + "\n" + game + "\n" + score + "\n\n" + this->_menuData._description;
+  if (this->_menuData._type == arcade::ModuleType::NAME)
+    selectName = "-" + selectName;
+  if (this->_menuData._type == arcade::ModuleType::GAME)
+    game = "-" + game;
+  if (this->_menuData._type == arcade::ModuleType::GRAPHIC)
+    graphic = "-" + graphic;
+  selection = selectName + this->name + "\n" + graphic + "\n" + game + "\n" + score + "\n\n" + this->_menuData._description;
   this->getGraphicModule()->drawText(selection, 0, 0, 20);
   this->getGraphicModule()->displayWindow();
 }
