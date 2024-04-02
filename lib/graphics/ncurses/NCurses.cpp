@@ -40,7 +40,7 @@ std::string arcade::NCurses::getName() const
 
 void arcade::NCurses::clearWindow()
 {
-  wrefresh(this->_window); // Refresh the window
+  wclear(this->_window); // Clear the window
 }
 
 void arcade::NCurses::drawSprite(std::pair<char, std::string> sprite, int x, int y, int width, int height, int rotation)
@@ -77,7 +77,7 @@ arcade::KeyboardInput arcade::NCurses::getInput()
     return arcade::KeyboardInput::LEFT;
   case KEY_RIGHT:
     return arcade::KeyboardInput::RIGHT;
-  case ESCAPE:
+  case 27:
     return arcade::KeyboardInput::CROSS;
   case BACKSPACE:
     return arcade::KeyboardInput::BACKSPACE;

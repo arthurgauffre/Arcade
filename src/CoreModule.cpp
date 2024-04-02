@@ -205,8 +205,6 @@ void arcade::CoreModule::loadLib(std::string pathLib)
     throw std::exception();
     break;
   }
-  this->_menuData.indexGame = this->_menuData._gameLibList.size() / 2;
-  this->_menuData.indexGraphic = this->_menuData._graphicLibList.size() / 2;
 }
 
 void arcade::CoreModule::handleKeySelection(arcade::KeyboardInput key)
@@ -483,16 +481,20 @@ void arcade::CoreModule::updateSelection()
  */
 void arcade::CoreModule::selectionLoop()
 {
+  arcade::KeyboardInput input;
   this->updateSelection();
-  while (this->_coreStatus == CoreStatus::SELECTION)
-    this->handleKeyEvent(this->getGraphicModule()->getInput());
+  while (this->_coreStatus == CoreStatus::SELECTION) {
+    input = this->getGraphicModule()->getInput();
+    if (input != arcade::KeyboardInput::NONE)
+      this->handleKeyEvent(input);
+  }
 }
 
 void arcade::CoreModule::updateRunning()
 {
   std::pair<char, std::string> sprite;
-  this->getGameModule()->updateGame();
   this->getGraphicModule()->clearWindow();
+  this->getGameModule()->updateGame();
   for (size_t i = 0; i < this->getGameData().display_info.size(); i += 1)
   {
     for (size_t j = 0; j < this->getGameData().display_info[i].size(); j += 1) {
@@ -518,8 +520,10 @@ void arcade::CoreModule::runningLoop()
     if (this->getGameModule()->getGameStatus() == arcade::IGameModule::GameStatus::GAMEOVER)
       this->_coreStatus = CoreStatus::SELECTION;
     input = this->getGraphicModule()->getInput();
-    this->handleKeyEvent(input);
-    this->getGameModule()->handdleKeyEvents(input);
+    if (input != arcade::KeyboardInput::NONE) {
+      this->handleKeyEvent(input);
+      this->getGameModule()->handdleKeyEvents(input);
+    }
   }
 }
 
