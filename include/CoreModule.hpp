@@ -45,6 +45,9 @@ namespace arcade
     void updateRunning();
     void selectionLoop();
     void updateSelection();
+
+    std::string getScore();
+    void updateScore(int score);
   };
 }; // namespace arcade
 

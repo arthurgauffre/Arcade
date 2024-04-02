@@ -11,7 +11,10 @@
  * @brief Construct a new arcade::Snake::Snake object
  *
  */
-arcade::Snake::Snake() : arcade::AGameModule() {}
+arcade::Snake::Snake() : arcade::AGameModule()
+{
+  this->score = 0;
+}
 
 void arcade::Snake::init()
 {
@@ -117,6 +120,7 @@ std::vector<std::vector<int>> arcade::Snake::moveSnake(std::vector<std::vector<i
   // Check if the snake eats itself
   for (int i = 1; i < snake.size(); i++) {
     if (new_head == snake[i]) {
+      this->getCoreModule()->updateScore(this->score);
       this->setGameStatus(arcade::IGameModule::GameStatus::GAMEOVER);
       return display_info;
     }
@@ -124,12 +128,14 @@ std::vector<std::vector<int>> arcade::Snake::moveSnake(std::vector<std::vector<i
 
   // Check if the snake hits a wall
   if (display_info[new_head.first][new_head.second] == 'W') {
+    this->getCoreModule()->updateScore(this->score);
     this->setGameStatus(arcade::IGameModule::GameStatus::GAMEOVER);
     return display_info;
   }
 
   // Check if the snake eats apple; elongate body if yes
   if (display_info[new_head.first][new_head.second] == 'A') {
+    score += 10;
     is_eating = true;
     snake.push_back(new_tail);
 
@@ -263,7 +269,7 @@ void arcade::Snake::updateGame()
 {
   arcade::GameData data = this->getCoreModule()->getGameData();
   this->updateTimer();
-  if (this->getTimer().duration.count() >= 500) {
+  if (this->getTimer().duration.count() >= 250) {
     this->resetTimer();
     // Update the game
     data.display_info = this->moveSnake(this->getCoreModule()->getGameData().display_info);

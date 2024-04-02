@@ -53,7 +53,10 @@ namespace arcade
 
     virtual void init() = 0;
 
+    virtual int getScore() const = 0;
+
   protected:
+    int score;
     timer _timer;
     GameStatus _gameStatus;
     arcade::CoreModule *_coreModule;

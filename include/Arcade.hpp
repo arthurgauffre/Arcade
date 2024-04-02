@@ -34,7 +34,7 @@ struct GameData {
  * @brief all the possible module types
  *
  */
-enum ModuleType { GRAPHIC, GAME, CORE };
+enum ModuleType { GRAPHIC, GAME, NAME, CORE };
 
 struct MenuData {
   std::vector<std::string> _graphicLibList;
@@ -57,6 +57,7 @@ enum KeyboardInput {
   SPACE,
   ENTER,
   ESCAPE,
+  BACKSPACE,
   TAB,
   CROSS,
   A,
