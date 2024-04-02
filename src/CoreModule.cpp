@@ -457,14 +457,14 @@ void arcade::CoreModule::updateSelection()
   this->getGraphicModule()->clearWindow();
   for (size_t i = 0; i < this->_menuData._graphicLibList.size(); i += 1)
   {
-    if (i == this->_menuData.indexGraphic && this->_menuData._type == arcade::ModuleType::GRAPHIC)
+    if (i == this->_menuData.indexGraphic)
       graphic += "-> " + this->_menuData._graphicLibList[i] + "\n";
     else
       graphic += "   " + this->_menuData._graphicLibList[i] + "\n";
   }
   for (size_t i = 0; i < this->_menuData._gameLibList.size(); i += 1)
   {
-    if (i == this->_menuData.indexGame && this->_menuData._type == arcade::ModuleType::GAME)
+    if (i == this->_menuData.indexGame)
       game += "-> " + this->_menuData._gameLibList[i] + "\n";
     else
       game += "   " + this->_menuData._gameLibList[i] + "\n";
