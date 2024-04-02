@@ -35,4 +35,4 @@ cmake --build build
 #### L - switch graphics libraries during game
 #### G - switch games while playing
 
-#### Email address of the team leader of the group we collaborated with for the interface: tom.mendy@epitech.eu
+## Email address of the team leader of the group we collaborated with for the interface: tom.mendy@epitech.eu
