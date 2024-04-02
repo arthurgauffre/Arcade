@@ -44,7 +44,6 @@ namespace arcade
       }
       void DLLunloader() {
         if (handle) {
-          std::cout << "Closing Lib" << std::endl;
           dlclose(handle);
         }
       };

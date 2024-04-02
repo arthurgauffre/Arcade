@@ -5,18 +5,15 @@
 ** launch_arcade
 */
 
-#include <dlfcn.h>
-#include <iostream>
-#include <CoreModule.hpp>
-#include <unistd.h>
+#include <Shell.hpp>
 
-int launch_arcade(char const *const lib_path)
+int arcade::Shell::launch_arcade(char const *const lib_path)
 {
     arcade::CoreModule core;
 
     core.getLib("./lib/");
     core.loadLib(lib_path);
     if (core.getGraphicModule() == nullptr)
-        return 84;
+        throw std::runtime_error("Error: Graphic module not loaded");
     return core.coreLoop();
 }
