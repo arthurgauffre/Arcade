@@ -44,9 +44,6 @@ arcade::CoreModule::~CoreModule()
   if (this->_gameModule) {
     delete this->_gameModule;
   }
-  if (this->_graphicModule) {
-    delete this->_graphicModule;
-  }
 }
 
 /**
