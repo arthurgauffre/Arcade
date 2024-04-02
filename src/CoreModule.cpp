@@ -130,6 +130,7 @@ void arcade::CoreModule::addLibList(std::string pathLib)
     break;
   default:
     throw std::exception();
+    break;
   }
 }
 
@@ -170,13 +171,8 @@ void arcade::CoreModule::getLib(std::string pathLib)
 
 void arcade::CoreModule::loadLib(std::string pathLib)
 {
-  std::cout << "start Load lib :" << pathLib << std::endl;
-  // arcade::CoreModule::DLLoader<arcade::ModuleType> loaderTypeModule(pathLib);
   arcade::CoreModule::_libList.push_back(arcade::CoreModule::DLLoader<arcade::ModuleType>(pathLib));
   arcade::ModuleType module = arcade::CoreModule::_libList.back().getInstance("getType");
-  // arcade::ModuleType module = loaderTypeModule.getInstance("getType");
-  // CoreModule::DLLoader<std::unique_ptr<arcade::IDisplayModule>> loaderGraphic(pathLib);
-  // CoreModule::DLLoader<std::unique_ptr<arcade::IGameModule>> loaderGame(pathLib);
   arcade::CoreModule::_interfaceList.emplace_back(DLLoader<std::unique_ptr<arcade::IDisplayModule>>(pathLib), DLLoader<std::unique_ptr<arcade::IGameModule>>(pathLib));
   switch (module) {
   case arcade::ModuleType::GAME:
@@ -191,7 +187,6 @@ void arcade::CoreModule::loadLib(std::string pathLib)
   case arcade::ModuleType::GRAPHIC:
     if (this->_graphicModule) {
       arcade::CoreModule::_nameLoader.push_back(DLLoader<std::string>(pathLib));
-      // DLLoader<std::string> loaderTypeModule(pathLib);
       std::string moduleName = _nameLoader.back().getInstance("getName");
       if (moduleName == this->_graphicModule->getName())
         return;
@@ -254,6 +249,8 @@ void arcade::CoreModule::handleKeySelection(arcade::KeyboardInput key)
       break;
     case arcade::KeyboardInput::ESCAPE:
       this->_coreStatus = CoreStatus::EXIT;
+      break;
+    default:
       break;
   }
   if (this->_menuData._type == arcade::ModuleType::NAME) {
@@ -340,6 +337,8 @@ void arcade::CoreModule::handleKeySelection(arcade::KeyboardInput key)
         if (this->name.size() > 0)
           this->name.pop_back();
         break;
+      default:
+        break;
     }
     this->updateSelection();
   }
@@ -391,6 +390,7 @@ void arcade::CoreModule::handleKeyEvent(arcade::KeyboardInput key)
     break;
   default:
     throw std::exception();
+    break;
   }
 }
 
@@ -433,6 +433,7 @@ int arcade::CoreModule::coreLoop()
       break;
     default:
       throw std::exception();
+      break;
     }
   }
   return 0;
