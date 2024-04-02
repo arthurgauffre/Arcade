@@ -96,10 +96,14 @@ arcade::KeyboardInput arcade::Sfml::getInput()
         return arcade::KeyboardInput::ENTER;
       case sf::Keyboard::Tab:
         return arcade::KeyboardInput::TAB;
+      case sf::Keyboard::R:
+        return arcade::KeyboardInput::R;
       case sf::Keyboard::M:
         return arcade::KeyboardInput::M;
       case sf::Keyboard::L:
         return arcade::KeyboardInput::L;
+      case sf::Keyboard::G:
+        return arcade::KeyboardInput::G;
       case sf::Keyboard::Q:
         return arcade::KeyboardInput::Q;
       default:

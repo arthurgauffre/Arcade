@@ -223,6 +223,9 @@ void arcade::CoreModule::handleKeySelection(arcade::KeyboardInput key)
 void arcade::CoreModule::handleKeyRunning(arcade::KeyboardInput key)
 {
   switch (key) {
+    case arcade::KeyboardInput::R:
+      this->loadLib(this->_menuData._gameLibList[this->_menuData.indexGame]);
+      break;
     case arcade::KeyboardInput::M:
       this->_coreStatus = CoreStatus::SELECTION;
       break;
@@ -232,6 +235,13 @@ void arcade::CoreModule::handleKeyRunning(arcade::KeyboardInput key)
       else
         this->_menuData.indexGraphic = 0;
       this->loadLib(this->_menuData._graphicLibList[this->_menuData.indexGraphic]);
+      break;
+    case arcade::KeyboardInput::G:
+      if (this->_menuData.indexGame < this->_menuData._gameLibList.size() - 1)
+        ++this->_menuData.indexGame;
+      else
+        this->_menuData.indexGame = 0;
+      this->loadLib(this->_menuData._gameLibList[this->_menuData.indexGame]);
       break;
     case arcade::KeyboardInput::Q:
       this->_coreStatus = CoreStatus::EXIT;
@@ -415,11 +425,17 @@ void arcade::CoreModule::runningLoop()
       case arcade::KeyboardInput::ENTER:
         this->handleKeyEvent(arcade::KeyboardInput::ENTER);
         break;
+      case arcade::KeyboardInput::R:                      // R for restart game
+        this->handleKeyEvent(arcade::KeyboardInput::R);
+        break;
       case arcade::KeyboardInput::M:                      // M for menu
         this->handleKeyEvent(arcade::KeyboardInput::M);
         break;
       case arcade::KeyboardInput::L:                      // L for next graphics library
         this->handleKeyEvent(arcade::KeyboardInput::L);
+        break;
+      case arcade::KeyboardInput::G:                      // G for next game
+        this->handleKeyEvent(arcade::KeyboardInput::G);
         break;
       case arcade::KeyboardInput::Q:                      // Q for quit
         this->handleKeyEvent(arcade::KeyboardInput::Q);

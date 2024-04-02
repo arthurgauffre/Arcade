@@ -207,10 +207,14 @@ arcade::KeyboardInput arcade::Sdl2::getInput()
                     return arcade::KeyboardInput::ENTER;
                 case SDLK_TAB:
                     return arcade::KeyboardInput::TAB;
+                case SDLK_r:
+                    return arcade::KeyboardInput::R;
                 case SDLK_m:
                     return arcade::KeyboardInput::M;
                 case SDLK_l:
                     return arcade::KeyboardInput::L;
+                case SDLK_g:
+                    return arcade::KeyboardInput::G;
                 case SDLK_q:
                     return arcade::KeyboardInput::Q;
             }
