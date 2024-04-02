@@ -40,18 +40,10 @@ void arcade::NCurses::clearWindow()
 
 void arcade::NCurses::drawSprite(std::pair<char, std::string> sprite, int x, int y, int width, int height, int rotation)
 {
-  char c;
   // Draw the sprite at the specified position
   x /= width;
   y /= height;
-  if (sprite.first == 'U' || sprite.first == 'D' || sprite.first == 'L' || sprite.first == 'R')
-    c = 'H';
-  else if (sprite.first == 'H' || sprite.first == 'V' || sprite.first == 'M' || sprite.first == 'O' ||
-  sprite.first == 'P' || sprite.first == 'T' || sprite.first == 'I' || sprite.first == 'E' || sprite.first == 'F')
-    c = 'B';
-  else
-    c = sprite.first;
-  mvwprintw(this->_window, y, x, "%c", c);
+  mvwprintw(this->_window, y, x, "%c", sprite.first);
 }
 
 void arcade::NCurses::drawText(const std::string text, int x, int y, int size)
