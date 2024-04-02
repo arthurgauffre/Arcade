@@ -583,11 +583,10 @@ void arcade::CoreModule::updateScore(int score)
   if (filepath.size() != 0)
     filepath.pop_back();
   filepath += ".txt";
-  fd = open(filepath.c_str(), O_WRONLY | O_TRUNC);
-  if (fd == -1)
+  std::ofstream file;
+  file.open(filepath, std::ios::app);
+  if (!file.is_open())
     return;
-  write(fd, this->name.c_str(), this->name.size());
-  write(fd, " ", 1);
-  write(fd, std::to_string(score).c_str(), std::to_string(score).size());
+  file << this->name << " " << score << std::endl;
   close(fd);
 }
