@@ -76,8 +76,12 @@ arcade::KeyboardInput arcade::NCurses::getInput()
     return arcade::KeyboardInput::TAB;
   case '\n':
     return arcade::KeyboardInput::ENTER;
+  case 'm':
+    return arcade::KeyboardInput::M;
+  case 'l':
+    return arcade::KeyboardInput::L;
   case 'q':
-    return arcade::KeyboardInput::CROSS;
+    return arcade::KeyboardInput::Q;
   default:
     return arcade::KeyboardInput::NONE;
   }

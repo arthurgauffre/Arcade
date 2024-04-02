@@ -211,6 +211,9 @@ void arcade::CoreModule::handleKeySelection(arcade::KeyboardInput key)
       else
         this->_menuData._type = arcade::ModuleType::GRAPHIC;
       break;
+    case arcade::KeyboardInput::Q:
+      this->_coreStatus = CoreStatus::EXIT;
+      break;
     case arcade::KeyboardInput::CROSS:
       this->_coreStatus = CoreStatus::EXIT;
       break;
@@ -220,9 +223,19 @@ void arcade::CoreModule::handleKeySelection(arcade::KeyboardInput key)
 void arcade::CoreModule::handleKeyRunning(arcade::KeyboardInput key)
 {
   switch (key) {
-    // case arcade::KeyboardInput::ESCAPE:
-    //   this->_coreStatus = CoreStatus::SELECTION;
-    //   break;
+    case arcade::KeyboardInput::M:
+      this->_coreStatus = CoreStatus::SELECTION;
+      break;
+    case arcade::KeyboardInput::L:
+      if (this->_menuData.indexGraphic < this->_menuData._graphicLibList.size() - 1)
+        ++this->_menuData.indexGraphic;
+      else
+        this->_menuData.indexGraphic = 0;
+      this->loadLib(this->_menuData._graphicLibList[this->_menuData.indexGraphic]);
+      break;
+    case arcade::KeyboardInput::Q:
+      this->_coreStatus = CoreStatus::EXIT;
+      break;
     case arcade::KeyboardInput::CROSS:
       this->_coreStatus = CoreStatus::EXIT;
       break;
@@ -346,6 +359,9 @@ void arcade::CoreModule::selectionLoop()
       case arcade::KeyboardInput::ENTER:
         this->handleKeyEvent(arcade::KeyboardInput::ENTER);
         break;
+      case arcade::KeyboardInput::Q:
+        this->handleKeyEvent(arcade::KeyboardInput::Q);
+        break;
       case arcade::KeyboardInput::CROSS:
         this->handleKeyEvent(arcade::KeyboardInput::CROSS);
         break;
@@ -398,6 +414,15 @@ void arcade::CoreModule::runningLoop()
         break;
       case arcade::KeyboardInput::ENTER:
         this->handleKeyEvent(arcade::KeyboardInput::ENTER);
+        break;
+      case arcade::KeyboardInput::M:                      // M for menu
+        this->handleKeyEvent(arcade::KeyboardInput::M);
+        break;
+      case arcade::KeyboardInput::L:                      // L for next graphics library
+        this->handleKeyEvent(arcade::KeyboardInput::L);
+        break;
+      case arcade::KeyboardInput::Q:                      // Q for quit
+        this->handleKeyEvent(arcade::KeyboardInput::Q);
         break;
       case arcade::KeyboardInput::CROSS:
         this->handleKeyEvent(arcade::KeyboardInput::CROSS);

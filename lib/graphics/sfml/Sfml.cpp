@@ -96,7 +96,12 @@ arcade::KeyboardInput arcade::Sfml::getInput()
         return arcade::KeyboardInput::ENTER;
       case sf::Keyboard::Tab:
         return arcade::KeyboardInput::TAB;
-        break;
+      case sf::Keyboard::M:
+        return arcade::KeyboardInput::M;
+      case sf::Keyboard::L:
+        return arcade::KeyboardInput::L;
+      case sf::Keyboard::Q:
+        return arcade::KeyboardInput::Q;
       default:
         break;
       }
