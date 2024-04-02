@@ -8,7 +8,7 @@
 #ifndef SNAKE_HPP_
 #define SNAKE_HPP_
 
-#include "AGameModule.hpp"
+#include "../AGameModule.hpp"
 
 namespace arcade {
 class Snake : virtual public arcade::AGameModule {

@@ -7,7 +7,7 @@
 
 #include <dlfcn.h>
 #include <iostream>
-#include "CoreModule.hpp"
+#include <CoreModule.hpp>
 #include <unistd.h>
 
 int launch_arcade(char const *const lib_path)

@@ -2,21 +2,23 @@
 ** EPITECH PROJECT, 2024
 ** Arcade
 ** File description:
-** SFML
+** SDL2
 */
 
-#ifndef SFML_HPP_
-#define SFML_HPP_
+#ifndef SDL2_HPP_
+#define SDL2_HPP_
 
-#include "ADisplayModule.hpp"
-#include <SFML/Graphics.hpp>
+#include "../ADisplayModule.hpp"
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_image.h>
 
 namespace arcade {
-class Sfml : virtual public arcade::ADisplayModule {
+class Sdl2: virtual public arcade::ADisplayModule {
 public:
-  Sfml();
-  ~Sfml();
-
+  Sdl2();
+  ~Sdl2();
+  std::string getName() const;
   void clearWindow();
   void displayWindow();
   arcade::KeyboardInput getInput();
@@ -24,9 +26,10 @@ public:
   void drawSprite(std::pair<char, std::string> sprite, int x, int y, int width, int height, int rotation);
 
 protected:
-  sf::RenderWindow *_window;
-  sf::Texture _texture;
+  SDL_Renderer *_renderer;
+  SDL_Window *_window;
+private:
 };
 }; // namespace arcade
 
-#endif /* !SFML_HPP_ */
+#endif /* !SDL2_HPP_ */

@@ -90,6 +90,16 @@ arcade::Sdl2::~Sdl2()
 }
 
 /**
+ * @brief get the name of the library
+ * 
+ * @return std::string 
+ */
+std::string arcade::Sdl2::getName() const
+{
+    return "sdl2";
+}
+
+/**
  * @brief clear the window
  * 
  */

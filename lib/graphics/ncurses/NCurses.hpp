@@ -2,33 +2,30 @@
 ** EPITECH PROJECT, 2024
 ** Arcade
 ** File description:
-** SDL2
+** NCurses
 */
 
-#ifndef SDL2_HPP_
-#define SDL2_HPP_
+#ifndef NCURSES_HPP_
+#define NCURSES_HPP_
 
-#include "ADisplayModule.hpp"
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_ttf.h>
-#include <SDL2/SDL_image.h>
+#include "../ADisplayModule.hpp"
+#include <ncurses.h>
 
 namespace arcade {
-class Sdl2: virtual public arcade::ADisplayModule {
+class NCurses : virtual public arcade::ADisplayModule {
 public:
-  Sdl2();
-  ~Sdl2();
+  NCurses();
+  ~NCurses();
+  std::string getName() const;
   void clearWindow();
-  void displayWindow();
   arcade::KeyboardInput getInput();
+  void displayWindow();
   void drawText(const std::string text, int x, int y, int size);
   void drawSprite(std::pair<char, std::string> sprite, int x, int y, int width, int height, int rotation);
 
 protected:
-  SDL_Renderer *_renderer;
-  SDL_Window *_window;
-private:
+  WINDOW *_window;
 };
 }; // namespace arcade
 
-#endif /* !SDL2_HPP_ */
+#endif /* !NCURSES_HPP_ */
