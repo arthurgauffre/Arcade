@@ -44,7 +44,7 @@ void arcade::Pacman::init()
       {'W', '*', 'W', 'W', '*', 'W', 'W', 'W', '*', '*', '*', 'W', 'W', 'W', '*', 'W', 'W', '*', 'W'},
       {'W', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', 'W'},
       {'W', 'W', 'W', 'W', '*', 'W', '*', 'W', 'W', '*', 'W', 'W', '*', 'W', '*', 'W', 'W', 'W', 'W'},
-      {'*', '*', '*', 'W', '*', 'W', '*', 'W', ' ', ' ', ' ', 'W', '*', 'W', '*', 'W', '*', '*', '*'},
+      {'*', '*', '*', '*', '*', 'W', '*', 'W', ' ', ' ', ' ', 'W', '*', 'W', '*', '*', '*', '*', '*'},
       {'W', 'W', 'W', 'W', '*', 'W', '*', 'W', ' ', ' ', ' ', 'W', '*', 'W', '*', 'W', 'W', 'W', 'W'},
       {'W', '*', '*', '*', '*', 'W', '*', 'W', 'W', 'W', 'W', 'W', '*', 'W', '*', '*', '*', '*', 'W'},
       {'W', '*', 'W', 'W', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', 'W', 'W', '*', 'W'},
@@ -257,6 +257,12 @@ std::vector<std::vector<int>> arcade::Pacman::moveEntities(std::vector<std::vect
   std::vector<arcade::Node> newGhosts = ghosts;
   arcade::KeyboardInput direction = this->getDirection();
 
+  // replace pacman in other side of the map
+  pacman.position.first = pacman.position.first % display_info.size();
+  pacman.position.second = pacman.position.second % display_info[0].size();
+  newPacman.position.first = newPacman.position.first % display_info.size();
+  newPacman.position.second = newPacman.position.second % display_info[0].size();
+
   // Move pacman
   if (direction == arcade::KeyboardInput::UP)
     newPacman.position.first--;
@@ -267,42 +273,16 @@ std::vector<std::vector<int>> arcade::Pacman::moveEntities(std::vector<std::vect
   else if (direction == arcade::KeyboardInput::RIGHT)
     newPacman.position.second++;
 
+  if (newPacman.position.first < 0)
+    newPacman.position.first = display_info.size() - 1;
+  else if (newPacman.position.second < 0)
+    newPacman.position.second = display_info[0].size() - 1;
+
   // Move the ghosts
   for (int i = 0; i < ghosts.size(); i++)
   {
     arcade::Node path = aStar(display_info, ghosts[i], pacman);
     newGhosts[i] = path;
-  }
-
-  // Check if ghosts are in superposed positions
-  for (int i = 0; i < ghosts.size(); i++)
-  {
-    for (int j = 0; j < ghosts.size(); j++)
-    {
-      if (i != j && newGhosts[i].position == newGhosts[j].position)
-      {
-        newGhosts[i] = ghosts[i];
-      }
-    }
-  }
-
-  // Check if ghost is hitting a wall
-  for (int i = 0; i < ghosts.size(); i++)
-  {
-    if (display_info[newGhosts[i].position.first][newGhosts[i].position.second] == 'W' ||
-        display_info[newGhosts[i].position.first][newGhosts[i].position.second] == 'G')
-    {
-      newGhosts[i] = ghosts[i];
-    }
-
-    if (display_info[newGhosts[i].position.first][newGhosts[i].position.second] == 'U' ||
-        display_info[newGhosts[i].position.first][newGhosts[i].position.second] == 'D' ||
-        display_info[newGhosts[i].position.first][newGhosts[i].position.second] == 'L' ||
-        display_info[newGhosts[i].position.first][newGhosts[i].position.second] == 'R')
-    {
-      this->setGameStatus(arcade::IGameModule::GameStatus::GAMEOVER);
-      return display_info;
-    }
   }
 
   // Check if pacman is hitting a wall
@@ -313,14 +293,15 @@ std::vector<std::vector<int>> arcade::Pacman::moveEntities(std::vector<std::vect
 
   // clear the map
   if (pacman.position != newPacman.position)
+  {
     display_info[pacman.position.first][pacman.position.second] = ' ';
+    this->_templateMap[pacman.position.first][pacman.position.second] = ' ';
+  }
 
   for (int i = 0; i < ghosts.size(); i++)
   {
     if (ghosts[i].position != newGhosts[i].position)
       display_info[ghosts[i].position.first][ghosts[i].position.second] = this->_templateMap[ghosts[i].position.first][ghosts[i].position.second];
-    else
-      display_info[ghosts[i].position.first][ghosts[i].position.second] = 'G';
   }
 
   // Update the map
@@ -335,7 +316,10 @@ std::vector<std::vector<int>> arcade::Pacman::moveEntities(std::vector<std::vect
 
   for (int i = 0; i < ghosts.size(); i++)
   {
-    display_info[newGhosts[i].position.first][newGhosts[i].position.second] = 'G';
+    if (display_info[newGhosts[i].position.first][newGhosts[i].position.second] != 'G')
+      display_info[newGhosts[i].position.first][newGhosts[i].position.second] = 'G';
+    else
+      newGhosts[i] = ghosts[i];
   }
 
   this->setPacman(newPacman.position);
