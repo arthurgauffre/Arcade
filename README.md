@@ -23,7 +23,7 @@ In case of confusion or curiosity, a document detailing the ins and outs of this
 #### cmake --build build
 #### ./arcade libraryPath
 
-### Available library paths:
+## Available library paths:
 #### lib/arcade_ncurses.so
 #### lib/arcade_sfml.so
 #### lib/arcade_sdl2.so
