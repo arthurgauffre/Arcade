@@ -125,3 +125,13 @@ arcade::KeyboardInput arcade::AGameModule::getDirection() const
 {
   return this->_direction;
 }
+
+/**
+ * @brief get the score of the game
+ *
+ * @return int
+ */
+int arcade::AGameModule::getScore() const
+{
+  return this->score;
+}

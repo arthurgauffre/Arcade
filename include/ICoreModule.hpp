@@ -14,6 +14,9 @@
 #include "IGameModule.hpp"
 #include <dirent.h>
 #include <iostream>
+#include <fcntl.h>
+#include <fstream>
+#include <unistd.h>
 
 namespace arcade
 {
@@ -60,8 +63,12 @@ namespace arcade
     virtual void selectionLoop() = 0;
     virtual void updateSelection() = 0;
 
+    virtual std::string getScore() = 0;
+    virtual void updateScore(int score) = 0;
+
   protected:
     CoreStatus _coreStatus;
+    std::string name;
     arcade::IDisplayModule *_graphicModule;
     arcade::IGameModule *_gameModule;
     arcade::MenuData _menuData;

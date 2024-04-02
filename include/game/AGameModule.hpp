@@ -39,6 +39,8 @@ namespace arcade
     virtual void init() = 0;
     virtual void handdleKeyEvents(arcade::KeyboardInput key) = 0;
 
+    int getScore() const;
+
   };
 }; // namespace arcade
 
