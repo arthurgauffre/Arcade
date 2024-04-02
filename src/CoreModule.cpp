@@ -5,7 +5,7 @@
 ** CoreModule
 */
 
-#include "CoreModule.hpp"
+#include <CoreModule.hpp>
 
 /**
  * @brief Construct a new arcade::Core Module::Core Module object
@@ -28,7 +28,26 @@ Press TAB to switch between module selection";
  * @brief Destroy the arcade::Core Module::Core Module object
  *
  */
-arcade::CoreModule::~CoreModule() {}
+arcade::CoreModule::~CoreModule()
+{
+  if (this->_libList.size() > 0) {
+    for (auto &loader : arcade::CoreModule::_libList) {
+      loader.DLLunloader();
+    }
+  }
+  if (this->_interfaceList.size() > 0) {
+    for (auto &loader : arcade::CoreModule::_interfaceList) {
+      loader.first.DLLunloader();
+      loader.second.DLLunloader();
+    }
+  }
+  if (this->_gameModule) {
+    delete this->_gameModule;
+  }
+  if (this->_graphicModule) {
+    delete this->_graphicModule;
+  }
+}
 
 /**
  * @brief set graphic or game module to the core module
@@ -101,8 +120,10 @@ arcade::IGameModule *arcade::CoreModule::getGameModule()
 
 void arcade::CoreModule::addLibList(std::string pathLib)
 {
-  DLLoader<arcade::ModuleType> loader(pathLib);
-  arcade::ModuleType module = loader.getInstance("getType");
+  // arcade::CoreModule::DLLoader<arcade::ModuleType> loader(pathLib);
+  arcade::CoreModule::_libList.push_back(DLLoader<arcade::ModuleType>(pathLib));
+  arcade::ModuleType module = arcade::CoreModule::_libList.back().getInstance("getType");
+  // arcade::ModuleType module = loader.getInstance("getType");
   switch (module) {
   case arcade::ModuleType::GAME:
     this->_menuData._gameLibList.push_back(pathLib);
@@ -152,28 +173,43 @@ void arcade::CoreModule::getLib(std::string pathLib)
 
 void arcade::CoreModule::loadLib(std::string pathLib)
 {
-  DLLoader<arcade::ModuleType> loaderTypeModule(pathLib);
-  arcade::ModuleType module = loaderTypeModule.getInstance("getType");
-  DLLoader<std::unique_ptr<arcade::IDisplayModule>> loaderGraphic(pathLib);
-  DLLoader<std::unique_ptr<arcade::IGameModule>> loaderGame(pathLib);
+  std::cout << "start Load lib :" << pathLib << std::endl;
+  // arcade::CoreModule::DLLoader<arcade::ModuleType> loaderTypeModule(pathLib);
+  arcade::CoreModule::_libList.push_back(arcade::CoreModule::DLLoader<arcade::ModuleType>(pathLib));
+  arcade::ModuleType module = arcade::CoreModule::_libList.back().getInstance("getType");
+  // arcade::ModuleType module = loaderTypeModule.getInstance("getType");
+  // CoreModule::DLLoader<std::unique_ptr<arcade::IDisplayModule>> loaderGraphic(pathLib);
+  // CoreModule::DLLoader<std::unique_ptr<arcade::IGameModule>> loaderGame(pathLib);
+  arcade::CoreModule::_interfaceList.emplace_back(DLLoader<std::unique_ptr<arcade::IDisplayModule>>(pathLib), DLLoader<std::unique_ptr<arcade::IGameModule>>(pathLib));
   switch (module) {
   case arcade::ModuleType::GAME:
-    if (this->_gameModule != nullptr)
+    if (this->_gameModule) {
       delete this->_gameModule;
-    this->_gameModule = std::move(loaderGame.getInstance("entryPoint")).release();
+    }
+    this->_gameModule =
+        std::move(arcade::CoreModule::_interfaceList.back().second.getInstance("entryPoint")).release();
     this->_gameModule->setCoreModule(this);
     this->_gameModule->init();
     break;
   case arcade::ModuleType::GRAPHIC:
-    if (this->_graphicModule != nullptr)
+    if (this->_graphicModule) {
+      arcade::CoreModule::_nameLoader.push_back(DLLoader<std::string>(pathLib));
+      // DLLoader<std::string> loaderTypeModule(pathLib);
+      std::string moduleName = _nameLoader.back().getInstance("getName");
+      if (moduleName == this->_graphicModule->getName())
+        return;
       delete this->_graphicModule;
-    this->_graphicModule = std::move(loaderGraphic.getInstance("entryPoint")).release();
+    }
+    this->_graphicModule =
+        std::move(arcade::CoreModule::_interfaceList.back().first.getInstance("entryPoint")).release();
     this->_graphicModule->setCoreModule(this);
     break;
   default:
     throw std::exception();
     break;
   }
+  this->_menuData.indexGame = this->_menuData._gameLibList.size() / 2;
+  this->_menuData.indexGraphic = this->_menuData._graphicLibList.size() / 2;
 }
 
 void arcade::CoreModule::handleKeySelection(arcade::KeyboardInput key)

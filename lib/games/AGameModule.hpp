@@ -8,7 +8,7 @@
 #ifndef AGAMEMODULE_HPP_
 #define AGAMEMODULE_HPP_
 
-#include "IGameModule.hpp"
+#include <arcade/IGameModule.hpp>
 
 namespace arcade
 {

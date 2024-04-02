@@ -22,6 +22,11 @@ arcade::Sfml::~Sfml()
   this->_window = nullptr;
 }
 
+std::string arcade::Sfml::getName() const
+{
+  return "sfml";
+}
+
 void arcade::Sfml::clearWindow()
 {
   this->_window->clear(sf::Color::Black);

@@ -8,13 +8,47 @@
 #ifndef COREMODULE_HPP_
 #define COREMODULE_HPP_
 
-#include "ICoreModule.hpp"
+#include <arcade/ICoreModule.hpp>
 
 namespace arcade
 {
   class CoreModule: virtual public ICoreModule
   {
   public:
+    template <typename T>
+    class DLLoader {
+    private:
+      void *handle;
+    
+    public:
+      DLLoader(const std::string &libPath)
+      {
+        handle = dlopen(libPath.c_str(), RTLD_LAZY);
+        if (!handle) {
+          std::cerr << dlerror() << std::endl;
+          exit(1);
+        }
+      }
+    
+      ~DLLoader() {}
+
+
+      T getInstance(const std::string &funcName)
+      {
+        void *sym = dlsym(handle, funcName.c_str());
+        if (!sym) {
+          std::cerr << dlerror() << std::endl;
+          exit(1);
+        }
+        return reinterpret_cast<T (*)()>(sym)();
+      }
+      void DLLunloader() {
+        if (handle) {
+          std::cout << "Closing Lib" << std::endl;
+          dlclose(handle);
+        }
+      };
+    };
     CoreModule();
     ~CoreModule();
 
@@ -48,6 +82,9 @@ namespace arcade
 
     std::string getScore();
     void updateScore(int score);
+    std::vector<DLLoader<std::string>> _nameLoader;
+    std::vector<DLLoader<arcade::ModuleType>> _libList;
+    std::vector<std::pair<DLLoader<std::unique_ptr<arcade::IDisplayModule>>, DLLoader<std::unique_ptr<arcade::IGameModule>>>> _interfaceList;
   };
 }; // namespace arcade
 

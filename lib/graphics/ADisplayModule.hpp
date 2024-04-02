@@ -2,28 +2,29 @@
 ** EPITECH PROJECT, 2024
 ** bsArcade
 ** File description:
-** IDisplayModule
+** ADisplayModule
 */
 
-#ifndef IDISPLAYMODULE_HPP_
-#define IDISPLAYMODULE_HPP_
 
-#include "Arcade.hpp"
-#include "CoreModule.hpp"
-#include <iostream>
+#ifndef ADISPLAYMODULE_HPP_
+#define ADISPLAYMODULE_HPP_
+
+#include <arcade/IDisplayModule.hpp>
 
 namespace arcade {
-class CoreModule;
-class IDisplayModule {
+  class CoreModule;
+class ADisplayModule : virtual public arcade::IDisplayModule {
 public:
-  IDisplayModule(){};
-  virtual ~IDisplayModule(){};
+  ADisplayModule();
+  ~ADisplayModule();
+
+  virtual std::string getName() const = 0;
 
   void sendGameData(arcade::GameData data);
   void sendMenuData(arcade::MenuData data);
 
-  virtual void setCoreModule(arcade::CoreModule *coreModule) = 0;
-  virtual arcade::CoreModule *getCoreModule() const = 0;
+  void setCoreModule(arcade::CoreModule *coreModule);
+  arcade::CoreModule *getCoreModule() const;
 
   virtual void clearWindow() = 0;
   virtual void displayWindow() = 0;
@@ -32,9 +33,9 @@ public:
   virtual void drawText(const std::string text, int x, int y, int size) = 0;
 
 protected:
-  arcade::CoreModule *_coreModule;
   arcade::KeyboardInput _input;
+  arcade::CoreModule *_coreModule;
 };
 }; // namespace arcade
 
-#endif /* !IDISPLAYMODULE_HPP_ */
+#endif /* !ADISPLAYMODULE_HPP_ */

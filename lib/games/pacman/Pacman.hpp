@@ -8,7 +8,7 @@
 #ifndef PACMAN_HPP_
 #define PACMAN_HPP_
 
-#include "AGameModule.hpp"
+#include "../AGameModule.hpp"
 
 namespace arcade {
 class Pacman : virtual public arcade::AGameModule {

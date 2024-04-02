@@ -8,7 +8,7 @@
 #ifndef ARCADE_HPP_
 #define ARCADE_HPP_
 
-#include "Macros.hpp"
+#include <Macros.hpp>
 #include <map>
 #include <memory>
 #include <string.h>

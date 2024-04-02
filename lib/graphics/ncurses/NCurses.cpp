@@ -33,6 +33,11 @@ arcade::NCurses::~NCurses()
   endwin();              // Restore normal terminal behavior
 }
 
+std::string arcade::NCurses::getName() const
+{
+  return "ncurses";
+}
+
 void arcade::NCurses::clearWindow()
 {
   wrefresh(this->_window); // Refresh the window
