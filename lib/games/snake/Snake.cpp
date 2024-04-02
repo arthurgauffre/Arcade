@@ -11,10 +11,14 @@
  * @brief Construct a new arcade::Snake::Snake object
  *
  */
-arcade::Snake::Snake() : arcade::AGameModule() {}
+arcade::Snake::Snake() : arcade::AGameModule()
+{
+  this->score = 0;
+}
 
 void arcade::Snake::init()
 {
+  int i = 0;
   // Initialize the game
   arcade::GameData data;
   // Define the sprite values
@@ -25,7 +29,16 @@ void arcade::Snake::init()
   data.sprite_value['D'] = "assets/snake/npc/head_down.png";  // Head down
   data.sprite_value['L'] = "assets/snake/npc/head_left.png";  // Head left
   data.sprite_value['R'] = "assets/snake/npc/head_right.png";  // Head right
-  data.sprite_value['B'] = "assets/snake/npc/body.png";  // Body
+  data.sprite_value['H'] = "assets/snake/npc/body_horizontal.png";  // Body horizontal
+  data.sprite_value['V'] = "assets/snake/npc/body_vertical.png";  // Body vertical
+  data.sprite_value['M'] = "assets/snake/npc/tail_up.png";  // Tail up (m)
+  data.sprite_value['N'] = "assets/snake/npc/tail_down.png";  // Tail down (n)
+  data.sprite_value['O'] = "assets/snake/npc/tail_left.png";  // Tail left (o)
+  data.sprite_value['P'] = "assets/snake/npc/tail_right.png";  // Tail right (p)
+  data.sprite_value['T'] = "assets/snake/npc/body_topleft.png";  // Top left corner
+  data.sprite_value['I'] = "assets/snake/npc/body_topright.png";  // Top right corner
+  data.sprite_value['E'] = "assets/snake/npc/body_bottomleft.png";  // Bottom left corner
+  data.sprite_value['F'] = "assets/snake/npc/body_bottomright.png";  // Bottom right corner
 
   // Define the snake
   std::vector<std::pair<int, int>> snake;
@@ -59,12 +72,12 @@ void arcade::Snake::init()
       {'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W'}
   };
 
-  for (int i = 0; i < snake.size(); i++) {
-    if (i == 0)
-      data.display_info[snake[i].first][snake[i].second] = 'R';
-    else
-      data.display_info[snake[i].first][snake[i].second] = 'B';
+  // snakes initial look
+  data.display_info[snake[0].first][snake[0].second] = 'R'; // head
+  for (i = 1; i < (snake.size() - 1); i++) {
+    data.display_info[snake[i].first][snake[i].second] = 'H'; // body
   }
+  data.display_info[snake[i].first][snake[i].second] = 'O'; // tail
 
   this->getCoreModule()->setGameData(data);
   this->setSnake(snake);
@@ -85,6 +98,7 @@ arcade::Snake::~Snake() {}
  */
 std::vector<std::vector<int>> arcade::Snake::moveSnake(std::vector<std::vector<int>> display_info)
 {
+  int i = 0;
   bool is_eating = false;
   std::vector<std::pair<int, int>> snake = this->getSnake();
   std::pair<int, int> head = snake[0];
@@ -103,16 +117,10 @@ std::vector<std::vector<int>> arcade::Snake::moveSnake(std::vector<std::vector<i
   else if (direction == arcade::KeyboardInput::RIGHT)
     new_head = std::make_pair(head.first, head.second + 1);
 
-  // Check if the snake eats apple
-  if (display_info[new_head.first][new_head.second] == 'A') {
-    is_eating = true;
-    snake.push_back(new_tail);
-    display_info[new_tail.first][new_tail.second] = 'B';
-  }
-
   // Check if the snake eats itself
   for (int i = 1; i < snake.size(); i++) {
     if (new_head == snake[i]) {
+      this->getCoreModule()->updateScore(this->score);
       this->setGameStatus(arcade::IGameModule::GameStatus::GAMEOVER);
       return display_info;
     }
@@ -120,14 +128,40 @@ std::vector<std::vector<int>> arcade::Snake::moveSnake(std::vector<std::vector<i
 
   // Check if the snake hits a wall
   if (display_info[new_head.first][new_head.second] == 'W') {
+    this->getCoreModule()->updateScore(this->score);
     this->setGameStatus(arcade::IGameModule::GameStatus::GAMEOVER);
     return display_info;
   }
+
+  // Check if the snake eats apple; elongate body if yes
+  if (display_info[new_head.first][new_head.second] == 'A') {
+    score += 10;
+    is_eating = true;
+    snake.push_back(new_tail);
+
+    // Convert previous tail to body
+    if (snake[snake.size() - 1].first == snake[snake.size() - 2].first)
+      display_info[snake[snake.size() - 1].first][snake[snake.size() - 1].second] = 'H';
+    else
+      display_info[snake[snake.size() - 1].first][snake[snake.size() - 1].second] = 'V';
+
+    // Update new tail direction
+    if (snake[snake.size() - 1].first > new_tail.first)
+      display_info[new_tail.first][new_tail.second] = 'N';
+    else if (snake[snake.size() - 1].first < new_tail.first)
+      display_info[new_tail.first][new_tail.second] = 'M';
+    else if (snake[snake.size() - 1].second > new_tail.second)
+      display_info[new_tail.first][new_tail.second] = 'P';
+    else
+      display_info[new_tail.first][new_tail.second] = 'O';
+  }
   
-  // clear the map
+  // clear the map behind snake
   for (int i = 0; i < display_info.size(); i++) {
     for (int j = 0; j < display_info[i].size(); j++) {
-      if (display_info[i][j] == 'U' || display_info[i][j] == 'D' || display_info[i][j] == 'L' || display_info[i][j] == 'R' || display_info[i][j] == 'B')
+      if (display_info[i][j] == 'U' || display_info[i][j] == 'D' || display_info[i][j] == 'L' || display_info[i][j] == 'R' || display_info[i][j] == 'H'
+      || display_info[i][j] == 'V' || display_info[i][j] == 'M' || display_info[i][j] == 'N' || display_info[i][j] == 'O' || display_info[i][j] == 'P'
+      || display_info[i][j] == 'T' || display_info[i][j] == 'I' || display_info[i][j] == 'E' || display_info[i][j] == 'F')
         display_info[i][j] = ' ';
     }
   }
@@ -136,23 +170,53 @@ std::vector<std::vector<int>> arcade::Snake::moveSnake(std::vector<std::vector<i
   snake.insert(snake.begin(), new_head);
   snake.pop_back();
 
-  // Update the map
-  for (int i = 0; i < snake.size(); i++) {
-    if (i == 0) {
-      if (direction == arcade::KeyboardInput::UP)
-        display_info[snake[i].first][snake[i].second] = 'U';
-      else if (direction == arcade::KeyboardInput::DOWN)
-        display_info[snake[i].first][snake[i].second] = 'D';
-      else if (direction == arcade::KeyboardInput::LEFT)
-        display_info[snake[i].first][snake[i].second] = 'L';
-      else if (direction == arcade::KeyboardInput::RIGHT)
-        display_info[snake[i].first][snake[i].second] = 'R';
-    } else {
-      display_info[snake[i].first][snake[i].second] = 'B';
+  // update head
+  if (direction == arcade::KeyboardInput::UP)
+    display_info[snake[0].first][snake[0].second] = 'U';
+  else if (direction == arcade::KeyboardInput::DOWN)
+    display_info[snake[0].first][snake[0].second] = 'D';
+  else if (direction == arcade::KeyboardInput::LEFT)
+    display_info[snake[0].first][snake[0].second] = 'L';
+  else if (direction == arcade::KeyboardInput::RIGHT)
+    display_info[snake[0].first][snake[0].second] = 'R';
+
+  // update body
+  for (i = 1; i < (snake.size() - 1); i++) {
+    if (snake[i - 1].first > snake[i].first && snake[i + 1].second > snake[i].second)
+      display_info[snake[i].first][snake[i].second] = 'T';
+    else if (snake[i - 1].first > snake[i].first && snake[i + 1].second < snake[i].second)
+      display_info[snake[i].first][snake[i].second] = 'I';
+    else if (snake[i - 1].first < snake[i].first && snake[i + 1].second < snake[i].second)
+      display_info[snake[i].first][snake[i].second] = 'F';
+    else if (snake[i - 1].first < snake[i].first && snake[i + 1].second > snake[i].second)
+      display_info[snake[i].first][snake[i].second] = 'E';
+    else if (snake[i + 1].first > snake[i].first && snake[i - 1].second > snake[i].second)
+      display_info[snake[i].first][snake[i].second] = 'T';
+    else if (snake[i + 1].first > snake[i].first && snake[i - 1].second < snake[i].second)
+      display_info[snake[i].first][snake[i].second] = 'I';
+    else if (snake[i + 1].first < snake[i].first && snake[i - 1].second < snake[i].second)
+      display_info[snake[i].first][snake[i].second] = 'F';
+    else if (snake[i + 1].first < snake[i].first && snake[i - 1].second > snake[i].second)
+      display_info[snake[i].first][snake[i].second] = 'E';
+    else {
+      if (snake[i - 1].first == snake[i].first)
+        display_info[snake[i].first][snake[i].second] = 'H';
+      else
+        display_info[snake[i].first][snake[i].second] = 'V';
     }
   }
 
-  // add an apple
+  // update tail
+  if (snake[i - 1].first > snake[i].first)
+    display_info[snake[i].first][snake[i].second] = 'N';
+  else if (snake[i - 1].first < snake[i].first)
+    display_info[snake[i].first][snake[i].second] = 'M';
+  else if (snake[i - 1].second > snake[i].second)
+    display_info[snake[i].first][snake[i].second] = 'P';
+  else
+    display_info[snake[i].first][snake[i].second] = 'O';
+
+  // Add an apple
   if (is_eating == true) {
     int x = rand() % 20;
     int y = rand() % 20;
@@ -205,7 +269,7 @@ void arcade::Snake::updateGame()
 {
   arcade::GameData data = this->getCoreModule()->getGameData();
   this->updateTimer();
-  if (this->getTimer().duration.count() >= 500) {
+  if (this->getTimer().duration.count() >= 250) {
     this->resetTimer();
     // Update the game
     data.display_info = this->moveSnake(this->getCoreModule()->getGameData().display_info);

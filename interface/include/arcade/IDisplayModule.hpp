@@ -8,8 +8,8 @@
 #ifndef IDISPLAYMODULE_HPP_
 #define IDISPLAYMODULE_HPP_
 
-#include "Arcade.hpp"
-#include "CoreModule.hpp"
+#include <Arcade.hpp>
+#include <CoreModule.hpp>
 #include <iostream>
 
 namespace arcade {
@@ -18,6 +18,8 @@ class IDisplayModule {
 public:
   IDisplayModule(){};
   virtual ~IDisplayModule(){};
+
+  virtual std::string getName() const = 0;
 
   void sendGameData(arcade::GameData data);
   void sendMenuData(arcade::MenuData data);

@@ -8,7 +8,7 @@
 #ifndef ARCADE_HPP_
 #define ARCADE_HPP_
 
-#include "Macros.hpp"
+#include <Macros.hpp>
 #include <map>
 #include <memory>
 #include <string.h>
@@ -34,7 +34,7 @@ struct GameData {
  * @brief all the possible module types
  *
  */
-enum ModuleType { GRAPHIC, GAME, CORE };
+enum ModuleType { GRAPHIC, GAME, NAME, CORE };
 
 struct MenuData {
   std::vector<std::string> _graphicLibList;
@@ -57,6 +57,7 @@ enum KeyboardInput {
   SPACE,
   ENTER,
   ESCAPE,
+  BACKSPACE,
   TAB,
   CROSS,
   A,

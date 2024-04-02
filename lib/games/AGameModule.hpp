@@ -8,7 +8,7 @@
 #ifndef AGAMEMODULE_HPP_
 #define AGAMEMODULE_HPP_
 
-#include "IGameModule.hpp"
+#include <arcade/IGameModule.hpp>
 
 namespace arcade
 {
@@ -38,6 +38,8 @@ namespace arcade
 
     virtual void init() = 0;
     virtual void handdleKeyEvents(arcade::KeyboardInput key) = 0;
+
+    int getScore() const;
 
   };
 }; // namespace arcade

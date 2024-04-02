@@ -9,8 +9,8 @@
 #define IGAMEMODULE_HPP_
 
 #include <chrono>
-#include "CoreModule.hpp"
-#include "Arcade.hpp"
+#include <CoreModule.hpp>
+#include <Arcade.hpp>
 
 namespace arcade
 {
@@ -53,7 +53,10 @@ namespace arcade
 
     virtual void init() = 0;
 
+    virtual int getScore() const = 0;
+
   protected:
+    int score;
     timer _timer;
     GameStatus _gameStatus;
     arcade::CoreModule *_coreModule;

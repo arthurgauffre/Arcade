@@ -8,10 +8,12 @@
 #ifndef PACMAN_HPP_
 #define PACMAN_HPP_
 
-#include "AGameModule.hpp"
+#include "../AGameModule.hpp"
 #include <queue>
 #include <cmath>
 #include <algorithm>
+
+>>>>>>> 42b6c401f6f6fec6520228403f3b718ddf9b8382:lib/games/pacman/Pacman.hpp
 
 namespace arcade {
 class Pacman : virtual public arcade::AGameModule {

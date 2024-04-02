@@ -9,7 +9,7 @@
 #ifndef ADISPLAYMODULE_HPP_
 #define ADISPLAYMODULE_HPP_
 
-#include "IDisplayModule.hpp"
+#include <arcade/IDisplayModule.hpp>
 
 namespace arcade {
   class CoreModule;
@@ -17,6 +17,8 @@ class ADisplayModule : virtual public arcade::IDisplayModule {
 public:
   ADisplayModule();
   ~ADisplayModule();
+
+  virtual std::string getName() const = 0;
 
   void sendGameData(arcade::GameData data);
   void sendMenuData(arcade::MenuData data);

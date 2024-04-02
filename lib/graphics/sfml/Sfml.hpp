@@ -2,29 +2,33 @@
 ** EPITECH PROJECT, 2024
 ** Arcade
 ** File description:
-** NCurses
+** SFML
 */
 
-#ifndef NCURSES_HPP_
-#define NCURSES_HPP_
+#ifndef SFML_HPP_
+#define SFML_HPP_
 
-#include "ADisplayModule.hpp"
-#include <ncurses.h>
+#include "../ADisplayModule.hpp"
+#include <SFML/Graphics.hpp>
 
 namespace arcade {
-class NCurses : virtual public arcade::ADisplayModule {
+class Sfml : virtual public arcade::ADisplayModule {
 public:
-  NCurses();
-  ~NCurses();
+  Sfml();
+  ~Sfml();
+
+  std::string getName() const;
+
   void clearWindow();
-  arcade::KeyboardInput getInput();
   void displayWindow();
+  arcade::KeyboardInput getInput();
   void drawText(const std::string text, int x, int y, int size);
   void drawSprite(std::pair<char, std::string> sprite, int x, int y, int width, int height, int rotation);
 
 protected:
-  WINDOW *_window;
+  sf::RenderWindow *_window;
+  sf::Texture _texture;
 };
 }; // namespace arcade
 
-#endif /* !NCURSES_HPP_ */
+#endif /* !SFML_HPP_ */

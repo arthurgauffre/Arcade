@@ -7,7 +7,7 @@
 
 #include <dlfcn.h>
 #include <iostream>
-#include "ErrorHandling.hpp"
+#include <ErrorHandling.hpp>
 
 void checkPath(const char *path)
 {

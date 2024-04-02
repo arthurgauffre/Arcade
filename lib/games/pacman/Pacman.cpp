@@ -11,7 +11,10 @@
  * @brief Construct a new arcade::Pacman::Pacman object
  * 
  */
-arcade::Pacman::Pacman() : arcade::AGameModule() {}
+arcade::Pacman::Pacman() : arcade::AGameModule()
+{
+  this->score = 0;
+}
 
 void arcade::Pacman::init()
 {

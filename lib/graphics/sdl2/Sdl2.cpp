@@ -90,12 +90,21 @@ arcade::Sdl2::~Sdl2()
 }
 
 /**
+ * @brief get the name of the library
+ * 
+ * @return std::string 
+ */
+std::string arcade::Sdl2::getName() const
+{
+    return "sdl2";
+}
+
+/**
  * @brief clear the window
  * 
  */
 void arcade::Sdl2::clearWindow()
 {
-    SDL_SetRenderDrawColor(this->_renderer, 30, 30, 30, 255); // Dark gray background
     SDL_RenderClear(this->_renderer);
 }
 
@@ -125,7 +134,6 @@ void arcade::Sdl2::drawSprite(std::pair<char, std::string> sprite, int x, int y,
 
     SDL_Rect rect = {x, y, width, height};
     SDL_RenderCopyEx(this->_renderer, texture, nullptr, &rect, rotation, nullptr, SDL_FLIP_NONE);
-    // SDL_RenderCopy(this->_renderer, texture, nullptr, &rect);
 
     SDL_DestroyTexture(texture);
     SDL_FreeSurface(surface);
@@ -207,6 +215,62 @@ arcade::KeyboardInput arcade::Sdl2::getInput()
                     return arcade::KeyboardInput::ENTER;
                 case SDLK_TAB:
                     return arcade::KeyboardInput::TAB;
+                case SDLK_ESCAPE:
+                    return arcade::KeyboardInput::ESCAPE;
+                case SDLK_BACKSPACE:
+                    return arcade::KeyboardInput::BACKSPACE;
+                case SDLK_a:
+                    return arcade::KeyboardInput::A;
+                case SDLK_b:
+                    return arcade::KeyboardInput::B;
+                case SDLK_c:
+                    return arcade::KeyboardInput::C;
+                case SDLK_d:
+                    return arcade::KeyboardInput::D;
+                case SDLK_e:
+                    return arcade::KeyboardInput::E;
+                case SDLK_f:
+                    return arcade::KeyboardInput::F;
+                case SDLK_g:
+                    return arcade::KeyboardInput::G;
+                case SDLK_h:
+                    return arcade::KeyboardInput::H;
+                case SDLK_i:
+                    return arcade::KeyboardInput::I;
+                case SDLK_j:
+                    return arcade::KeyboardInput::J;
+                case SDLK_k:
+                    return arcade::KeyboardInput::K;
+                case SDLK_l:
+                    return arcade::KeyboardInput::L;
+                case SDLK_m:
+                    return arcade::KeyboardInput::M;
+                case SDLK_n:
+                    return arcade::KeyboardInput::N;
+                case SDLK_o:
+                    return arcade::KeyboardInput::O;
+                case SDLK_p:
+                    return arcade::KeyboardInput::P;
+                case SDLK_q:
+                    return arcade::KeyboardInput::Q;
+                case SDLK_r:
+                    return arcade::KeyboardInput::R;
+                case SDLK_s:
+                    return arcade::KeyboardInput::S;
+                case SDLK_t:
+                    return arcade::KeyboardInput::T;
+                case SDLK_u:
+                    return arcade::KeyboardInput::U;
+                case SDLK_v:
+                    return arcade::KeyboardInput::V;
+                case SDLK_w:
+                    return arcade::KeyboardInput::W;
+                case SDLK_x:
+                    return arcade::KeyboardInput::X;
+                case SDLK_y:
+                    return arcade::KeyboardInput::Y;
+                case SDLK_z:
+                    return arcade::KeyboardInput::Z;
             }
         }
     }

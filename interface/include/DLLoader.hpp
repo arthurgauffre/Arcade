@@ -11,7 +11,7 @@
 #include <dlfcn.h>
 #include <iostream>
 #include <memory>
-#include "Arcade.hpp"
+#include <Arcade.hpp>
 
 template <typename T>
 class DLLoader {

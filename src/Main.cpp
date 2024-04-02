@@ -6,8 +6,8 @@
 */
 
 #include <iostream>
-#include "ErrorHandling.hpp"
-#include "proto.hpp"
+#include <proto.hpp>
+#include <ErrorHandling.hpp>
 
 /**
  * @brief check param launch arcade
