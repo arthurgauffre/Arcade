@@ -27,18 +27,13 @@ void arcade::Pacman::init()
   data.sprite_value['D'] = "assets/pacman/npc/pacman_down.png";  // Pacman down
   data.sprite_value['L'] = "assets/pacman/npc/pacman_left.png";  // Pacman left
   data.sprite_value['R'] = "assets/pacman/npc/pacman_right.png";  // Pacman right
-  data.sprite_value['G'] = "assets/pacman/npc/ghost_0.png";  // Ghost
-  data.sprite_value['H'] = "assets/pacman/npc/ghost_1.png";  // Ghost
-  data.sprite_value['I'] = "assets/pacman/npc/ghost_2.png";  // Ghost
-  data.sprite_value['J'] = "assets/pacman/npc/ghost_3.png";  // Ghost
-  data.sprite_value['F'] = "assets/default/png/black.png";  // Floor
+  data.sprite_value['G'] = "assets/pacman/npc/ghost_1.png";  // Ghost
+  data.sprite_value['B'] = "assets/default/png/black.png";  // Floor
 
   std::pair<int, int> pacman = std::make_pair(10, 9);
   std::vector<std::pair<int, int>> ghosts;
   ghosts.push_back(std::make_pair(7, 10));
-  ghosts.push_back(std::make_pair(7, 9));
   ghosts.push_back(std::make_pair(7, 8));
-  ghosts.push_back(std::make_pair(8, 8));
 
   // Define the map
   data.display_info = {
@@ -49,8 +44,8 @@ void arcade::Pacman::init()
       {'W', 'C', 'W', 'W', 'C', 'W', 'W', 'W', 'C', 'C', 'C', 'W', 'W', 'W', 'C', 'W', 'W', 'C', 'W'},
       {'W', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'W'},
       {'W', 'W', 'W', 'W', 'C', 'W', 'C', 'W', 'W', 'C', 'W', 'W', 'C', 'W', 'C', 'W', 'W', 'W', 'W'},
-      {'C', 'C', 'C', 'W', 'C', 'W', 'C', 'W', 'M', 'M', 'M', 'W', 'C', 'W', 'C', 'W', 'C', 'C', 'C'},
-      {'W', 'W', 'W', 'W', 'C', 'W', 'C', 'W', 'M', 'M', 'M', 'W', 'C', 'W', 'C', 'W', 'W', 'W', 'W'},
+      {'C', 'C', 'C', 'W', 'C', 'W', 'C', 'W', 'B', 'B', 'B', 'W', 'C', 'W', 'C', 'W', 'C', 'C', 'C'},
+      {'W', 'W', 'W', 'W', 'C', 'W', 'C', 'W', 'B', 'B', 'B', 'W', 'C', 'W', 'C', 'W', 'W', 'W', 'W'},
       {'W', 'C', 'C', 'C', 'C', 'W', 'C', 'W', 'W', 'W', 'W', 'W', 'C', 'W', 'C', 'C', 'C', 'C', 'W'},
       {'W', 'C', 'W', 'W', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'W', 'W', 'C', 'W'},
       {'W', 'C', 'C', 'W', 'C', 'W', 'W', 'W', 'C', 'C', 'C', 'W', 'W', 'W', 'C', 'W', 'C', 'C', 'W'},
@@ -62,9 +57,9 @@ void arcade::Pacman::init()
       {'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W'},
   };
 
-  for (int i = 0; i < ghosts.size(); i++) {
-    data.display_info[ghosts[i].first][ghosts[i].second] = 'G' + i;
-  }
+  // Set the initial position of the pacman and the ghosts
+  data.display_info[ghosts[0].first][ghosts[0].second] = 'G';
+  data.display_info[ghosts[1].first][ghosts[1].second] = 'G';
 
   data.display_info[pacman.first][pacman.second] = 'R';
   this->setPacman(pacman);
@@ -89,7 +84,7 @@ void arcade::Pacman::updateGame()
 {
   arcade::GameData data = this->getCoreModule()->getGameData();
   this->updateTimer();
-  if (this->getTimer().duration.count() >= 500) {
+  if (this->getTimer().duration.count() >= 250) {
     this->resetTimer();
     // Update the game
     data.display_info = this->moveEntities(this->getCoreModule()->getGameData().display_info);
@@ -136,7 +131,7 @@ bool operator<(const Node& a, const Node& b) {
     return a.f > b.f; // Pour la priorité de la file de priorité (min heap)
 }
 
-Node a_star(const std::pair<int, int>& start, const std::pair<int, int>& goal, const std::vector<std::vector<int>>& map) {
+Node a_star(const std::pair<int, int> start, const std::pair<int, int> goal, const std::vector<std::vector<int>> map) {
     std::priority_queue<Node> open_list;
     std::vector<std::vector<bool>> closed_list(map.size(), std::vector<bool>(map[0].size(), false));
 
@@ -164,7 +159,7 @@ Node a_star(const std::pair<int, int>& start, const std::pair<int, int>& goal, c
             if (neighbor.first < 0 || neighbor.first >= map.size() || neighbor.second < 0 || neighbor.second >= map[0].size()) {
                 continue; // Hors des limites de la carte
             }
-            if (map[neighbor.first][neighbor.second] == 1 || closed_list[neighbor.first][neighbor.second]) {
+            if (map[neighbor.first][neighbor.second] == 'W') {
                 continue; // Mur ou déjà visité
             }
 
@@ -214,26 +209,32 @@ std::vector<std::vector<int>> arcade::Pacman::moveEntities(std::vector<std::vect
 
   // Check if ghost is hitting a wall
   for (int i = 0; i < ghosts.size(); i++) {
-    if (display_info[newGhosts[i].first][newGhosts[i].second] == 'W') {
+    if (display_info[newGhosts[i].first][newGhosts[i].second] == 'W' ||
+        display_info[newGhosts[i].first][newGhosts[i].second] == 'G') {
       newGhosts[i] = ghosts[i];
     }
-    if (display_info[newGhosts[i].first][newGhosts[i].second] == 'G') {
-      newGhosts[i] = ghosts[i];
+
+    if (display_info[newGhosts[i].first][newGhosts[i].second] == 'U' ||
+        display_info[newGhosts[i].first][newGhosts[i].second] == 'D' ||
+        display_info[newGhosts[i].first][newGhosts[i].second] == 'L' ||
+        display_info[newGhosts[i].first][newGhosts[i].second] == 'R') {
+      this->setGameStatus(arcade::IGameModule::GameStatus::GAMEOVER);
+      return display_info;
     }
   }
 
   // Check if pacman is hitting a wall
   if (display_info[newPacman.first][newPacman.second] == 'W') {
-    return display_info;
+    newPacman = pacman;
   }
   
   // clear the map
   if (pacman != newPacman)
-    display_info[pacman.first][pacman.second] = 'F';
+    display_info[pacman.first][pacman.second] = 'B';
 
   for (int i = 0; i < ghosts.size(); i++) {
     if (ghosts[i] != newGhosts[i])
-      display_info[ghosts[i].first][ghosts[i].second] = 'M';
+      display_info[ghosts[i].first][ghosts[i].second] = 'B';
     else
       display_info[ghosts[i].first][ghosts[i].second] = 'G';
   }
@@ -247,11 +248,14 @@ std::vector<std::vector<int>> arcade::Pacman::moveEntities(std::vector<std::vect
     display_info[newPacman.first][newPacman.second] = 'L';
   else if (direction == arcade::KeyboardInput::RIGHT)
     display_info[newPacman.first][newPacman.second] = 'R';
-  this->setPacman(newPacman);
+
   for (int i = 0; i < ghosts.size(); i++) {
     display_info[newGhosts[i].first][newGhosts[i].second] = 'G';
   }
+
+  this->setPacman(newPacman);
   this->setGhosts(newGhosts);
+
   return display_info;
 }
 
