@@ -367,13 +367,11 @@ void arcade::CoreModule::handleKeyRunning(arcade::KeyboardInput key)
         this->_menuData.indexGame = 0;
       this->loadLib(this->_menuData._gameLibList[this->_menuData.indexGame]);
       break;
-    case arcade::KeyboardInput::Q:
+    case arcade::KeyboardInput::ESCAPE:
       this->_coreStatus = CoreStatus::EXIT;
       break;
     case arcade::KeyboardInput::CROSS:
       this->_coreStatus = CoreStatus::EXIT;
-      break;
-    default:
       break;
   }
 }
