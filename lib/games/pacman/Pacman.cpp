@@ -33,8 +33,17 @@ void arcade::Pacman::init()
 
   std::pair<int, int> pacman = std::make_pair(10, 9);
   std::vector<arcade::Node> ghosts;
+  std::vector<std::chrono::time_point<std::chrono::system_clock>> ghostsTimer;
   ghosts.push_back({std::make_pair(8, 10), 0, 0, 0});
   ghosts.push_back({std::make_pair(8, 8), 0, 0, 0});
+
+  for (int i = 0; i < ghosts.size(); i++)
+  {
+    ghosts[i].isShutDown = true;
+    auto end = std::chrono::system_clock::now();
+    ghostsTimer.push_back(end);
+  }
+
 
   // Define the map
   data.display_info = {
@@ -68,6 +77,7 @@ void arcade::Pacman::init()
   data.display_info[pacman.first][pacman.second] = 'R';
   this->setPacman(pacman);
   this->setGhosts(ghosts);
+  this->setGhostsTimer(ghostsTimer);
   this->setDirection(arcade::KeyboardInput::RIGHT);
 
   this->getCoreModule()->setGameData(data);
@@ -98,6 +108,23 @@ void arcade::Pacman::updateGame()
   return;
 }
 
+void arcade::Pacman::updateGhostTimers()
+{
+  // Update the ghost timers
+  for (int i = 0; i < this->_ghostsTimer.size(); i++)
+  {
+    this->updateTimer();
+    auto end = std::chrono::system_clock::now();
+    auto start = this->getGhostsTimer()[i];
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+    if (duration.count() >= 10000)
+    {
+      this->_ghostsTimer[i] = end;
+      this->_ghosts[i].isShutDown = false;
+    }
+  }
+}
+
 /**
  * @brief generate entry point for the game library
  *
@@ -115,6 +142,16 @@ extern "C" arcade::ModuleType getType()
 extern "C" std::string getName()
 {
   return "pacman";
+}
+
+void arcade::Pacman::setGhostsTimer(std::vector<std::chrono::time_point<std::chrono::system_clock>> ghostsTimer)
+{
+  this->_ghostsTimer = ghostsTimer;
+}
+
+std::vector<std::chrono::time_point<std::chrono::system_clock>> arcade::Pacman::getGhostsTimer() const
+{
+  return this->_ghostsTimer;
 }
 
 std::pair<int, int> arcade::Pacman::getPacman() const
@@ -272,7 +309,7 @@ bool arcade::Pacman::isOver(std::vector<std::vector<int>> display_info)
     }
   }
 
-  return false;
+  return true;
 }
 
 std::vector<std::vector<int>> arcade::Pacman::moveEntities(std::vector<std::vector<int>> display_info)
@@ -307,6 +344,8 @@ std::vector<std::vector<int>> arcade::Pacman::moveEntities(std::vector<std::vect
   // Move the ghosts
   for (int i = 0; i < ghosts.size(); i++)
   {
+    if (ghosts[i].isShutDown)
+      continue;
     arcade::Node path = aStar(display_info, ghosts[i], pacman);
     if (path.position.first == 0 && path.position.second == 0)
       path = ghosts[i];
@@ -364,6 +403,7 @@ std::vector<std::vector<int>> arcade::Pacman::moveEntities(std::vector<std::vect
 
   this->setPacman(newPacman.position);
   this->setGhosts(newGhosts);
+  this->updateGhostTimers();
 
   // Check win condition
   if (this->isOver(display_info))
