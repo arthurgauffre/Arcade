@@ -502,6 +502,15 @@ void arcade::CoreModule::updateRunning()
       this->getGraphicModule()->drawSprite(sprite, j * 30, i * 30, 30, 30, 0);
     }
   }
+  for (size_t i = 0; i < this->getGameData().entities.size(); i += 1)
+  {
+    for (size_t j = 0; j < this->getGameData().entities[i].size(); j += 1)
+    {
+      sprite.first = this->getGameData().entities[i][j].first;
+      sprite.second = this->getGameData().sprite_value[this->getGameData().entities[i][j].first];
+      this->getGraphicModule()->drawSprite(sprite, this->getGameData().entities[i][j].second.second * 30, this->getGameData().entities[i][j].second.first * 30, 30, 30, 0);
+    }
+  }
   this->getGraphicModule()->displayWindow();
 }
 
