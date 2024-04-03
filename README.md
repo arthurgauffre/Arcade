@@ -14,18 +14,25 @@ You may then select a game and/or change the graphics library if you deisre. Ano
 In case of confusion or curiosity, a document detailing the ins and outs of this program is available in the doc directory: ./doc/Documentation.pdf
 
 ## Dependencies:
-SDL2
-SDL2_ttf
-SDL2_image
+#### SDL2
+#### SDL2_ttf
+#### SDL2_image
 
 ## Execution:
-cmake -S. -B build
-cmake --build build
-./arcade libraryPath
+#### cmake -S. -B build
+#### cmake --build build
+#### ./arcade libraryPath
 
-### Available library paths:
-lib/arcade_ncurses.so
-lib/arcade_sfml.so
-lib/arcade_sdl2.so
+## Available library paths:
+#### lib/arcade_ncurses.so
+#### lib/arcade_sfml.so
+#### lib/arcade_sdl2.so
 
-#### Email address of the team leader of the group we collaborated with for the interface: tom.mendy@epitech.eu
+## Special Keys:
+#### ESC - exit program
+#### M - back to menu
+#### R - restart current game
+#### L - switch graphics libraries during game
+#### G - switch games while playing
+
+### Email address of the team leader of the group we collaborated with for the interface: tom.mendy@epitech.eu
