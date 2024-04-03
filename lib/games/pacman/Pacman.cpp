@@ -44,7 +44,7 @@ void arcade::Pacman::init()
       {'W', '*', 'W', 'W', '*', 'W', 'W', 'W', '*', 'W', '*', 'W', 'W', 'W', '*', 'W', 'W', '*', 'W'},
       {'W', '*', 'W', 'W', '*', 'W', 'W', 'W', '*', '*', '*', 'W', 'W', 'W', '*', 'W', 'W', '*', 'W'},
       {'W', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', 'W'},
-      {'W', 'W', 'W', 'W', '*', 'W', '*', 'W', 'W', '*', 'W', 'W', '*', 'W', '*', 'W', 'W', 'W', 'W'},
+      {'W', 'W', 'W', 'W', '*', 'W', '*', 'W', 'W', ' ', 'W', 'W', '*', 'W', '*', 'W', 'W', 'W', 'W'},
       {'*', '*', '*', '*', '*', 'W', '*', 'W', ' ', ' ', ' ', 'W', '*', 'W', '*', '*', '*', '*', '*'},
       {'W', 'W', 'W', 'W', '*', 'W', '*', 'W', ' ', ' ', ' ', 'W', '*', 'W', '*', 'W', 'W', 'W', 'W'},
       {'W', '*', '*', '*', '*', 'W', '*', 'W', 'W', 'W', 'W', 'W', '*', 'W', '*', '*', '*', '*', 'W'},
@@ -308,6 +308,8 @@ std::vector<std::vector<int>> arcade::Pacman::moveEntities(std::vector<std::vect
   for (int i = 0; i < ghosts.size(); i++)
   {
     arcade::Node path = aStar(display_info, ghosts[i], pacman);
+    if (path.position.first == 0 && path.position.second == 0)
+      path = ghosts[i];
     newGhosts[i] = path;
   }
 
