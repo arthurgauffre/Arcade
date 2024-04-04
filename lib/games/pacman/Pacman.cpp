@@ -20,6 +20,7 @@ void arcade::Pacman::init()
 {
   // Initialize the game
   arcade::GameData data;
+
   // Define the sprite values for walls, coins, Pacman, and coins that allow Pacman to eat ghosts
   data.sprite_value['W'] = "assets/default/map/wall.png";        // Wall
   data.sprite_value['*'] = "assets/default/item/coin.png";       // Coin
@@ -28,14 +29,22 @@ void arcade::Pacman::init()
   data.sprite_value['D'] = "assets/pacman/npc/pacman_down.png";  // Pacman down
   data.sprite_value['L'] = "assets/pacman/npc/pacman_left.png";  // Pacman left
   data.sprite_value['R'] = "assets/pacman/npc/pacman_right.png"; // Pacman right
+  data.sprite_value['S'] = "assets/pacman/npc/ghost_0.png";      // Ghost Scared
   data.sprite_value['G'] = "assets/pacman/npc/ghost_1.png";      // Ghost
   data.sprite_value[' '] = "assets/default/png/black.png";       // Floor
 
-  std::pair<int, int> pacman = std::make_pair(10, 9);
+  arcade::Node pacman = {std::make_pair(10, 9), 0, 0, 0, true};
   std::vector<arcade::Node> ghosts;
+  std::vector<std::pair<int, int>> pacGums;
   std::vector<std::chrono::time_point<std::chrono::system_clock>> ghostsTimer;
+
   ghosts.push_back({std::make_pair(8, 10), 0, 0, 0});
   ghosts.push_back({std::make_pair(8, 8), 0, 0, 0});
+
+  pacGums.push_back(std::make_pair(1, 1));
+  pacGums.push_back(std::make_pair(1, 17));
+  pacGums.push_back(std::make_pair(16, 1));
+  pacGums.push_back(std::make_pair(16, 17));
 
   for (int i = 0; i < ghosts.size(); i++)
   {
@@ -44,11 +53,10 @@ void arcade::Pacman::init()
     ghostsTimer.push_back(end);
   }
 
-
   // Define the map
   data.display_info = {
       {'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W'},
-      {'W', 'X', '*', '*', '*', '*', '*', '*', '*', 'W', '*', '*', '*', '*', '*', '*', '*', 'X', 'W'},
+      {'W', '*', '*', '*', '*', '*', '*', '*', '*', 'W', '*', '*', '*', '*', '*', '*', '*', '*', 'W'},
       {'W', '*', 'W', 'W', '*', 'W', 'W', 'W', '*', 'W', '*', 'W', 'W', 'W', '*', 'W', 'W', '*', 'W'},
       {'W', '*', 'W', 'W', '*', 'W', 'W', 'W', '*', 'W', '*', 'W', 'W', 'W', '*', 'W', 'W', '*', 'W'},
       {'W', '*', 'W', 'W', '*', 'W', 'W', 'W', '*', '*', '*', 'W', 'W', 'W', '*', 'W', 'W', '*', 'W'},
@@ -63,7 +71,7 @@ void arcade::Pacman::init()
       {'W', 'W', '*', 'W', '*', 'W', '*', 'W', 'W', 'W', 'W', 'W', '*', 'W', '*', 'W', '*', 'W', 'W'},
       {'W', '*', '*', '*', '*', 'W', '*', '*', '*', 'W', '*', '*', '*', 'W', '*', '*', '*', '*', 'W'},
       {'W', '*', 'W', 'W', 'W', 'W', 'W', 'W', '*', 'W', '*', 'W', 'W', 'W', 'W', 'W', 'W', '*', 'W'},
-      {'W', 'X', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', 'X', 'W'},
+      {'W', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', 'W'},
       {'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W'},
   };
 
@@ -71,14 +79,25 @@ void arcade::Pacman::init()
   this->_templateMap = data.display_info;
 
   // Set the initial position of the pacman and the ghosts
-  data.display_info[ghosts[0].position.first][ghosts[0].position.second] = 'G';
-  data.display_info[ghosts[1].position.first][ghosts[1].position.second] = 'G';
+  for (int i = 0; i < ghosts.size(); i++)
+  {
+    data.display_info[ghosts[i].position.first][ghosts[i].position.second] = 'G';
+  }
 
-  data.display_info[pacman.first][pacman.second] = 'R';
+  // Set the initial position of the pacgums
+  for (int i = 0; i < pacGums.size(); i++)
+  {
+    data.display_info[pacGums[i].first][pacGums[i].second] = 'X';
+  }
+
+  data.display_info[pacman.position.first][pacman.position.second] = 'R';
+
+  // Set the game data
   this->setPacman(pacman);
   this->setGhosts(ghosts);
   this->setGhostsTimer(ghostsTimer);
   this->setDirection(arcade::KeyboardInput::RIGHT);
+  this->setPacGums(pacGums);
 
   this->getCoreModule()->setGameData(data);
   return;
@@ -108,7 +127,12 @@ void arcade::Pacman::updateGame()
   return;
 }
 
-void arcade::Pacman::updateGhostTimers()
+std::chrono::time_point<std::chrono::system_clock> arcade::Pacman::getPacmanTimer() const
+{
+  return this->_pacmanTimer;
+}
+
+void arcade::Pacman::updateTimers(std::vector<std::vector<int>> display_info)
 {
   // Update the ghost timers
   for (int i = 0; i < this->_ghostsTimer.size(); i++)
@@ -122,6 +146,21 @@ void arcade::Pacman::updateGhostTimers()
       this->_ghostsTimer[i] = end;
       this->_ghosts[i].isShutDown = false;
     }
+  }
+
+  // Update the pacman timer
+  this->updateTimer();
+  auto end = std::chrono::system_clock::now();
+  auto start = this->getPacmanTimer();
+  auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+  if (duration.count() >= 10000)
+  {
+    for (int i = 0; i < this->_ghosts.size(); i++)
+    {
+      display_info[this->_ghosts[i].position.first][this->_ghosts[i].position.second] = 'G';
+    }
+    this->_pacman.isShutDown = true;
+    this->_pacmanTimer = end;
   }
 }
 
@@ -154,14 +193,24 @@ std::vector<std::chrono::time_point<std::chrono::system_clock>> arcade::Pacman::
   return this->_ghostsTimer;
 }
 
-std::pair<int, int> arcade::Pacman::getPacman() const
+arcade::Node arcade::Pacman::getPacman() const
 {
   return this->_pacman;
 }
 
-void arcade::Pacman::setPacman(std::pair<int, int> pacman)
+void arcade::Pacman::setPacman(arcade::Node pacman)
 {
   this->_pacman = pacman;
+}
+
+void arcade::Pacman::setPacGums(std::vector<std::pair<int, int>> pacGums)
+{
+  this->_pacGums = pacGums;
+}
+
+std::vector<std::pair<int, int>> arcade::Pacman::getPacGums() const
+{
+  return this->_pacGums;
 }
 
 int manhattanDistance(const arcade::Node a, const arcade::Node b)
@@ -293,18 +342,18 @@ bool arcade::Pacman::isOver(std::vector<std::vector<int>> display_info)
   // Check if pacman is hitting a ghost
   for (int i = 0; i < this->_ghosts.size(); i++)
   {
-    if (this->_pacman == this->_ghosts[i].position)
+    if (this->_pacman.position == this->_ghosts[i].position)
     {
       return true;
     }
   }
 
   // Check if pacman ate all the coins
-  for(int i = 0; i < display_info.size(); i++)
+  for (int i = 0; i < display_info.size(); i++)
   {
-    for(int j = 0; j < display_info[i].size(); j++)
+    for (int j = 0; j < display_info[i].size(); j++)
     {
-      if(display_info[i][j] == '*')
+      if (display_info[i][j] == '*')
         return false;
     }
   }
@@ -312,17 +361,29 @@ bool arcade::Pacman::isOver(std::vector<std::vector<int>> display_info)
   return true;
 }
 
+bool arcade::Pacman::isPacgumEaten(std::pair<int, int> pos)
+{
+  for (int i = 0; i < this->_pacGums.size(); i++)
+  {
+    if (this->_pacGums[i] == pos)
+    {
+      this->_pacGums.erase(this->_pacGums.begin() + i);
+      return true;
+    }
+  }
+  return false;
+}
+
 std::vector<std::vector<int>> arcade::Pacman::moveEntities(std::vector<std::vector<int>> display_info)
 {
-  arcade::Node pacman = {this->getPacman(), 0, 0, 0};
-  arcade::Node newPacman = pacman;
+  arcade::Node newPacman = this->_pacman;
   std::vector<arcade::Node> ghosts = this->getGhosts();
   std::vector<arcade::Node> newGhosts = ghosts;
   arcade::KeyboardInput direction = this->getDirection();
 
   // replace pacman in other side of the map
-  pacman.position.first = pacman.position.first % display_info.size();
-  pacman.position.second = pacman.position.second % display_info[0].size();
+  _pacman.position.first = _pacman.position.first % display_info.size();
+  _pacman.position.second = _pacman.position.second % display_info[0].size();
   newPacman.position.first = newPacman.position.first % display_info.size();
   newPacman.position.second = newPacman.position.second % display_info[0].size();
 
@@ -341,15 +402,42 @@ std::vector<std::vector<int>> arcade::Pacman::moveEntities(std::vector<std::vect
   else if (newPacman.position.second < 0)
     newPacman.position.second = display_info[0].size() - 1;
 
-  // Move the ghosts
-  for (int i = 0; i < ghosts.size(); i++)
+  // Check if pacman is hitting a pacgum
+  if (this->isPacgumEaten(newPacman.position))
   {
-    if (ghosts[i].isShutDown)
-      continue;
-    arcade::Node path = aStar(display_info, ghosts[i], pacman);
-    if (path.position.first == 0 && path.position.second == 0)
-      path = ghosts[i];
-    newGhosts[i] = path;
+    newPacman.isShutDown = false;
+    for (int i = 0; i < this->_ghosts.size(); i++)
+    {
+      display_info[this->_ghosts[i].position.first][this->_ghosts[i].position.second] = 'S';
+    }
+  }
+
+  if (!newPacman.isShutDown)
+  {
+    for (int i = 0; i < ghosts.size(); i++)
+    {
+      display_info[ghosts[i].position.first][ghosts[i].position.second] = 'S';
+      ghosts[i].isShutDown = true;
+
+      arcade::Node runAway = {std::make_pair(1, 1), 0, 0, 0};
+      arcade::Node path = aStar(display_info, ghosts[i], runAway);
+      if (path.position.first == 0 && path.position.second == 0)
+        path = ghosts[i];
+      newGhosts[i] = path;
+    }
+  }
+  else
+  {
+    // Move the ghosts a_star
+    for (int i = 0; i < ghosts.size(); i++)
+    {
+      if (ghosts[i].isShutDown)
+        continue;
+      arcade::Node path = aStar(display_info, ghosts[i], _pacman);
+      if (path.position.first == 0 && path.position.second == 0)
+        path = ghosts[i];
+      newGhosts[i] = path;
+    }
   }
 
   // Check if ghosts are in superposed positions
@@ -367,14 +455,14 @@ std::vector<std::vector<int>> arcade::Pacman::moveEntities(std::vector<std::vect
   // Check if pacman is hitting a wall
   if (display_info[newPacman.position.first][newPacman.position.second] == 'W')
   {
-    newPacman = pacman;
+    newPacman = _pacman;
   }
 
   // clear the map
-  if (pacman.position != newPacman.position)
+  if (_pacman.position != newPacman.position)
   {
-    display_info[pacman.position.first][pacman.position.second] = ' ';
-    this->_templateMap[pacman.position.first][pacman.position.second] = ' ';
+    display_info[_pacman.position.first][_pacman.position.second] = ' ';
+    this->_templateMap[_pacman.position.first][_pacman.position.second] = ' ';
   }
 
   for (int i = 0; i < ghosts.size(); i++)
@@ -401,9 +489,9 @@ std::vector<std::vector<int>> arcade::Pacman::moveEntities(std::vector<std::vect
       newGhosts[i] = ghosts[i];
   }
 
-  this->setPacman(newPacman.position);
+  this->setPacman(newPacman);
   this->setGhosts(newGhosts);
-  this->updateGhostTimers();
+  this->updateTimers(display_info);
 
   // Check win condition
   if (this->isOver(display_info))
