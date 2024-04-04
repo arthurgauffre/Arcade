@@ -75,8 +75,8 @@ void arcade::Sfml::drawAllSprite(std::pair<char, std::string> sprite, std::vecto
     mySprite.setScale(scaleX, scaleY);
     mySprite.setRotation(rotation);
 
-    for (auto coord : coordinates) {
-        mySprite.setPosition(coord.first, coord.second);
+    for (int i = 0; i < coordinates.size(); i++) {
+        mySprite.setPosition(coordinates[i].first, coordinates[i].second);
         this->_window->draw(mySprite);
     }
     mySprite.setTexture(texture);

@@ -492,6 +492,7 @@ void arcade::CoreModule::selectionLoop()
 void arcade::CoreModule::updateRunning()
 {
   std::pair<char, std::string> sprite;
+  std::pair<char, std::string> oldSprite;
   std::vector<std::pair<int, std::vector<std::pair<int, int>>> > allSpritesCoordinates;
   for (auto &i : this->_gameData.sprite_value)
   {
@@ -509,6 +510,8 @@ void arcade::CoreModule::updateRunning()
     this->getGraphicModule()->clearWindow();
     for (size_t i = 0; i < allSpritesCoordinates.size(); i += 1)
     {
+      if (allSpritesCoordinates[i].second.size() == 0)
+        continue;
       sprite.first = allSpritesCoordinates[i].first;
       sprite.second = this->getGameData().sprite_value[allSpritesCoordinates[i].first];
       this->getGraphicModule()->drawAllSprite(sprite, allSpritesCoordinates[i].second, 30, 30, 0);
@@ -517,9 +520,19 @@ void arcade::CoreModule::updateRunning()
     {
       for (size_t j = 0; j < this->getGameData().entities[i].size(); j += 1)
       {
-        sprite.first = this->getGameData().entities[i][j].first;
-        sprite.second = this->getGameData().sprite_value[this->getGameData().entities[i][j].first];
-        if (this->_oldGameData.entities[i][j].second.first < this->_gameData.entities[i][j].second.first)
+        oldSprite.first = this->_oldGameData.entities[i][j].first;
+        oldSprite.second = this->_gameData.sprite_value[this->_oldGameData.entities[i][j].first];
+        sprite.first = this->_gameData.entities[i][j].first;
+        sprite.second = this->_gameData.sprite_value[this->_gameData.entities[i][j].first];
+        if (this->_oldGameData.entities[i][j].second.first < this->_gameData.entities[i][j].second.first && this->_oldGameData.entities[i][j].second.second < this->_gameData.entities[i][j].second.second)
+          this->getGraphicModule()->drawSprite(sprite, this->_oldGameData.entities[i][j].second.second * 30 + h, this->_oldGameData.entities[i][j].second.first * 30 + h, 30, 30, 0);
+        else if (this->_oldGameData.entities[i][j].second.first > this->_gameData.entities[i][j].second.first && this->_oldGameData.entities[i][j].second.second < this->_gameData.entities[i][j].second.second)
+          this->getGraphicModule()->drawSprite(sprite, this->_oldGameData.entities[i][j].second.second * 30 + h, this->_oldGameData.entities[i][j].second.first * 30 - h, 30, 30, 0);
+        else if (this->_oldGameData.entities[i][j].second.first < this->_gameData.entities[i][j].second.first && this->_oldGameData.entities[i][j].second.second > this->_gameData.entities[i][j].second.second)
+          this->getGraphicModule()->drawSprite(sprite, this->_oldGameData.entities[i][j].second.second * 30 - h, this->_oldGameData.entities[i][j].second.first * 30 + h, 30, 30, 0);
+        else if (this->_oldGameData.entities[i][j].second.first > this->_gameData.entities[i][j].second.first && this->_oldGameData.entities[i][j].second.second > this->_gameData.entities[i][j].second.second)
+          this->getGraphicModule()->drawSprite(sprite, this->_oldGameData.entities[i][j].second.second * 30 - h, this->_oldGameData.entities[i][j].second.first * 30 - h, 30, 30, 0);
+        else if (this->_oldGameData.entities[i][j].second.first < this->_gameData.entities[i][j].second.first)
           this->getGraphicModule()->drawSprite(sprite, this->_oldGameData.entities[i][j].second.second * 30, this->_oldGameData.entities[i][j].second.first * 30 + h, 30, 30, 0);
         else if (this->_oldGameData.entities[i][j].second.first > this->_gameData.entities[i][j].second.first)
           this->getGraphicModule()->drawSprite(sprite, this->_oldGameData.entities[i][j].second.second * 30, this->_oldGameData.entities[i][j].second.first * 30 - h, 30, 30, 0);
@@ -528,7 +541,7 @@ void arcade::CoreModule::updateRunning()
         else if (this->_oldGameData.entities[i][j].second.second > this->_gameData.entities[i][j].second.second)
           this->getGraphicModule()->drawSprite(sprite, this->_oldGameData.entities[i][j].second.second * 30 - h, this->_oldGameData.entities[i][j].second.first * 30, 30, 30, 0);
         else
-          this->getGraphicModule()->drawSprite(sprite, this->getGameData().entities[i][j].second.second * 30, this->getGameData().entities[i][j].second.first * 30, 30, 30, 0);
+          this->getGraphicModule()->drawSprite(oldSprite, this->getGameData().entities[i][j].second.second * 30, this->getGameData().entities[i][j].second.first * 30, 30, 30, 0);
       }
     }
     this->getGraphicModule()->displayWindow();
