@@ -492,18 +492,47 @@ void arcade::CoreModule::selectionLoop()
 void arcade::CoreModule::updateRunning()
 {
   std::pair<char, std::string> sprite;
-  this->getGraphicModule()->clearWindow();
-  this->getGameModule()->updateGame();
-  for (size_t i = 0; i < this->getGameData().entities.size(); i += 1)
+  std::vector<std::pair<int, std::vector<std::pair<int, int>>> > allSpritesCoordinates;
+  for (auto &i : this->_gameData.sprite_value)
   {
-    for (size_t j = 0; j < this->getGameData().entities[i].size(); j += 1)
+    std::vector<std::pair<int, int>> coordinates;
+    for (size_t k = 0; k < this->_gameData.entities[0].size(); k += 1)
     {
-      sprite.first = this->getGameData().entities[i][j].first;
-      sprite.second = this->getGameData().sprite_value[this->getGameData().entities[i][j].first];
-      this->getGraphicModule()->drawSprite(sprite, this->getGameData().entities[i][j].second.second * 30, this->getGameData().entities[i][j].second.first * 30, 30, 30, 0);
+      if (this->_gameData.entities[0][k].first == i.first)
+        coordinates.push_back(std::make_pair(this->_gameData.entities[0][k].second.second * 30, this->_gameData.entities[0][k].second.first * 30));
     }
+    allSpritesCoordinates.push_back(std::make_pair(i.first, coordinates));
   }
-  this->getGraphicModule()->displayWindow();
+  this->_oldGameData = this->_gameData;
+  this->getGameModule()->updateGame();
+  for (int h = 0; h <= 30; h++) {
+    this->getGraphicModule()->clearWindow();
+    for (size_t i = 0; i < allSpritesCoordinates.size(); i += 1)
+    {
+      sprite.first = allSpritesCoordinates[i].first;
+      sprite.second = this->getGameData().sprite_value[allSpritesCoordinates[i].first];
+      this->getGraphicModule()->drawAllSprite(sprite, allSpritesCoordinates[i].second, 30, 30, 0);
+    }
+    for (size_t i = 1; i < this->getGameData().entities.size(); i += 1)
+    {
+      for (size_t j = 0; j < this->getGameData().entities[i].size(); j += 1)
+      {
+        sprite.first = this->getGameData().entities[i][j].first;
+        sprite.second = this->getGameData().sprite_value[this->getGameData().entities[i][j].first];
+        if (this->_oldGameData.entities[i][j].second.first < this->_gameData.entities[i][j].second.first)
+          this->getGraphicModule()->drawSprite(sprite, this->_oldGameData.entities[i][j].second.second * 30, this->_oldGameData.entities[i][j].second.first * 30 + h, 30, 30, 0);
+        else if (this->_oldGameData.entities[i][j].second.first > this->_gameData.entities[i][j].second.first)
+          this->getGraphicModule()->drawSprite(sprite, this->_oldGameData.entities[i][j].second.second * 30, this->_oldGameData.entities[i][j].second.first * 30 - h, 30, 30, 0);
+        else if (this->_oldGameData.entities[i][j].second.second < this->_gameData.entities[i][j].second.second)
+          this->getGraphicModule()->drawSprite(sprite, this->_oldGameData.entities[i][j].second.second * 30 + h, this->_oldGameData.entities[i][j].second.first * 30, 30, 30, 0);
+        else if (this->_oldGameData.entities[i][j].second.second > this->_gameData.entities[i][j].second.second)
+          this->getGraphicModule()->drawSprite(sprite, this->_oldGameData.entities[i][j].second.second * 30 - h, this->_oldGameData.entities[i][j].second.first * 30, 30, 30, 0);
+        else
+          this->getGraphicModule()->drawSprite(sprite, this->getGameData().entities[i][j].second.second * 30, this->getGameData().entities[i][j].second.first * 30, 30, 30, 0);
+      }
+    }
+    this->getGraphicModule()->displayWindow();
+  }
 }
 
 /**

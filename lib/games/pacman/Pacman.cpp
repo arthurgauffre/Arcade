@@ -73,13 +73,9 @@ void arcade::Pacman::init()
       {'W', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'W'},
       {'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W'}
   };
-  for (int i = 0; i < 20; i++) {
-    for (int j = 0; j < 20; j++) {
-      if (mapGen[i][j] == 'W')
-        map.push_back(std::make_pair('W', std::make_pair(i, j)));
-      if (mapGen[i][j] == ' ')
-        map.push_back(std::make_pair(' ', std::make_pair(i, j)));
-    }
+  for (int i = 0; i < mapGen.size(); i++) {
+    for (int j = 0; j < mapGen[i].size(); j++)
+        map.push_back(std::make_pair(mapGen[i][j], std::make_pair(i, j)));
   }
   data.entities.push_back(map);
   data.entities.push_back(snake);

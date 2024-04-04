@@ -22,6 +22,7 @@ public:
   void displayWindow();
   void drawText(const std::string text, int x, int y, int size);
   void drawSprite(std::pair<char, std::string> sprite, int x, int y, int width, int height, int rotation);
+  void drawAllSprite(std::pair<char, std::string> sprite, std::vector<std::pair<int, int>> coordinates, int width, int height, int rotation);
 
 protected:
   WINDOW *_window;

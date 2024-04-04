@@ -73,6 +73,7 @@ namespace arcade
     arcade::IGameModule *_gameModule;
     arcade::MenuData _menuData;
     arcade::GameData _gameData;
+    arcade::GameData _oldGameData;
   };
 }; // namespace arcade
 

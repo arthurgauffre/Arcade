@@ -51,6 +51,13 @@ void arcade::NCurses::drawSprite(std::pair<char, std::string> sprite, int x, int
   mvwprintw(this->_window, y, x, "%c", sprite.first);
 }
 
+void arcade::NCurses::drawAllSprite(std::pair<char, std::string> sprite, std::vector<std::pair<int, int>> coordinates, int width, int height, int rotation)
+{
+  // Draw all the sprites at the specified positions
+  for (auto &coord : coordinates)
+    drawSprite(sprite, coord.first, coord.second, width, height, rotation);
+}
+
 void arcade::NCurses::drawText(const std::string text, int x, int y, int size)
 {
   // Draw the text at the specified position
