@@ -86,7 +86,7 @@ arcade::KeyboardInput arcade::NCurses::getInput()
     return arcade::KeyboardInput::RIGHT;
   case 27:
     return arcade::KeyboardInput::CROSS;
-  case BACKSPACE:
+  case KEY_BACKSPACE:
     return arcade::KeyboardInput::BACKSPACE;
   case '\t':
     return arcade::KeyboardInput::TAB;

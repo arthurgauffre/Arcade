@@ -484,8 +484,9 @@ void arcade::CoreModule::selectionLoop()
   this->updateSelection();
   while (this->_coreStatus == CoreStatus::SELECTION) {
     input = this->getGraphicModule()->getInput();
-    if (input != arcade::KeyboardInput::NONE)
+    if (input != arcade::KeyboardInput::NONE) {
       this->handleKeyEvent(input);
+    }
   }
 }
 
@@ -613,7 +614,6 @@ std::string arcade::CoreModule::getScore()
  */
 void arcade::CoreModule::updateScore(int score)
 {
-  int fd;
   std::string line;
   std::string buffer;
   std::vector<std::string> lines;
@@ -631,5 +631,5 @@ void arcade::CoreModule::updateScore(int score)
   if (!file.is_open())
     return;
   file << this->name << " " << score << std::endl;
-  close(fd);
+  file.close();
 }
