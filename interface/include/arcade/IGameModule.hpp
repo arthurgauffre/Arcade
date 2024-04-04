@@ -55,6 +55,8 @@ namespace arcade
 
     virtual int getScore() const = 0;
 
+    virtual int getMapCell(int x, int y) const = 0;
+
   protected:
     int score;
     timer _timer;

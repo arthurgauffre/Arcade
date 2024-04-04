@@ -494,14 +494,6 @@ void arcade::CoreModule::updateRunning()
   std::pair<char, std::string> sprite;
   this->getGraphicModule()->clearWindow();
   this->getGameModule()->updateGame();
-  for (size_t i = 0; i < this->getGameData().display_info.size(); i += 1)
-  {
-    for (size_t j = 0; j < this->getGameData().display_info[i].size(); j += 1) {
-      sprite.first = this->getGameData().display_info[i][j];
-      sprite.second = this->getGameData().sprite_value[this->getGameData().display_info[i][j]];
-      this->getGraphicModule()->drawSprite(sprite, j * 30, i * 30, 30, 30, 0);
-    }
-  }
   for (size_t i = 0; i < this->getGameData().entities.size(); i += 1)
   {
     for (size_t j = 0; j < this->getGameData().entities[i].size(); j += 1)

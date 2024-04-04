@@ -48,7 +48,9 @@ void arcade::Snake::init()
   snake.push_back(std::make_pair('O', std::make_pair(10, 7)));
 
   // Define the map
-  data.display_info = {
+  std::vector<std::pair<int, std::pair<int, int>>> map;
+
+  std::vector<std::vector<int>> mapGen = {
       {'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W'},
       {'W', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'W'},
       {'W', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'W'},
@@ -71,11 +73,15 @@ void arcade::Snake::init()
       {'W', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'W'},
       {'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W'}
   };
-
+  for (int i = 0; i < mapGen.size(); i++) {
+    for (int j = 0; j < mapGen[i].size(); j++)
+        map.push_back(std::make_pair(mapGen[i][j], std::make_pair(i, j)));
+  }
+  data.entities.push_back(map);
   data.entities.push_back(snake);
   int x = rand() % 20;
   int y = rand() % 20;
-  while (data.display_info[x][y] != ' ') {
+  while (mapGen[x][y] != ' ') {
     x = rand() % 20;
     y = rand() % 20;
   }
@@ -96,12 +102,12 @@ arcade::Snake::~Snake() {}
  *
  * @param display_info
  */
-arcade::GameData arcade::Snake::moveSnake(std::vector<std::vector<int>> display_info)
+arcade::GameData arcade::Snake::moveSnake()
 {
   int i = 0;
   bool is_eating = false;
   arcade::GameData data = this->getCoreModule()->getGameData();
-  std::vector<std::pair<int, std::pair<int, int>>> snake = data.entities[0];
+  std::vector<std::pair<int, std::pair<int, int>>> snake = data.entities[1];
   std::pair<int, std::pair<int, int>> head = snake[0];
   std::pair<int, std::pair<int, int>> tail = snake[snake.size() - 1];
   std::pair<int, std::pair<int, int>> new_head = head;
@@ -128,22 +134,22 @@ arcade::GameData arcade::Snake::moveSnake(std::vector<std::vector<int>> display_
   }
 
   // Check if the snake hits a wall
-  if (display_info[new_head.second.first][new_head.second.second] == 'W') {
+  if (this->getMapCell(new_head.second.second, new_head.second.first) == 'W') {
     this->getCoreModule()->updateScore(this->score);
     this->setGameStatus(arcade::IGameModule::GameStatus::GAMEOVER);
     return data;
   }
 
   // Check if the snake eats apple; elongate body if yes
-  if (new_head.second == data.entities[1][0].second) {
+  if (new_head.second == data.entities[2][0].second) {
     score += 10;
     is_eating = true;
 
     // Convert previous tail to body
     if (snake[snake.size() - 1].first == snake[snake.size() - 2].first)
-      display_info[snake[snake.size() - 1].second.first][snake[snake.size() - 1].second.second] = 'H';
+      snake[snake.size() - 1].first = 'H';
     else
-      display_info[snake[snake.size() - 1].second.first][snake[snake.size() - 1].second.second] = 'V';
+      snake[snake.size() - 1].first = 'V';
 
     // Update new tail direction
     if (snake[snake.size() - 1].second.first > new_tail.second.first)
@@ -211,13 +217,13 @@ arcade::GameData arcade::Snake::moveSnake(std::vector<std::vector<int>> display_
   if (is_eating == true) {
     int x = rand() % 20;
     int y = rand() % 20;
-    while (display_info[x][y] != ' ') {
+    while (this->getMapCell(x, y) != ' ') {
       x = rand() % 20;
       y = rand() % 20;
     }
-    data.entities[1] = {std::make_pair('A', std::make_pair(x, y))};
+    data.entities[2] = {std::make_pair('A', std::make_pair(x, y))};
   }
-  data.entities[0] = snake;
+  data.entities[1] = snake;
   return data;
 }
 
@@ -262,7 +268,7 @@ void arcade::Snake::updateGame()
   if (this->getTimer().duration.count() >= 250) {
     this->resetTimer();
     // Update the game
-    data = this->moveSnake(this->getCoreModule()->getGameData().display_info);
+    data = this->moveSnake();
   }
   this->getCoreModule()->setGameData(data);
   return;
