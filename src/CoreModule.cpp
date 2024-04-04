@@ -496,13 +496,7 @@ void arcade::CoreModule::updateRunning()
   this->getGameModule()->updateGame();
   for (int h = 0; h <= 30; h++) {
     this->getGraphicModule()->clearWindow();
-    for (size_t i = 0; i < this->getGameData().entities[0].size(); i += 1)
-    {
-      sprite.first = this->getGameData().entities[0][i].first;
-      sprite.second = this->getGameData().sprite_value[this->getGameData().entities[0][i].first];
-      this->getGraphicModule()->drawSprite(sprite, this->getGameData().entities[0][i].second.second * 30, this->getGameData().entities[0][i].second.first * 30, 30, 30, 0);
-    }
-    for (size_t i = 1; i < this->getGameData().entities.size(); i += 1)
+    for (size_t i = 0; i < this->getGameData().entities.size(); i += 1)
     {
       for (size_t j = 0; j < this->getGameData().entities[i].size(); j += 1)
       {
