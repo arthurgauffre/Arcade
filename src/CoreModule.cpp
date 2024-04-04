@@ -492,11 +492,28 @@ void arcade::CoreModule::selectionLoop()
 void arcade::CoreModule::updateRunning()
 {
   std::pair<char, std::string> sprite;
+  std::vector<std::pair<int, std::vector<std::pair<int, int>>> > allSpritesCoordinates;
+  for (auto &i : this->_gameData.sprite_value)
+  {
+    std::vector<std::pair<int, int>> coordinates;
+    for (size_t k = 0; k < this->_gameData.entities[0].size(); k += 1)
+    {
+      if (this->_gameData.entities[0][k].first == i.first)
+        coordinates.push_back(std::make_pair(this->_gameData.entities[0][k].second.second * 30, this->_gameData.entities[0][k].second.first * 30));
+    }
+    allSpritesCoordinates.push_back(std::make_pair(i.first, coordinates));
+  }
   this->_oldGameData = this->_gameData;
   this->getGameModule()->updateGame();
   for (int h = 0; h <= 30; h++) {
     this->getGraphicModule()->clearWindow();
-    for (size_t i = 0; i < this->getGameData().entities.size(); i += 1)
+    for (size_t i = 0; i < allSpritesCoordinates.size(); i += 1)
+    {
+      sprite.first = allSpritesCoordinates[i].first;
+      sprite.second = this->getGameData().sprite_value[allSpritesCoordinates[i].first];
+      this->getGraphicModule()->drawAllSprite(sprite, allSpritesCoordinates[i].second, 30, 30, 0);
+    }
+    for (size_t i = 1; i < this->getGameData().entities.size(); i += 1)
     {
       for (size_t j = 0; j < this->getGameData().entities[i].size(); j += 1)
       {
