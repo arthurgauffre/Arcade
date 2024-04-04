@@ -6,3 +6,7 @@ toto 0
 toto 0
 toto 0
 toto 50
+toto 0
+toto 30
+toto 0
+toto 0
