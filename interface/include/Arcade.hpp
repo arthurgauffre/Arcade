@@ -22,6 +22,15 @@
  */
 namespace arcade {
 /**
+ * @brief struct
+ *
+ */
+struct entity {
+  int sprite;
+  std::pair<int, int> position;
+};
+
+/**
  * @brief timer struct for chrono
  *
  */
@@ -38,7 +47,7 @@ struct timer {
 struct GameData {
   int score;
   std::map<unsigned int, std::string> sprite_value;
-  std::vector<std::vector<std::pair<int, std::pair<int, int>>>> entities;
+  std::vector<std::vector<entity>> entities;
 };
 
 /**

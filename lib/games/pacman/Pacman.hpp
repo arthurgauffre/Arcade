@@ -7,6 +7,7 @@
 
 #ifndef PACMAN_HPP_
 #define PACMAN_HPP_
+#define SPEED_SNAKE 1
 
 #include "../AGameModule.hpp"
 

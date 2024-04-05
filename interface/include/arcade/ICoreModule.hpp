@@ -71,7 +71,7 @@ namespace arcade
     virtual void resetTimers(int index) = 0;
     virtual std::vector<timer> getTimers() const = 0;
 
-    virtual void smoothTransition(std::vector<std::pair<int, std::vector<std::pair<int, int>>>> allSpritesCoordinates) = 0;
+    virtual void displayGame(std::vector<std::pair<int, std::vector<std::pair<int, int>>>> allSpritesCoordinates) = 0;
 
   protected:
     int smoothIndex;
@@ -82,7 +82,6 @@ namespace arcade
     arcade::IGameModule *_gameModule;
     arcade::MenuData _menuData;
     arcade::GameData _gameData;
-    arcade::GameData _oldGameData;
   };
 }; // namespace arcade
 

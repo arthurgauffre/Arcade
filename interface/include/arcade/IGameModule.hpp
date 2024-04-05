@@ -45,6 +45,7 @@ namespace arcade
     GameStatus _gameStatus;
     arcade::CoreModule *_coreModule;
     arcade::KeyboardInput _direction;
+    arcade::KeyboardInput _oldDirection;
   };
 }; // namespace arcade
 

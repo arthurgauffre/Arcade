@@ -64,6 +64,7 @@ arcade::CoreModule *arcade::AGameModule::getCoreModule() const
  */
 void arcade::AGameModule::setDirection(arcade::KeyboardInput direction)
 {
+  this->_oldDirection = this->_direction;
   this->_direction = direction;
 }
 
@@ -86,10 +87,10 @@ arcade::KeyboardInput arcade::AGameModule::getDirection() const
  */
 int arcade::AGameModule::getLayerCell(int layer, int x, int y) const
 {
-  std::vector<std::pair<int, std::pair<int, int>>> actualLayer = this->_coreModule->getGameData().entities[layer];
+  std::vector<arcade::entity> actualLayer = this->_coreModule->getGameData().entities[layer];
   for (size_t cell = 0; cell < actualLayer.size(); cell++) {
-    if (actualLayer[cell].second.first == x && actualLayer[cell].second.second == y)
-      return actualLayer[cell].first;
+    if (actualLayer[cell].position.first == x && actualLayer[cell].position.second == y)
+      return actualLayer[cell].sprite;
   }
   return -1;
 }

@@ -7,6 +7,7 @@
 
 #ifndef SNAKE_HPP_
 #define SNAKE_HPP_
+#define SPEED_SNAKE 1
 
 #include "../AGameModule.hpp"
 

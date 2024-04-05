@@ -495,50 +495,29 @@ void arcade::CoreModule::selectionLoop()
  * @brief smooth transition
  *
  */
-void arcade::CoreModule::smoothTransition(std::vector<std::pair<int, std::vector<std::pair<int, int>>>> allSpritesCoordinates)
+void arcade::CoreModule::displayGame(std::vector<std::pair<int, std::vector<std::pair<int, int>>>> allSpritesCoordinates)
 {
   std::pair<char, std::string> sprite;
-  std::pair<char, std::string> oldSprite;
-  for (int h = 0; h <= 30; h++) {
-    this->getGraphicModule()->clearWindow();
-    for (size_t i = 0; i < allSpritesCoordinates.size(); i += 1)
-    {
-      if (allSpritesCoordinates[i].second.size() == 0)
-        continue;
-      sprite.first = allSpritesCoordinates[i].first;
-      sprite.second = this->getGameData().sprite_value[allSpritesCoordinates[i].first];
-      this->getGraphicModule()->drawAllSprite(sprite, allSpritesCoordinates[i].second, 30, 30);
-    }
-    for (size_t i = 1; i < this->getGameData().entities.size(); i += 1)
-    {
-      for (size_t j = 0; j < this->getGameData().entities[i].size(); j += 1)
-      {
-        oldSprite.first = this->_oldGameData.entities[i][j].first;
-        oldSprite.second = this->_gameData.sprite_value[this->_oldGameData.entities[i][j].first];
-        sprite.first = this->_gameData.entities[i][j].first;
-        sprite.second = this->_gameData.sprite_value[this->_gameData.entities[i][j].first];
-        if (this->_oldGameData.entities[i][j].second.first < this->_gameData.entities[i][j].second.first && this->_oldGameData.entities[i][j].second.second < this->_gameData.entities[i][j].second.second)
-          this->getGraphicModule()->drawSprite(sprite, this->_oldGameData.entities[i][j].second.second * 30 + h, this->_oldGameData.entities[i][j].second.first * 30 + h, 30, 30);
-        else if (this->_oldGameData.entities[i][j].second.first > this->_gameData.entities[i][j].second.first && this->_oldGameData.entities[i][j].second.second < this->_gameData.entities[i][j].second.second)
-          this->getGraphicModule()->drawSprite(sprite, this->_oldGameData.entities[i][j].second.second * 30 + h, this->_oldGameData.entities[i][j].second.first * 30 - h, 30, 30);
-        else if (this->_oldGameData.entities[i][j].second.first < this->_gameData.entities[i][j].second.first && this->_oldGameData.entities[i][j].second.second > this->_gameData.entities[i][j].second.second)
-          this->getGraphicModule()->drawSprite(sprite, this->_oldGameData.entities[i][j].second.second * 30 - h, this->_oldGameData.entities[i][j].second.first * 30 + h, 30, 30);
-        else if (this->_oldGameData.entities[i][j].second.first > this->_gameData.entities[i][j].second.first && this->_oldGameData.entities[i][j].second.second > this->_gameData.entities[i][j].second.second)
-          this->getGraphicModule()->drawSprite(sprite, this->_oldGameData.entities[i][j].second.second * 30 - h, this->_oldGameData.entities[i][j].second.first * 30 - h, 30, 30);
-        else if (this->_oldGameData.entities[i][j].second.first < this->_gameData.entities[i][j].second.first)
-          this->getGraphicModule()->drawSprite(sprite, this->_oldGameData.entities[i][j].second.second * 30, this->_oldGameData.entities[i][j].second.first * 30 + h, 30, 30);
-        else if (this->_oldGameData.entities[i][j].second.first > this->_gameData.entities[i][j].second.first)
-          this->getGraphicModule()->drawSprite(sprite, this->_oldGameData.entities[i][j].second.second * 30, this->_oldGameData.entities[i][j].second.first * 30 - h, 30, 30);
-        else if (this->_oldGameData.entities[i][j].second.second < this->_gameData.entities[i][j].second.second)
-          this->getGraphicModule()->drawSprite(sprite, this->_oldGameData.entities[i][j].second.second * 30 + h, this->_oldGameData.entities[i][j].second.first * 30, 30, 30);
-        else if (this->_oldGameData.entities[i][j].second.second > this->_gameData.entities[i][j].second.second)
-          this->getGraphicModule()->drawSprite(sprite, this->_oldGameData.entities[i][j].second.second * 30 - h, this->_oldGameData.entities[i][j].second.first * 30, 30, 30);
-        else
-          this->getGraphicModule()->drawSprite(oldSprite, this->getGameData().entities[i][j].second.second * 30, this->getGameData().entities[i][j].second.first * 30, 30, 30);
-      }
-    }
-    this->getGraphicModule()->displayWindow();
+  this->getGraphicModule()->clearWindow();
+  for (size_t i = 0; i < allSpritesCoordinates.size(); i += 1)
+  {
+    if (allSpritesCoordinates[i].second.size() == 0)
+      continue;
+    sprite.first = allSpritesCoordinates[i].first;
+    sprite.second = this->getGameData().sprite_value[allSpritesCoordinates[i].first];
+    this->getGraphicModule()->drawAllSprite(sprite, allSpritesCoordinates[i].second, 30, 30);
   }
+  for (size_t i = 1; i < this->getGameData().entities.size(); i += 1)
+  {
+    for (size_t j = 0; j < this->getGameData().entities[i].size(); j += 1)
+    {
+      sprite.first = this->_gameData.entities[i][j].sprite;
+      sprite.second = this->_gameData.sprite_value[this->_gameData.entities[i][j].sprite];
+      this->getGraphicModule()->drawSprite(sprite, this->getGameData().entities[i][j].position.first, this->getGameData().entities[i][j].position.second, 30, 30);
+    }
+  }
+  this->getGraphicModule()->displayWindow();
+  sleep(3);
 }
 
 /**
@@ -553,14 +532,13 @@ void arcade::CoreModule::updateRunning()
     std::vector<std::pair<int, int>> coordinates;
     for (size_t k = 0; k < this->_gameData.entities[0].size(); k += 1)
     {
-      if (this->_gameData.entities[0][k].first == i.first)
-        coordinates.push_back(std::make_pair(this->_gameData.entities[0][k].second.second * 30, this->_gameData.entities[0][k].second.first * 30));
+      if (this->_gameData.entities[0][k].sprite == i.first)
+        coordinates.push_back(std::make_pair(this->_gameData.entities[0][k].position.first, this->_gameData.entities[0][k].position.second));
     }
     allSpritesCoordinates.push_back(std::make_pair(i.first, coordinates));
   }
-  this->_oldGameData = this->_gameData;
   this->getGameModule()->updateGame();
-  this->smoothTransition(allSpritesCoordinates);
+  this->displayGame(allSpritesCoordinates);
 }
 
 /**
