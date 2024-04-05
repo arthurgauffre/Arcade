@@ -8,6 +8,7 @@
 #ifndef ARCADE_HPP_
 #define ARCADE_HPP_
 
+#include <chrono>
 #include <Macros.hpp>
 #include <map>
 #include <memory>
@@ -21,14 +22,32 @@
  */
 namespace arcade {
 /**
+ * @brief struct
+ *
+ */
+struct entity {
+  int sprite;
+  std::pair<int, int> position;
+};
+
+/**
+ * @brief timer struct for chrono
+ *
+ */
+struct timer {
+      std::chrono::_V2::steady_clock::time_point start;
+      std::chrono::_V2::steady_clock::time_point end;
+      std::chrono::milliseconds duration;
+};
+/**
  * @brief information about the game from the game module to the graphic
  * module
  *
  */
 struct GameData {
-  std::vector<std::vector<int>> display_info;
+  int score;
   std::map<unsigned int, std::string> sprite_value;
-  std::vector<std::vector<std::pair<int, std::pair<int, int>>>> entities;
+  std::vector<std::vector<entity>> entities;
 };
 
 /**

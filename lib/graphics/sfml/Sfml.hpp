@@ -23,7 +23,8 @@ public:
   void displayWindow();
   arcade::KeyboardInput getInput();
   void drawText(const std::string text, int x, int y, int size);
-  void drawSprite(std::pair<char, std::string> sprite, int x, int y, int width, int height, int rotation);
+  void drawSprite(std::pair<char, std::string> sprite, int x, int y, int width, int height);
+  void drawAllSprite(std::pair<char, std::string> sprite, std::vector<std::pair<int, int>> coordinates, int width, int height);
 
 protected:
   sf::RenderWindow *_window;

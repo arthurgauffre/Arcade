@@ -117,7 +117,7 @@ void arcade::Sdl2::clearWindow()
  * @param width width of the sprite
  * @param height height of the sprite
  */
-void arcade::Sdl2::drawSprite(std::pair<char, std::string> sprite, int x, int y, int width, int height, int rotation)
+void arcade::Sdl2::drawSprite(std::pair<char, std::string> sprite, int x, int y, int width, int height)
 {
     SDL_Surface* surface = IMG_Load(sprite.second.c_str());
     if (surface == nullptr) {
@@ -133,7 +133,40 @@ void arcade::Sdl2::drawSprite(std::pair<char, std::string> sprite, int x, int y,
     }
 
     SDL_Rect rect = {x, y, width, height};
-    SDL_RenderCopyEx(this->_renderer, texture, nullptr, &rect, rotation, nullptr, SDL_FLIP_NONE);
+    SDL_RenderCopy(this->_renderer, texture, nullptr, &rect);
+
+    SDL_DestroyTexture(texture);
+    SDL_FreeSurface(surface);
+}
+
+/**
+ * @brief draw a sprite on the window
+ * 
+ * @param sprite sprite to display
+ * @param coordinates coordinates of the sprite
+ * @param width width of the sprite
+ * @param height height of the sprite
+ * @param rotation rotation of the sprite
+ */
+void arcade::Sdl2::drawAllSprite(std::pair<char, std::string> sprite, std::vector<std::pair<int, int>> coordinates, int width, int height)
+{
+    SDL_Surface* surface = IMG_Load(sprite.second.c_str());
+    if (surface == nullptr) {
+        std::cerr << "Failed to load image: " << IMG_GetError() << std::endl;
+        return;
+    }
+
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(this->_renderer, surface);
+    if (texture == nullptr) {
+        std::cerr << "Failed to create texture: " << SDL_GetError() << std::endl;
+        SDL_FreeSurface(surface);
+        return;
+    }
+
+    for (auto coord : coordinates) {
+        SDL_Rect rect = {coord.first, coord.second, width, height};
+        SDL_RenderCopy(this->_renderer, texture, nullptr, &rect);
+    }
 
     SDL_DestroyTexture(texture);
     SDL_FreeSurface(surface);

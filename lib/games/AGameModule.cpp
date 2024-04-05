@@ -38,26 +38,6 @@ arcade::AGameModule::GameStatus arcade::AGameModule::getGameStatus() const
 }
 
 /**
- * @brief receive input from the graphic module
- *
- * @param input KeyboardInput
- */
-void arcade::AGameModule::sendInput(arcade::KeyboardInput input)
-{
-  return;
-}
-
-/**
- * @brief send the game data to the graphic module
- *
- * @return arcade::GameData
- */
-arcade::GameData arcade::AGameModule::sendGameData()
-{
-  return arcade::GameData();
-}
-
-/**
  * @brief set the core module to the game module
  *
  * @param coreModule
@@ -78,41 +58,13 @@ arcade::CoreModule *arcade::AGameModule::getCoreModule() const
 }
 
 /**
- * @brief update the timer
- *
- */
-void arcade::AGameModule::updateTimer()
-{
-  this->_timer.end = std::chrono::steady_clock::now();
-  this->_timer.duration = std::chrono::duration_cast<std::chrono::milliseconds>(this->_timer.end - this->_timer.start);
-}
-
-/**
- * @brief reset the timer
- *
- */
-void arcade::AGameModule::resetTimer()
-{
-  this->_timer.start = this->_timer.end;
-}
-
-/**
- * @brief get the timer
- *
- * @return arcade::AGameModule::timer
- */
-arcade::AGameModule::timer arcade::AGameModule::getTimer() const
-{
-  return this->_timer;
-}
-
-/**
  * @brief set the direction of the game
  *
  * @param direction
  */
 void arcade::AGameModule::setDirection(arcade::KeyboardInput direction)
 {
+  this->_oldDirection = this->_direction;
   this->_direction = direction;
 }
 
@@ -127,28 +79,18 @@ arcade::KeyboardInput arcade::AGameModule::getDirection() const
 }
 
 /**
- * @brief get the score of the game
- *
- * @return int
- */
-int arcade::AGameModule::getScore() const
-{
-  return this->score;
-}
-
-/**
- * @brief get the cell of the map
+ * @brief get the cell of the actual layer
  * 
  * @param x
  * @param y
  * @return int
  */
-int arcade::AGameModule::getMapCell(int x, int y) const
+int arcade::AGameModule::getLayerCell(int layer, int x, int y) const
 {
-  std::vector<std::pair<int, std::pair<int, int>>> map = this->_coreModule->getGameData().entities[0];
-  for (size_t cell = 0; cell < map.size(); cell++) {
-    if (map[cell].second.first == x && map[cell].second.second == y)
-      return map[cell].first;
+  std::vector<arcade::entity> actualLayer = this->_coreModule->getGameData().entities[layer];
+  for (size_t cell = 0; cell < actualLayer.size(); cell++) {
+    if (actualLayer[cell].position.first == x && actualLayer[cell].position.second == y)
+      return actualLayer[cell].sprite;
   }
   return -1;
 }

@@ -43,12 +43,19 @@ void arcade::NCurses::clearWindow()
   wclear(this->_window); // Clear the window
 }
 
-void arcade::NCurses::drawSprite(std::pair<char, std::string> sprite, int x, int y, int width, int height, int rotation)
+void arcade::NCurses::drawSprite(std::pair<char, std::string> sprite, int x, int y, int width, int height)
 {
   // Draw the sprite at the specified position
   x /= width;
   y /= height;
   mvwprintw(this->_window, y, x, "%c", sprite.first);
+}
+
+void arcade::NCurses::drawAllSprite(std::pair<char, std::string> sprite, std::vector<std::pair<int, int>> coordinates, int width, int height)
+{
+  // Draw all the sprites at the specified positions
+  for (auto &coord : coordinates)
+    drawSprite(sprite, coord.first, coord.second, width, height);
 }
 
 void arcade::NCurses::drawText(const std::string text, int x, int y, int size)
@@ -79,7 +86,7 @@ arcade::KeyboardInput arcade::NCurses::getInput()
     return arcade::KeyboardInput::RIGHT;
   case 27:
     return arcade::KeyboardInput::CROSS;
-  case BACKSPACE:
+  case KEY_BACKSPACE:
     return arcade::KeyboardInput::BACKSPACE;
   case '\t':
     return arcade::KeyboardInput::TAB;

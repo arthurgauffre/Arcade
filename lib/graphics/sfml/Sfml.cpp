@@ -32,7 +32,7 @@ void arcade::Sfml::clearWindow()
   this->_window->clear(sf::Color::Black);
 }
 
-void arcade::Sfml::drawSprite(std::pair<char, std::string> sprite, int x, int y, int width, int height, int rotation)
+void arcade::Sfml::drawSprite(std::pair<char, std::string> sprite, int x, int y, int width, int height)
 {
     sf::Texture texture;
     if (!texture.loadFromFile(sprite.second)) {
@@ -49,11 +49,34 @@ void arcade::Sfml::drawSprite(std::pair<char, std::string> sprite, int x, int y,
     float scaleX = static_cast<float>(width) / texture.getSize().x;
     float scaleY = static_cast<float>(height) / texture.getSize().y;
     mySprite.setScale(scaleX, scaleY);
-    mySprite.setRotation(rotation);
 
     this->_window->draw(mySprite);
     // destroy sprite
     // destroy texture
+    mySprite.setTexture(texture);
+}
+
+void arcade::Sfml::drawAllSprite(std::pair<char, std::string> sprite, std::vector<std::pair<int, int>> coordinates, int width, int height)
+{
+    sf::Texture texture;
+    if (!texture.loadFromFile(sprite.second)) {
+        // Handle error
+        std::cerr << "Failed to load texture: " << sprite.second << std::endl;
+        return;
+    }
+
+    sf::Sprite mySprite;
+    mySprite.setTexture(texture);
+
+    // Calculate the scale factors
+    float scaleX = static_cast<float>(width) / texture.getSize().x;
+    float scaleY = static_cast<float>(height) / texture.getSize().y;
+    mySprite.setScale(scaleX, scaleY);
+
+    for (int i = 0; i < coordinates.size(); i++) {
+        mySprite.setPosition(coordinates[i].first, coordinates[i].second);
+        this->_window->draw(mySprite);
+    }
     mySprite.setTexture(texture);
 }
 

@@ -64,16 +64,24 @@ namespace arcade
     virtual void updateSelection() = 0;
 
     virtual std::string getScore() = 0;
+    virtual void setScore(int score) = 0;
     virtual void updateScore(int score) = 0;
 
+    virtual void updateTimers() = 0;
+    virtual void resetTimers(int index) = 0;
+    virtual std::vector<timer> getTimers() const = 0;
+
+    virtual void displayGame(std::vector<std::pair<int, std::vector<std::pair<int, int>>>> allSpritesCoordinates) = 0;
+
   protected:
+    int smoothIndex;
+    std::vector<timer> _timers;
     CoreStatus _coreStatus;
     std::string name;
     arcade::IDisplayModule *_graphicModule;
     arcade::IGameModule *_gameModule;
     arcade::MenuData _menuData;
     arcade::GameData _gameData;
-    arcade::GameData _oldGameData;
   };
 }; // namespace arcade
 

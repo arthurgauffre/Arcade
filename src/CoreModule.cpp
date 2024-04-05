@@ -22,6 +22,7 @@ Press TAB to switch between module selection";
   this->_menuData.indexGame = 0;
   this->_menuData.indexGraphic = 0;
   this->_menuData._type = arcade::ModuleType::NAME;
+  this->_timers.push_back({std::chrono::steady_clock::now(), std::chrono::steady_clock::now(), std::chrono::milliseconds(0)});
 }
 
 /**
@@ -108,7 +109,7 @@ arcade::IDisplayModule *arcade::CoreModule::getGraphicModule()
 /**
  * @brief get the game module
  *
- * @return arcade::AGameModule *
+ * @return arcade::CoreModule *
  */
 arcade::IGameModule *arcade::CoreModule::getGameModule()
 {
@@ -484,38 +485,60 @@ void arcade::CoreModule::selectionLoop()
   this->updateSelection();
   while (this->_coreStatus == CoreStatus::SELECTION) {
     input = this->getGraphicModule()->getInput();
-    if (input != arcade::KeyboardInput::NONE)
+    if (input != arcade::KeyboardInput::NONE) {
       this->handleKeyEvent(input);
+    }
   }
 }
 
-void arcade::CoreModule::updateRunning()
+/**
+ * @brief smooth transition
+ *
+ */
+void arcade::CoreModule::displayGame(std::vector<std::pair<int, std::vector<std::pair<int, int>>>> allSpritesCoordinates)
 {
   std::pair<char, std::string> sprite;
-  this->_oldGameData = this->_gameData;
-  this->getGameModule()->updateGame();
-  for (int h = 0; h <= 30; h++) {
-    this->getGraphicModule()->clearWindow();
-    for (size_t i = 0; i < this->getGameData().entities.size(); i += 1)
-    {
-      for (size_t j = 0; j < this->getGameData().entities[i].size(); j += 1)
-      {
-        sprite.first = this->getGameData().entities[i][j].first;
-        sprite.second = this->getGameData().sprite_value[this->getGameData().entities[i][j].first];
-        if (this->_oldGameData.entities[i][j].second.first < this->_gameData.entities[i][j].second.first)
-          this->getGraphicModule()->drawSprite(sprite, this->_oldGameData.entities[i][j].second.second * 30, this->_oldGameData.entities[i][j].second.first * 30 + h, 30, 30, 0);
-        else if (this->_oldGameData.entities[i][j].second.first > this->_gameData.entities[i][j].second.first)
-          this->getGraphicModule()->drawSprite(sprite, this->_oldGameData.entities[i][j].second.second * 30, this->_oldGameData.entities[i][j].second.first * 30 - h, 30, 30, 0);
-        else if (this->_oldGameData.entities[i][j].second.second < this->_gameData.entities[i][j].second.second)
-          this->getGraphicModule()->drawSprite(sprite, this->_oldGameData.entities[i][j].second.second * 30 + h, this->_oldGameData.entities[i][j].second.first * 30, 30, 30, 0);
-        else if (this->_oldGameData.entities[i][j].second.second > this->_gameData.entities[i][j].second.second)
-          this->getGraphicModule()->drawSprite(sprite, this->_oldGameData.entities[i][j].second.second * 30 - h, this->_oldGameData.entities[i][j].second.first * 30, 30, 30, 0);
-        else
-          this->getGraphicModule()->drawSprite(sprite, this->getGameData().entities[i][j].second.second * 30, this->getGameData().entities[i][j].second.first * 30, 30, 30, 0);
-      }
-    }
-    this->getGraphicModule()->displayWindow();
+  this->getGraphicModule()->clearWindow();
+  for (size_t i = 0; i < allSpritesCoordinates.size(); i += 1)
+  {
+    if (allSpritesCoordinates[i].second.size() == 0)
+      continue;
+    sprite.first = allSpritesCoordinates[i].first;
+    sprite.second = this->getGameData().sprite_value[allSpritesCoordinates[i].first];
+    this->getGraphicModule()->drawAllSprite(sprite, allSpritesCoordinates[i].second, 30, 30);
   }
+  for (size_t i = 1; i < this->getGameData().entities.size(); i += 1)
+  {
+    for (size_t j = 0; j < this->getGameData().entities[i].size(); j += 1)
+    {
+      sprite.first = this->_gameData.entities[i][j].sprite;
+      sprite.second = this->_gameData.sprite_value[this->_gameData.entities[i][j].sprite];
+      this->getGraphicModule()->drawSprite(sprite, this->getGameData().entities[i][j].position.first, this->getGameData().entities[i][j].position.second, 30, 30);
+    }
+  }
+  this->getGraphicModule()->displayWindow();
+  sleep(3);
+}
+
+/**
+ * @brief update running
+ *
+ */
+void arcade::CoreModule::updateRunning()
+{
+  std::vector<std::pair<int, std::vector<std::pair<int, int>>>> allSpritesCoordinates;
+  for (auto &i : this->_gameData.sprite_value)
+  {
+    std::vector<std::pair<int, int>> coordinates;
+    for (size_t k = 0; k < this->_gameData.entities[0].size(); k += 1)
+    {
+      if (this->_gameData.entities[0][k].sprite == i.first)
+        coordinates.push_back(std::make_pair(this->_gameData.entities[0][k].position.first, this->_gameData.entities[0][k].position.second));
+    }
+    allSpritesCoordinates.push_back(std::make_pair(i.first, coordinates));
+  }
+  this->getGameModule()->updateGame();
+  this->displayGame(allSpritesCoordinates);
 }
 
 /**
@@ -528,6 +551,7 @@ void arcade::CoreModule::runningLoop()
   this->getGraphicModule()->clearWindow();
   while (this->_coreStatus == CoreStatus::RUNNING)
   {
+    this->updateTimers();
     this->updateRunning();
     if (this->getGameModule()->getGameStatus() == arcade::IGameModule::GameStatus::GAMEOVER)
       this->_coreStatus = CoreStatus::SELECTION;
@@ -583,7 +607,6 @@ std::string arcade::CoreModule::getScore()
  */
 void arcade::CoreModule::updateScore(int score)
 {
-  int fd;
   std::string line;
   std::string buffer;
   std::vector<std::string> lines;
@@ -601,5 +624,52 @@ void arcade::CoreModule::updateScore(int score)
   if (!file.is_open())
     return;
   file << this->name << " " << score << std::endl;
-  close(fd);
+  file.close();
+}
+
+
+/**
+ * @brief set the score
+ *
+ * @param score score to set
+ */
+void arcade::CoreModule::setScore(int score)
+{
+  arcade::GameData gameData = this->getGameData();
+  gameData.score = score;
+  this->setGameData(gameData);
+}
+
+/**
+ * @brief update the timer
+ *
+ */
+void arcade::CoreModule::updateTimers()
+{
+  for (size_t i = 0; i < this->_timers.size(); i += 1)
+  {
+    this->_timers[i].end = std::chrono::steady_clock::now();
+    this->_timers[i].duration = std::chrono::duration_cast<std::chrono::milliseconds>(this->_timers[i].end - this->_timers[i].start);
+  }
+}
+
+/**
+ * @brief reset the timer
+ *
+ */
+void arcade::CoreModule::resetTimers(int index)
+{
+  if (index >= this->_timers.size())
+    throw std::exception();
+  this->_timers[index].start = std::chrono::steady_clock::now();
+}
+
+/**
+ * @brief get the timer
+ *
+ * @return arcade::CoreModule::timer
+ */
+std::vector<arcade::timer> arcade::CoreModule::getTimers() const
+{
+  return this->_timers;
 }

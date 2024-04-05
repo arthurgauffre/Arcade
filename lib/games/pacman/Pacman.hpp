@@ -7,6 +7,7 @@
 
 #ifndef PACMAN_HPP_
 #define PACMAN_HPP_
+#define SPEED_SNAKE 1
 
 #include "../AGameModule.hpp"
 #include <queue>
@@ -41,11 +42,11 @@ public:
   ~Pacman();
   void init();
   void updateGame();
-  std::vector<std::vector<std::pair<int, std::pair<int, int>>>> moveEntities(std::vector<std::vector<std::pair<int, std::pair<int, int>>>> layers);
+  std::vector<std::vector<arcade::entity>> moveEntities(std::vector<std::vector<arcade::entity>> layers);
   void handdleKeyEvents(arcade::KeyboardInput key);
-  bool isOver(std::vector<std::vector<std::pair<int, std::pair<int, int>>>> layers);
-  void updateTimers(std::vector<std::vector<std::pair<int, std::pair<int, int>>>> layers);
-  bool isPacgumEaten(std::pair<int, int> pos, std::vector<std::vector<std::pair<int, std::pair<int, int>>>> layers);
+  bool isOver(std::vector<std::vector<arcade::entity>> layers);
+  void updateTimers(std::vector<std::vector<arcade::entity>> layers);
+  bool isPacgumEaten(std::pair<int, int> pos, std::vector<std::vector<arcade::entity>> layers);
 
 protected:
 private:
