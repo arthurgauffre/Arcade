@@ -39,9 +39,6 @@ namespace arcade
     virtual void setGameStatus(GameStatus status) = 0;
     virtual GameStatus getGameStatus() const = 0;
 
-    virtual void sendInput(arcade::KeyboardInput input) = 0;
-    virtual arcade::GameData sendGameData() = 0;
-
     virtual void setCoreModule(arcade::CoreModule *coreModule) = 0;
     virtual arcade::CoreModule *getCoreModule() const = 0;
 
@@ -53,12 +50,9 @@ namespace arcade
 
     virtual void init() = 0;
 
-    virtual int getScore() const = 0;
-
     virtual int getMapCell(int x, int y) const = 0;
 
   protected:
-    int score;
     timer _timer;
     GameStatus _gameStatus;
     arcade::CoreModule *_coreModule;

@@ -80,6 +80,7 @@ namespace arcade
     void updateSelection();
 
     std::string getScore();
+    void setScore(int score);
     void updateScore(int score);
     std::vector<DLLoader<std::string>> _nameLoader;
     std::vector<DLLoader<arcade::ModuleType>> _libList;

@@ -23,9 +23,6 @@ namespace arcade
     void setGameStatus(GameStatus status);
     GameStatus getGameStatus() const;
 
-    void sendInput(arcade::KeyboardInput input);
-    arcade::GameData sendGameData();
-
     void setCoreModule(arcade::CoreModule *coreModule);
     arcade::CoreModule *getCoreModule() const;
 
@@ -40,8 +37,6 @@ namespace arcade
     virtual void handdleKeyEvents(arcade::KeyboardInput key) = 0;
 
     int getMapCell(int x, int y) const;
-
-    int getScore() const;
 
   };
 }; // namespace arcade

@@ -64,6 +64,7 @@ namespace arcade
     virtual void updateSelection() = 0;
 
     virtual std::string getScore() = 0;
+    virtual void setScore(int score) = 0;
     virtual void updateScore(int score) = 0;
 
   protected:

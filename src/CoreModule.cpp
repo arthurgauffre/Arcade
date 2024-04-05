@@ -22,6 +22,7 @@ Press TAB to switch between module selection";
   this->_menuData.indexGame = 0;
   this->_menuData.indexGraphic = 0;
   this->_menuData._type = arcade::ModuleType::NAME;
+  this->setScore(0);
 }
 
 /**
@@ -632,4 +633,17 @@ void arcade::CoreModule::updateScore(int score)
     return;
   file << this->name << " " << score << std::endl;
   file.close();
+}
+
+
+/**
+ * @brief set the score
+ *
+ * @param score score to set
+ */
+void arcade::CoreModule::setScore(int score)
+{
+  arcade::GameData gameData = this->getGameData();
+  gameData.score = score;
+  this->setGameData(gameData);
 }

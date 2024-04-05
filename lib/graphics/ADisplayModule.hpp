@@ -20,9 +20,6 @@ public:
 
   virtual std::string getName() const = 0;
 
-  void sendGameData(arcade::GameData data);
-  void sendMenuData(arcade::MenuData data);
-
   void setCoreModule(arcade::CoreModule *coreModule);
   arcade::CoreModule *getCoreModule() const;
 

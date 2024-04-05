@@ -13,14 +13,13 @@
  */
 arcade::Snake::Snake() : arcade::AGameModule()
 {
-  this->score = 0;
 }
 
 void arcade::Snake::init()
 {
   int i = 0;
   // Initialize the game
-  arcade::GameData data;
+  arcade::GameData data = this->getCoreModule()->getGameData();
   // Define the sprite values
   data.sprite_value['W'] = "assets/snake/map/map1.png";  // Wall
   data.sprite_value[' '] = "assets/snake/map/map4.png";  // Map
@@ -127,7 +126,7 @@ arcade::GameData arcade::Snake::moveSnake()
   // Check if the snake eats itself
   for (int i = 1; i < snake.size(); i++) {
     if (new_head.second == snake[i].second) {
-      this->getCoreModule()->updateScore(this->score);
+      this->getCoreModule()->updateScore(this->getCoreModule()->getGameData().score);
       this->setGameStatus(arcade::IGameModule::GameStatus::GAMEOVER);
       return data;
     }
@@ -135,14 +134,14 @@ arcade::GameData arcade::Snake::moveSnake()
 
   // Check if the snake hits a wall
   if (this->getMapCell(new_head.second.second, new_head.second.first) == 'W') {
-    this->getCoreModule()->updateScore(this->score);
+    this->getCoreModule()->updateScore(this->getCoreModule()->getGameData().score);
     this->setGameStatus(arcade::IGameModule::GameStatus::GAMEOVER);
     return data;
   }
 
   // Check if the snake eats apple; elongate body if yes
   if (new_head.second == data.entities[2][0].second) {
-    score += 10;
+    this->getCoreModule()->updateScore(this->getCoreModule()->getGameData().score + 10);
     is_eating = true;
 
     // Convert previous tail to body
@@ -267,7 +266,6 @@ void arcade::Snake::updateGame()
   this->updateTimer();
   if (this->getTimer().duration.count() >= 250) {
     this->resetTimer();
-    // Update the game
     data = this->moveSnake();
   }
   this->getCoreModule()->setGameData(data);
