@@ -73,6 +73,10 @@ namespace arcade
     void setGameData(arcade::GameData gameData);
     arcade::GameData getGameData() const;
 
+    void updateTimer();
+    void resetTimer();
+    timer getTimer() const;
+
     int coreLoop();
     void runningLoop();
     void updateRunning();

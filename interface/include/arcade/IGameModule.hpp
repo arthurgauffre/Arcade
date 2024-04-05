@@ -8,7 +8,6 @@
 #ifndef IGAMEMODULE_HPP_
 #define IGAMEMODULE_HPP_
 
-#include <chrono>
 #include <CoreModule.hpp>
 #include <Arcade.hpp>
 
@@ -18,12 +17,6 @@ namespace arcade
   class IGameModule
   {
   public:
-    struct timer
-    {
-      std::chrono::_V2::steady_clock::time_point start;
-      std::chrono::_V2::steady_clock::time_point end;
-      std::chrono::milliseconds duration;
-    };
     enum GameStatus
     {
       RUNNING,

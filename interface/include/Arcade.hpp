@@ -8,6 +8,7 @@
 #ifndef ARCADE_HPP_
 #define ARCADE_HPP_
 
+#include <chrono>
 #include <Macros.hpp>
 #include <map>
 #include <memory>
@@ -20,6 +21,17 @@
  *
  */
 namespace arcade {
+/**
+ * @brief struct timer to implement chrono
+ * 
+ */
+struct timer
+{
+  std::chrono::_V2::steady_clock::time_point start;
+  std::chrono::_V2::steady_clock::time_point end;
+  std::chrono::milliseconds duration;
+};
+
 /**
  * @brief information about the game from the game module to the graphic
  * module

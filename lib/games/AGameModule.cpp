@@ -101,7 +101,7 @@ void arcade::AGameModule::resetTimer()
  *
  * @return arcade::AGameModule::timer
  */
-arcade::AGameModule::timer arcade::AGameModule::getTimer() const
+arcade::timer arcade::AGameModule::getTimer() const
 {
   return this->_timer;
 }

@@ -57,6 +57,10 @@ namespace arcade
     virtual void setGameData(arcade::GameData gameData) = 0;
     virtual arcade::GameData getGameData() const = 0;
 
+    virtual void updateTimer() = 0;
+    virtual void resetTimer() = 0;
+    virtual timer getTimer() const = 0;
+
     virtual int coreLoop() = 0;
     virtual void runningLoop() = 0;
     virtual void updateRunning() = 0;
@@ -67,6 +71,7 @@ namespace arcade
     virtual void updateScore(int score) = 0;
 
   protected:
+    timer _timer;
     CoreStatus _coreStatus;
     std::string name;
     arcade::IDisplayModule *_graphicModule;
