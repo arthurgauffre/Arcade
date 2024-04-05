@@ -56,6 +56,7 @@ void arcade::Pacman::init()
     ghostData.isScared = false;
     ghostData.isDead = false;
     ghostData.ghostTimer = std::chrono::system_clock::now();
+    ghostData.initialPos = ghosts[i].second;
     this->_ghostData.push_back(ghostData);
   }
 
@@ -242,14 +243,16 @@ std::vector<std::vector<int>> layersToMap(std::vector<std::pair<int, std::pair<i
 {
   int max_x = 0;
   int max_y = 0;
-  for (const auto& pair : layer) {
+  for (const auto &pair : layer)
+  {
     max_x = std::max(max_x, pair.second.second);
     max_y = std::max(max_y, pair.second.first);
   }
-  
+
   std::vector<std::vector<int>> map(max_y + 1, std::vector<int>(max_x + 1, 0));
-  
-  for (const auto& pair : layer) {
+
+  for (const auto &pair : layer)
+  {
     int x = pair.second.first;
     int y = pair.second.second;
     map[x][y] = pair.first;
@@ -257,7 +260,6 @@ std::vector<std::vector<int>> layersToMap(std::vector<std::pair<int, std::pair<i
 
   return map;
 }
-
 
 arcade::Node aStar(std::vector<std::vector<std::pair<int, std::pair<int, int>>>> layers, arcade::Node start, arcade::Node end)
 {
@@ -336,16 +338,25 @@ bool arcade::Pacman::isOver(std::vector<std::vector<std::pair<int, std::pair<int
   // Check if pacman is hitting a ghost
   for (int i = 0; i < layers[3].size(); i++)
   {
-    if (layers[3][i].second == layers[4][0].second && !this->_pacmanData.isBoosted)
+    if (layers[3][i].second == layers[4][0].second)
     {
-      return true;
+      printf("Pacman is hitting a ghost, isBoosted : %d\n", this->_pacmanData.isBoosted);
+      if (this->_pacmanData.isBoosted)
+      {
+        this->_ghostData[i].isDead = true;
+        this->_ghostData[i].ghostTimer = std::chrono::system_clock::now();
+      }
+      else
+      {
+        return true;
+      }
     }
   }
 
   // Check if pacman ate all the coins
   if (layers[1].size() == 0)
     return true;
-  
+
   return false;
 }
 
@@ -383,6 +394,11 @@ char getCharAt(std::vector<std::pair<int, std::pair<int, int>>> layer, std::pair
   return 'N';
 }
 
+bool isValidPosition(const arcade::Node &node)
+{
+  return node.position.first != 0 || node.position.second != 0;
+}
+
 std::vector<std::vector<std::pair<int, std::pair<int, int>>>> arcade::Pacman::moveEntities(std::vector<std::vector<std::pair<int, std::pair<int, int>>>> layers)
 {
   std::pair<int, int> nextPacmanPos = layers[4][0].second;
@@ -413,43 +429,60 @@ std::vector<std::vector<std::pair<int, std::pair<int, int>>>> arcade::Pacman::mo
   if (nextPacmanPos.first < 0)
     nextPacmanPos.first = 18;
 
+  printf("Is boosted : %d\n", this->_pacmanData.isBoosted);
+
   // Check if pacman is hitting a pacgum
   if (this->isPacgumEaten(nextPacmanPos, layers))
   {
+    printf("Pacman is hitting a pacgum\n");
     this->_pacmanData.isBoosted = true;
-    for (int i = 0; i < this->_ghostData.size(); i++) {
-      this->_ghostData[i].isDead = true;
+    for (int i = 0; i < this->_ghostData.size(); i++)
+    {
+      this->_ghostData[i].isScared = true;
       this->_ghostData[i].ghostTimer = std::chrono::system_clock::now();
+    }
+    // remove the pacgum from the map
+    for (int i = 0; i < layers[2].size(); i++)
+    {
+      if (layers[2][i].second == nextPacmanPos)
+      {
+        layers[2].erase(layers[2].begin() + i);
+        break;
+      }
     }
   }
 
-  if (this->_pacmanData.isBoosted)
+  // teleport ghost in the init position if they are dead
+  for (int i = 0; i < this->_ghostData.size(); i++)
   {
-    for (int i = 0; i < ghosts.size(); i++)
+    if (this->_ghostData[i].isDead)
+    {
+      layers[3][i].second = this->_ghostData[i].initialPos;
+    }
+  }
+
+  // Move the ghosts
+  for (int i = 0; i < ghosts.size(); i++)
+  {
+    arcade::Node path;
+    if (this->_pacmanData.isBoosted)
     {
       layers[3][i].first = 'S';
       this->_ghostData[i].isScared = true;
-
-      arcade::Node runAway = {std::make_pair(1, 1), 0, 0, 0};
-      arcade::Node path = aStar(layers, ghosts[i], runAway);
-      if (path.position.first == 0 && path.position.second == 0)
-        path = ghosts[i];
-      newGhosts[i] = path;
+      path = aStar(layers, ghosts[i], {std::make_pair(1, 1), 0, 0, 0});
     }
-  }
-  else
-  {
-    // Move the ghosts a_star
-    for (int i = 0; i < this->_ghostData.size(); i++)
+    else
     {
       if (this->_ghostData[i].isDead)
         continue;
       arcade::Node pacmanPos = {layers[4][0].second, 0, 0, 0};
-      arcade::Node path = aStar(layers, ghosts[i], pacmanPos);
-      if (path.position.first == 0 && path.position.second == 0)
-        path = ghosts[i];
-      newGhosts[i] = path;
+      path = aStar(layers, ghosts[i], pacmanPos);
     }
+    // Check if the path is valid
+    if (!isValidPosition(path))
+      path = ghosts[i];
+
+    newGhosts[i] = path;
   }
 
   // Check if ghosts are in superposed positions
@@ -522,20 +555,16 @@ void arcade::Pacman::handdleKeyEvents(arcade::KeyboardInput key)
   switch (key)
   {
   case arcade::KeyboardInput::UP:
-    if (this->getDirection() != arcade::KeyboardInput::DOWN)
-      this->setDirection(arcade::KeyboardInput::UP);
+    this->setDirection(arcade::KeyboardInput::UP);
     break;
   case arcade::KeyboardInput::DOWN:
-    if (this->getDirection() != arcade::KeyboardInput::UP)
-      this->setDirection(arcade::KeyboardInput::DOWN);
+    this->setDirection(arcade::KeyboardInput::DOWN);
     break;
   case arcade::KeyboardInput::LEFT:
-    if (this->getDirection() != arcade::KeyboardInput::RIGHT)
-      this->setDirection(arcade::KeyboardInput::LEFT);
+    this->setDirection(arcade::KeyboardInput::LEFT);
     break;
   case arcade::KeyboardInput::RIGHT:
-    if (this->getDirection() != arcade::KeyboardInput::LEFT)
-      this->setDirection(arcade::KeyboardInput::RIGHT);
+    this->setDirection(arcade::KeyboardInput::RIGHT);
     break;
   default:
     break;

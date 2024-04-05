@@ -31,6 +31,7 @@ struct DataPacman {
 struct DataGhost {
   bool isScared;
   bool isDead;
+  std::pair<int, int> initialPos;
   std::chrono::time_point<std::chrono::system_clock> ghostTimer;
 };
 
