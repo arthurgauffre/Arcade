@@ -17,7 +17,7 @@ public:
   ~Snake();
   void init();
   void updateGame();
-  arcade::GameData moveSnake(std::vector<std::vector<int>> display_info);
+  arcade::GameData moveSnake();
   void handdleKeyEvents(arcade::KeyboardInput key);
 
 protected:
