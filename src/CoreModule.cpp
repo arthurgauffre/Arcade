@@ -517,7 +517,6 @@ void arcade::CoreModule::displayGame(std::vector<std::pair<int, std::vector<std:
     }
   }
   this->getGraphicModule()->displayWindow();
-  sleep(3);
 }
 
 /**
