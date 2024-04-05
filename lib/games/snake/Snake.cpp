@@ -110,35 +110,42 @@ arcade::GameData arcade::Snake::moveSnake()
   std::vector<arcade::entity> snake = data.entities[2];
   arcade::entity head = snake[0];
   arcade::entity tail = snake[snake.size() - 1];
-  arcade::entity new_head = head;
   arcade::entity new_tail = tail;
   arcade::KeyboardInput direction = this->getDirection();
 
   // Move the snake
   if (direction == arcade::KeyboardInput::UP && head.position.first % 30 == 0) {
-    new_head = (arcade::entity){.sprite = head.sprite, .position = std::make_pair(head.position.first, head.position.second - SPEED_SNAKE)};
+    snake[0] = (arcade::entity){.sprite = head.sprite, .position = std::make_pair(head.position.first, head.position.second - SPEED_SNAKE)};
     this->_oldDirection = this->_direction;
+    snake[0].sprite = 'U';
   } else if (direction == arcade::KeyboardInput::DOWN && head.position.first % 30 == 0) {
-    new_head = (arcade::entity){.sprite = head.sprite, .position = std::make_pair(head.position.first, head.position.second + SPEED_SNAKE)};
+    snake[0] = (arcade::entity){.sprite = head.sprite, .position = std::make_pair(head.position.first, head.position.second + SPEED_SNAKE)};
     this->_oldDirection = this->_direction;
+    snake[0].sprite = 'D';
   } else if (direction == arcade::KeyboardInput::LEFT && head.position.second % 30 == 0) {
-    new_head = (arcade::entity){.sprite = head.sprite, .position = std::make_pair(head.position.first - SPEED_SNAKE, head.position.second)};
+    snake[0] = (arcade::entity){.sprite = head.sprite, .position = std::make_pair(head.position.first - SPEED_SNAKE, head.position.second)};
     this->_oldDirection = this->_direction;
+    snake[0].sprite = 'L';
   } else if (direction == arcade::KeyboardInput::RIGHT && head.position.second % 30 == 0) {
-    new_head = (arcade::entity){.sprite = head.sprite, .position = std::make_pair(head.position.first + SPEED_SNAKE, head.position.second)};
+    snake[0] = (arcade::entity){.sprite = head.sprite, .position = std::make_pair(head.position.first + SPEED_SNAKE, head.position.second)};
     this->_oldDirection = this->_direction;
-  } else if (this->_oldDirection == arcade::KeyboardInput::UP)
-    new_head = (arcade::entity){.sprite = head.sprite, .position = std::make_pair(head.position.first, head.position.second - SPEED_SNAKE)};
-  else if (this->_oldDirection == arcade::KeyboardInput::DOWN)
-    new_head = (arcade::entity){.sprite = head.sprite, .position = std::make_pair(head.position.first, head.position.second + SPEED_SNAKE)};
-  else if (this->_oldDirection == arcade::KeyboardInput::LEFT)
-    new_head = (arcade::entity){.sprite = head.sprite, .position = std::make_pair(head.position.first - SPEED_SNAKE, head.position.second)};
-  else if (this->_oldDirection == arcade::KeyboardInput::RIGHT)
-    new_head = (arcade::entity){.sprite = head.sprite, .position = std::make_pair(head.position.first + SPEED_SNAKE, head.position.second)};
-
+    snake[0].sprite = 'R';
+  } else if (this->_oldDirection == arcade::KeyboardInput::UP) {
+    snake[0] = (arcade::entity){.sprite = head.sprite, .position = std::make_pair(head.position.first, head.position.second - SPEED_SNAKE)};
+    snake[0].sprite = 'U';
+  } else if (this->_oldDirection == arcade::KeyboardInput::DOWN) {
+    snake[0] = (arcade::entity){.sprite = head.sprite, .position = std::make_pair(head.position.first, head.position.second + SPEED_SNAKE)};
+    snake[0].sprite = 'D';
+  } else if (this->_oldDirection == arcade::KeyboardInput::LEFT) {
+    snake[0] = (arcade::entity){.sprite = head.sprite, .position = std::make_pair(head.position.first - SPEED_SNAKE, head.position.second)};
+    snake[0].sprite = 'L';
+  } else if (this->_oldDirection == arcade::KeyboardInput::RIGHT) {
+    snake[0] = (arcade::entity){.sprite = head.sprite, .position = std::make_pair(head.position.first + SPEED_SNAKE, head.position.second)};
+    snake[0].sprite = 'R';
+  }
   // Check if the snake eats itself
   for (int i = 1; i < snake.size(); i++) {
-    if (new_head.position == snake[i].position) {
+    if (snake[0].position == snake[i].position) {
       this->getCoreModule()->updateScore(this->getCoreModule()->getGameData().score);
       this->setGameStatus(arcade::IGameModule::GameStatus::GAMEOVER);
       return data;
@@ -146,14 +153,14 @@ arcade::GameData arcade::Snake::moveSnake()
   }
 
   // Check if the snake hits a wall
-  if (this->getLayerCell(0, new_head.position.first, new_head.position.second) == 'W') {
+  if (this->getLayerCell(0, snake[0].position.first, snake[0].position.second) == 'W') {
     this->getCoreModule()->updateScore(this->getCoreModule()->getGameData().score);
     this->setGameStatus(arcade::IGameModule::GameStatus::GAMEOVER);
     return data;
   }
 
   // Check if the snake eats apple; elongate body if yes
-  if (new_head.position == data.entities[2][0].position) {
+  if (snake[0].position == data.entities[2][0].position) {
     this->getCoreModule()->updateScore(this->getCoreModule()->getGameData().score + 10);
     is_eating = true;
 
@@ -175,21 +182,32 @@ arcade::GameData arcade::Snake::moveSnake()
     snake.push_back(new_tail);
   }
 
-  // update head
-  if (direction == arcade::KeyboardInput::UP)
-    new_head.sprite = 'U';
-  else if (direction == arcade::KeyboardInput::DOWN)
-    new_head.sprite = 'D';
-  else if (direction == arcade::KeyboardInput::LEFT)
-    new_head.sprite = 'L';
-  else if (direction == arcade::KeyboardInput::RIGHT)
-    new_head.sprite = 'R';
+  // update body position
+  for (int i = 1; i < snake.size(); i ++) {
+    if (snake[i].position.first < snake[i - 1].position.first && snake[i].position.second == snake[i - 1].position.second)
+      snake[i].position = std::make_pair(snake[i].position.first + SPEED_SNAKE, snake[i].position.second);
+    else if (snake[i].position.first > snake[i - 1].position.first && snake[i].position.second == snake[i - 1].position.second)
+      snake[i].position = std::make_pair(snake[i].position.first - SPEED_SNAKE, snake[i].position.second);
+    else if (snake[i].position.second < snake[i - 1].position.second && snake[i].position.first == snake[i - 1].position.first)
+      snake[i].position = std::make_pair(snake[i].position.first, snake[i].position.second + SPEED_SNAKE);
+    else if (snake[i].position.second > snake[i - 1].position.second && snake[i].position.first == snake[i - 1].position.first)
+      snake[i].position = std::make_pair(snake[i].position.first, snake[i].position.second - SPEED_SNAKE);
+    else {
+      if (snake[i - 1].position.second % 30 != 0) {
+        if (snake[i].position.first < snake[i - 1].position.first)
+          snake[i].position = std::make_pair(snake[i].position.first + SPEED_SNAKE, snake[i].position.second);
+        else
+          snake[i].position = std::make_pair(snake[i].position.first - SPEED_SNAKE, snake[i].position.second);
+      } else if (snake[i - 1].position.first % 30 != 0) {
+        if (snake[i].position.second < snake[i - 1].position.second)
+          snake[i].position = std::make_pair(snake[i].position.first, snake[i].position.second + SPEED_SNAKE);
+        else
+          snake[i].position = std::make_pair(snake[i].position.first, snake[i].position.second - SPEED_SNAKE);
+      }
+    }
+  }
 
-  // Update the snake
-  snake.insert(snake.begin(), new_head);
-  snake.pop_back();
-
-  // update body
+  // update body sprite
   for (i = 1; i < (snake.size() - 1); i++) {
     if (snake[i - 1].position.second > snake[i].position.second && snake[i + 1].position.first > snake[i].position.first)
       snake[i].sprite = 'T';
