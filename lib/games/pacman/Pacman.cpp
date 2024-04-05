@@ -243,8 +243,8 @@ std::vector<std::vector<int>> layersToMap(std::vector<std::pair<int, std::pair<i
   int max_x = 0;
   int max_y = 0;
   for (const auto& pair : layer) {
-    max_x = std::max(max_x, pair.second.first);
-    max_y = std::max(max_y, pair.second.second);
+    max_x = std::max(max_x, pair.second.second);
+    max_y = std::max(max_y, pair.second.first);
   }
   
   std::vector<std::vector<int>> map(max_y + 1, std::vector<int>(max_x + 1, 0));
@@ -252,11 +252,12 @@ std::vector<std::vector<int>> layersToMap(std::vector<std::pair<int, std::pair<i
   for (const auto& pair : layer) {
     int x = pair.second.first;
     int y = pair.second.second;
-    map[y][x] = pair.first;
+    map[x][y] = pair.first;
   }
 
   return map;
 }
+
 
 arcade::Node aStar(std::vector<std::vector<std::pair<int, std::pair<int, int>>>> layers, arcade::Node start, arcade::Node end)
 {
