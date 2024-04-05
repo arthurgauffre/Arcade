@@ -264,11 +264,12 @@ void arcade::Snake::handdleKeyEvents(arcade::KeyboardInput key)
 void arcade::Snake::updateGame()
 {
   arcade::GameData data = this->getCoreModule()->getGameData();
-  this->updateTimer();
-  if (this->getTimer().duration.count() >= 250) {
-    this->resetTimer();
+  std::vector<arcade::timer> timers = this->getCoreModule()->getTimers();
+  int speedVector = timers[0].duration.count() / 250;
+  if (speedVector > 0)
+    this->getCoreModule()->resetTimers(0);
+  for (int i = 0; i < speedVector; i++)
     data = this->moveSnake();
-  }
   this->getCoreModule()->setGameData(data);
   return;
 }

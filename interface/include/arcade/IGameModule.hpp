@@ -8,7 +8,6 @@
 #ifndef IGAMEMODULE_HPP_
 #define IGAMEMODULE_HPP_
 
-#include <chrono>
 #include <CoreModule.hpp>
 #include <Arcade.hpp>
 
@@ -18,12 +17,6 @@ namespace arcade
   class IGameModule
   {
   public:
-    struct timer
-    {
-      std::chrono::_V2::steady_clock::time_point start;
-      std::chrono::_V2::steady_clock::time_point end;
-      std::chrono::milliseconds duration;
-    };
     enum GameStatus
     {
       RUNNING,
@@ -42,10 +35,6 @@ namespace arcade
     virtual void setCoreModule(arcade::CoreModule *coreModule) = 0;
     virtual arcade::CoreModule *getCoreModule() const = 0;
 
-    virtual void updateTimer() = 0;
-    virtual void resetTimer() = 0;
-    virtual timer getTimer() const = 0;
-
     virtual void handdleKeyEvents(arcade::KeyboardInput key) = 0;
 
     virtual void init() = 0;
@@ -53,7 +42,6 @@ namespace arcade
     virtual int getLayerCell(int layer, int x, int y) const = 0;
 
   protected:
-    timer _timer;
     GameStatus _gameStatus;
     arcade::CoreModule *_coreModule;
     arcade::KeyboardInput _direction;

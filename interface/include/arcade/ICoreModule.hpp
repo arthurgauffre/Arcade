@@ -67,9 +67,15 @@ namespace arcade
     virtual void setScore(int score) = 0;
     virtual void updateScore(int score) = 0;
 
+    virtual void updateTimers() = 0;
+    virtual void resetTimers(int index) = 0;
+    virtual std::vector<timer> getTimers() const = 0;
+
     virtual void smoothTransition(std::vector<std::pair<int, std::vector<std::pair<int, int>>>> allSpritesCoordinates) = 0;
 
   protected:
+    int smoothIndex;
+    std::vector<timer> _timers;
     CoreStatus _coreStatus;
     std::string name;
     arcade::IDisplayModule *_graphicModule;

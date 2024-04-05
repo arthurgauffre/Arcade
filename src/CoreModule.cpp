@@ -22,6 +22,7 @@ Press TAB to switch between module selection";
   this->_menuData.indexGame = 0;
   this->_menuData.indexGraphic = 0;
   this->_menuData._type = arcade::ModuleType::NAME;
+  this->_timers.push_back({std::chrono::steady_clock::now(), std::chrono::steady_clock::now(), std::chrono::milliseconds(0)});
 }
 
 /**
@@ -108,7 +109,7 @@ arcade::IDisplayModule *arcade::CoreModule::getGraphicModule()
 /**
  * @brief get the game module
  *
- * @return arcade::AGameModule *
+ * @return arcade::CoreModule *
  */
 arcade::IGameModule *arcade::CoreModule::getGameModule()
 {
@@ -572,6 +573,7 @@ void arcade::CoreModule::runningLoop()
   this->getGraphicModule()->clearWindow();
   while (this->_coreStatus == CoreStatus::RUNNING)
   {
+    this->updateTimers();
     this->updateRunning();
     if (this->getGameModule()->getGameStatus() == arcade::IGameModule::GameStatus::GAMEOVER)
       this->_coreStatus = CoreStatus::SELECTION;
@@ -658,4 +660,38 @@ void arcade::CoreModule::setScore(int score)
   arcade::GameData gameData = this->getGameData();
   gameData.score = score;
   this->setGameData(gameData);
+}
+
+/**
+ * @brief update the timer
+ *
+ */
+void arcade::CoreModule::updateTimers()
+{
+  for (size_t i = 0; i < this->_timers.size(); i += 1)
+  {
+    this->_timers[i].end = std::chrono::steady_clock::now();
+    this->_timers[i].duration = std::chrono::duration_cast<std::chrono::milliseconds>(this->_timers[i].end - this->_timers[i].start);
+  }
+}
+
+/**
+ * @brief reset the timer
+ *
+ */
+void arcade::CoreModule::resetTimers(int index)
+{
+  if (index >= this->_timers.size())
+    throw std::exception();
+  this->_timers[index].start = std::chrono::steady_clock::now();
+}
+
+/**
+ * @brief get the timer
+ *
+ * @return arcade::CoreModule::timer
+ */
+std::vector<arcade::timer> arcade::CoreModule::getTimers() const
+{
+  return this->_timers;
 }

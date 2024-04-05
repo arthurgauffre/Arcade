@@ -264,9 +264,9 @@ void arcade::Pacman::handdleKeyEvents(arcade::KeyboardInput key)
 void arcade::Pacman::updateGame()
 {
   arcade::GameData data = this->getCoreModule()->getGameData();
-  this->updateTimer();
-  if (this->getTimer().duration.count() >= 250) {
-    this->resetTimer();
+  std::vector<arcade::timer> timers = this->getCoreModule()->getTimers();
+  if (timers[0].duration.count() >= 250) {
+    this->getCoreModule()->resetTimers(0);
     data = this->movePacman();
   }
   this->getCoreModule()->setGameData(data);

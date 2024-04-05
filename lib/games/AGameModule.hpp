@@ -26,10 +26,6 @@ namespace arcade
     void setCoreModule(arcade::CoreModule *coreModule);
     arcade::CoreModule *getCoreModule() const;
 
-    void updateTimer();
-    void resetTimer();
-    timer getTimer() const;
-
     void setDirection(arcade::KeyboardInput direction);
     arcade::KeyboardInput getDirection() const;
 

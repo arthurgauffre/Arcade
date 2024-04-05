@@ -79,6 +79,10 @@ namespace arcade
     void selectionLoop();
     void updateSelection();
 
+    void updateTimers();
+    void resetTimers(int index);
+    std::vector<timer> getTimers() const;
+
     void smoothTransition(std::vector<std::pair<int, std::vector<std::pair<int, int>>>> allSpritesCoordinates);
 
     std::string getScore();
