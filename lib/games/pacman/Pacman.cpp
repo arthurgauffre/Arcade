@@ -340,7 +340,6 @@ bool arcade::Pacman::isOver(std::vector<std::vector<std::pair<int, std::pair<int
   {
     if (layers[3][i].second == layers[4][0].second)
     {
-      printf("Pacman is hitting a ghost, isBoosted : %d\n", this->_pacmanData.isBoosted);
       if (this->_pacmanData.isBoosted)
       {
         this->_ghostData[i].isDead = true;
@@ -429,12 +428,9 @@ std::vector<std::vector<std::pair<int, std::pair<int, int>>>> arcade::Pacman::mo
   if (nextPacmanPos.first < 0)
     nextPacmanPos.first = 18;
 
-  printf("Is boosted : %d\n", this->_pacmanData.isBoosted);
-
   // Check if pacman is hitting a pacgum
   if (this->isPacgumEaten(nextPacmanPos, layers))
   {
-    printf("Pacman is hitting a pacgum\n");
     this->_pacmanData.isBoosted = true;
     for (int i = 0; i < this->_ghostData.size(); i++)
     {
