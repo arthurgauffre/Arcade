@@ -36,7 +36,7 @@ namespace arcade
     virtual void init() = 0;
     virtual void handdleKeyEvents(arcade::KeyboardInput key) = 0;
 
-    int getMapCell(int x, int y) const;
+    int getLayerCell(int layer, int x, int y) const;
 
   };
 }; // namespace arcade

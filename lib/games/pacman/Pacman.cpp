@@ -19,7 +19,7 @@ void arcade::Pacman::init()
 {
   int i = 0;
   // Initialize the game
-  arcade::GameData data = this->getCoreModule()->getGameData();
+  arcade::GameData data;
   // Define the sprite values
   data.sprite_value['W'] = "assets/snake/map/map1.png";  // Wall
   data.sprite_value[' '] = "assets/snake/map/map4.png";  // Map
@@ -85,6 +85,7 @@ void arcade::Pacman::init()
     y = rand() % 20;
   }
   data.entities.push_back({std::make_pair('A', std::make_pair(x, y))});
+  data.score = 0;
   this->getCoreModule()->setGameData(data);
   this->setDirection(arcade::KeyboardInput::RIGHT);
   return;
@@ -133,7 +134,7 @@ arcade::GameData arcade::Pacman::movePacman()
   }
 
   // Check if the snake hits a wall
-  if (this->getMapCell(new_head.second.second, new_head.second.first) == 'W') {
+  if (this->getLayerCell(0, new_head.second.second, new_head.second.first) == 'W') {
     this->getCoreModule()->updateScore(this->getCoreModule()->getGameData().score);
     this->setGameStatus(arcade::IGameModule::GameStatus::GAMEOVER);
     return data;
@@ -216,7 +217,7 @@ arcade::GameData arcade::Pacman::movePacman()
   if (is_eating == true) {
     int x = rand() % 20;
     int y = rand() % 20;
-    while (this->getMapCell(x, y) != ' ') {
+    while (this->getLayerCell(0, x, y) != ' ') {
       x = rand() % 20;
       y = rand() % 20;
     }

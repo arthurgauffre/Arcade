@@ -79,6 +79,8 @@ namespace arcade
     void selectionLoop();
     void updateSelection();
 
+    void smoothTransition(std::vector<std::pair<int, std::vector<std::pair<int, int>>>> allSpritesCoordinates);
+
     std::string getScore();
     void setScore(int score);
     void updateScore(int score);

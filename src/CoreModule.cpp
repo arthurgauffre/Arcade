@@ -22,7 +22,6 @@ Press TAB to switch between module selection";
   this->_menuData.indexGame = 0;
   this->_menuData.indexGraphic = 0;
   this->_menuData._type = arcade::ModuleType::NAME;
-  this->setScore(0);
 }
 
 /**
@@ -491,23 +490,14 @@ void arcade::CoreModule::selectionLoop()
   }
 }
 
-void arcade::CoreModule::updateRunning()
+/**
+ * @brief smooth transition
+ *
+ */
+void arcade::CoreModule::smoothTransition(std::vector<std::pair<int, std::vector<std::pair<int, int>>>> allSpritesCoordinates)
 {
   std::pair<char, std::string> sprite;
   std::pair<char, std::string> oldSprite;
-  std::vector<std::pair<int, std::vector<std::pair<int, int>>> > allSpritesCoordinates;
-  for (auto &i : this->_gameData.sprite_value)
-  {
-    std::vector<std::pair<int, int>> coordinates;
-    for (size_t k = 0; k < this->_gameData.entities[0].size(); k += 1)
-    {
-      if (this->_gameData.entities[0][k].first == i.first)
-        coordinates.push_back(std::make_pair(this->_gameData.entities[0][k].second.second * 30, this->_gameData.entities[0][k].second.first * 30));
-    }
-    allSpritesCoordinates.push_back(std::make_pair(i.first, coordinates));
-  }
-  this->_oldGameData = this->_gameData;
-  this->getGameModule()->updateGame();
   for (int h = 0; h <= 30; h++) {
     this->getGraphicModule()->clearWindow();
     for (size_t i = 0; i < allSpritesCoordinates.size(); i += 1)
@@ -548,6 +538,28 @@ void arcade::CoreModule::updateRunning()
     }
     this->getGraphicModule()->displayWindow();
   }
+}
+
+/**
+ * @brief update running
+ *
+ */
+void arcade::CoreModule::updateRunning()
+{
+  std::vector<std::pair<int, std::vector<std::pair<int, int>>>> allSpritesCoordinates;
+  for (auto &i : this->_gameData.sprite_value)
+  {
+    std::vector<std::pair<int, int>> coordinates;
+    for (size_t k = 0; k < this->_gameData.entities[0].size(); k += 1)
+    {
+      if (this->_gameData.entities[0][k].first == i.first)
+        coordinates.push_back(std::make_pair(this->_gameData.entities[0][k].second.second * 30, this->_gameData.entities[0][k].second.first * 30));
+    }
+    allSpritesCoordinates.push_back(std::make_pair(i.first, coordinates));
+  }
+  this->_oldGameData = this->_gameData;
+  this->getGameModule()->updateGame();
+  this->smoothTransition(allSpritesCoordinates);
 }
 
 /**

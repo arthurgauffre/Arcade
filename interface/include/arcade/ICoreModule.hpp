@@ -67,6 +67,8 @@ namespace arcade
     virtual void setScore(int score) = 0;
     virtual void updateScore(int score) = 0;
 
+    virtual void smoothTransition(std::vector<std::pair<int, std::vector<std::pair<int, int>>>> allSpritesCoordinates) = 0;
+
   protected:
     CoreStatus _coreStatus;
     std::string name;

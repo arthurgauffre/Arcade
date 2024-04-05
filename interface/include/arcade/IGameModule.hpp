@@ -50,7 +50,7 @@ namespace arcade
 
     virtual void init() = 0;
 
-    virtual int getMapCell(int x, int y) const = 0;
+    virtual int getLayerCell(int layer, int x, int y) const = 0;
 
   protected:
     timer _timer;
