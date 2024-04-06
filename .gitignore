@@ -10,6 +10,6 @@ a.out
 arcade
 
 build
-saves
+saves/
 
 doc_doxygen/

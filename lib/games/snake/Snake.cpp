@@ -78,7 +78,7 @@ void arcade::Snake::init()
   }
   int x = rand() % 20;
   int y = rand() % 20;
-  while (mapGen[x][y] != ' ') {
+  while (mapGen[x][y] != ' ' && x * 30 != 300 && x * 30 != 270 && x * 30 != 240 && x * 30 != 210 && y * 30 != 300) {
     x = rand() % 20;
     y = rand() % 20;
   }
@@ -153,14 +153,14 @@ arcade::GameData arcade::Snake::moveSnake()
   }
 
   // Check if the snake hits a wall
-  if (this->getLayerCell(0, snake[0].position.first, snake[0].position.second) == 'W') {
+  if (this->getLayerCell(0, snake[0].position.first, snake[0].position.second) == 'W' || this->getLayerCell(0, snake[0].position.first + 29, snake[0].position.second) == 'W' || this->getLayerCell(0, snake[0].position.first - 29, snake[0].position.second) == 'W' || this->getLayerCell(0, snake[0].position.first, snake[0].position.second + 29) == 'W' || this->getLayerCell(0, snake[0].position.first, snake[0].position.second - 29) == 'W'){
     this->getCoreModule()->updateScore(this->getCoreModule()->getGameData().score);
     this->setGameStatus(arcade::IGameModule::GameStatus::GAMEOVER);
     return data;
   }
 
   // Check if the snake eats apple; elongate body if yes
-  if (snake[0].position == data.entities[2][0].position) {
+  if (snake[0].position == data.entities[1][0].position) {
     this->getCoreModule()->updateScore(this->getCoreModule()->getGameData().score + 10);
     is_eating = true;
 
@@ -182,23 +182,30 @@ arcade::GameData arcade::Snake::moveSnake()
     snake.push_back(new_tail);
   }
 
+  // check if snake reach the max size
+  if (snake.size() == MAX_SNAKE_SIZE) {
+    this->getCoreModule()->updateScore(this->getCoreModule()->getGameData().score);
+    this->setGameStatus(arcade::IGameModule::GameStatus::GAMEOVER);
+    return data;
+  }
+
   // update body position
   for (int i = 1; i < snake.size(); i ++) {
-    if (snake[i].position.first < snake[i - 1].position.first && snake[i].position.second == snake[i - 1].position.second)
+    if (snake[i].position.first + 30 < snake[i - 1].position.first && snake[i].position.second == snake[i - 1].position.second)
       snake[i].position = std::make_pair(snake[i].position.first + SPEED_SNAKE, snake[i].position.second);
-    else if (snake[i].position.first > snake[i - 1].position.first && snake[i].position.second == snake[i - 1].position.second)
+    else if (snake[i].position.first - 30 > snake[i - 1].position.first && snake[i].position.second == snake[i - 1].position.second)
       snake[i].position = std::make_pair(snake[i].position.first - SPEED_SNAKE, snake[i].position.second);
-    else if (snake[i].position.second < snake[i - 1].position.second && snake[i].position.first == snake[i - 1].position.first)
+    else if (snake[i].position.second + 30 < snake[i - 1].position.second && snake[i].position.first == snake[i - 1].position.first)
       snake[i].position = std::make_pair(snake[i].position.first, snake[i].position.second + SPEED_SNAKE);
-    else if (snake[i].position.second > snake[i - 1].position.second && snake[i].position.first == snake[i - 1].position.first)
+    else if (snake[i].position.second - 30 > snake[i - 1].position.second && snake[i].position.first == snake[i - 1].position.first)
       snake[i].position = std::make_pair(snake[i].position.first, snake[i].position.second - SPEED_SNAKE);
     else {
-      if (snake[i - 1].position.second % 30 != 0) {
+      if (snake[i - 1].position.second % 30 != 0 || snake[i].position.first % 30 != 0) {
         if (snake[i].position.first < snake[i - 1].position.first)
           snake[i].position = std::make_pair(snake[i].position.first + SPEED_SNAKE, snake[i].position.second);
         else
           snake[i].position = std::make_pair(snake[i].position.first - SPEED_SNAKE, snake[i].position.second);
-      } else if (snake[i - 1].position.first % 30 != 0) {
+      } else if (snake[i - 1].position.first % 30 != 0 || snake[i].position.second % 30 != 0) {
         if (snake[i].position.second < snake[i - 1].position.second)
           snake[i].position = std::make_pair(snake[i].position.first, snake[i].position.second + SPEED_SNAKE);
         else
@@ -247,7 +254,7 @@ arcade::GameData arcade::Snake::moveSnake()
   if (is_eating == true) {
     int x = rand() % 20;
     int y = rand() % 20;
-    while (this->getLayerCell(0, x, y) != ' ') {
+    while (this->getLayerCell(0, x * 30, y * 30) != ' ' && this->getLayerCell(2, x * 30, y * 30) == -1) {
       x = rand() % 20;
       y = rand() % 20;
     }
@@ -266,19 +273,19 @@ void arcade::Snake::handdleKeyEvents(arcade::KeyboardInput key)
 {
   switch (key) {
     case arcade::KeyboardInput::UP:
-      if (this->getDirection() != arcade::KeyboardInput::DOWN)
+      if (this->getDirection() != arcade::KeyboardInput::DOWN && this->_oldDirection != arcade::KeyboardInput::DOWN)
         this->setDirection(arcade::KeyboardInput::UP);
       break;
     case arcade::KeyboardInput::DOWN:
-      if (this->getDirection() != arcade::KeyboardInput::UP)
+      if (this->getDirection() != arcade::KeyboardInput::UP && this->_oldDirection != arcade::KeyboardInput::UP)
         this->setDirection(arcade::KeyboardInput::DOWN);
       break;
     case arcade::KeyboardInput::LEFT:
-      if (this->getDirection() != arcade::KeyboardInput::RIGHT)
+      if (this->getDirection() != arcade::KeyboardInput::RIGHT && this->_oldDirection != arcade::KeyboardInput::RIGHT)
         this->setDirection(arcade::KeyboardInput::LEFT);
       break;
     case arcade::KeyboardInput::RIGHT:
-      if (this->getDirection() != arcade::KeyboardInput::LEFT)
+      if (this->getDirection() != arcade::KeyboardInput::LEFT && this->_oldDirection != arcade::KeyboardInput::LEFT)
         this->setDirection(arcade::KeyboardInput::RIGHT);
       break;
     default:
