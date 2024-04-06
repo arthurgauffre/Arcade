@@ -182,6 +182,13 @@ arcade::GameData arcade::Snake::moveSnake()
     snake.push_back(new_tail);
   }
 
+  // check if snake reach the max size
+  if (snake.size() == MAX_SNAKE_SIZE) {
+    this->getCoreModule()->updateScore(this->getCoreModule()->getGameData().score);
+    this->setGameStatus(arcade::IGameModule::GameStatus::GAMEOVER);
+    return data;
+  }
+
   // update body position
   for (int i = 1; i < snake.size(); i ++) {
     if (snake[i].position.first + 30 < snake[i - 1].position.first && snake[i].position.second == snake[i - 1].position.second)

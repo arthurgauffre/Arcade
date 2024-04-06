@@ -8,6 +8,7 @@
 #ifndef SNAKE_HPP_
 #define SNAKE_HPP_
 #define SPEED_SNAKE 1
+#define MAX_SNAKE_SIZE 361
 
 #include "../AGameModule.hpp"
 
