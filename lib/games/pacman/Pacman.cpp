@@ -404,25 +404,40 @@ std::vector<std::vector<arcade::entity>> arcade::Pacman::moveEntities(std::vecto
   nextPacmanPos.second = nextPacmanPos.second % 570;
 
   // Move pacman
-  if (direction == arcade::KeyboardInput::UP && nextPacmanPos.first % 30 == 0) {
+  if (direction == arcade::KeyboardInput::UP)
+  {
     nextPacmanPos.second -= SPEED_PACMAN;
     this->_oldDirection = this->_direction;
-  } else if (direction == arcade::KeyboardInput::DOWN && nextPacmanPos.first % 30 == 0) {
+  }
+  else if (direction == arcade::KeyboardInput::DOWN)
+  {
     nextPacmanPos.second += SPEED_PACMAN;
     this->_oldDirection = this->_direction;
-  } else if (direction == arcade::KeyboardInput::LEFT && nextPacmanPos.first % 30 == 0) {
+  }
+  else if (direction == arcade::KeyboardInput::LEFT)
+  {
     nextPacmanPos.first -= SPEED_PACMAN;
     this->_oldDirection = this->_direction;
-  } else if (direction == arcade::KeyboardInput::RIGHT && nextPacmanPos.first % 30 == 0) {
+  }
+  else if (direction == arcade::KeyboardInput::RIGHT)
+  {
     nextPacmanPos.first += SPEED_PACMAN;
     this->_oldDirection = this->_direction;
-  } else if (this->_oldDirection == arcade::KeyboardInput::UP) {
+  }
+  else if (this->_oldDirection == arcade::KeyboardInput::UP)
+  {
     nextPacmanPos.second -= SPEED_PACMAN;
-  } else if (this->_oldDirection == arcade::KeyboardInput::DOWN) {
+  }
+  else if (this->_oldDirection == arcade::KeyboardInput::DOWN)
+  {
     nextPacmanPos.second += SPEED_PACMAN;
-  } else if (this->_oldDirection == arcade::KeyboardInput::LEFT) {
+  }
+  else if (this->_oldDirection == arcade::KeyboardInput::LEFT)
+  {
     nextPacmanPos.first -= SPEED_PACMAN;
-  } else if (this->_oldDirection == arcade::KeyboardInput::RIGHT) {
+  }
+  else if (this->_oldDirection == arcade::KeyboardInput::RIGHT)
+  {
     nextPacmanPos.first += SPEED_PACMAN;
   }
 
@@ -494,9 +509,11 @@ std::vector<std::vector<arcade::entity>> arcade::Pacman::moveEntities(std::vecto
     }
   }
 
-
   // Check if pacman is hitting a wall
-  if (this->getLayerCell(0, nextPacmanPos.first, nextPacmanPos.second) == 'W')
+  if (this->getLayerCell(0, nextPacmanPos.first, nextPacmanPos.second) == 'W' ||
+      this->getLayerCell(0, nextPacmanPos.first + 29, nextPacmanPos.second) == 'W' ||
+      this->getLayerCell(0, nextPacmanPos.first, nextPacmanPos.second + 29) == 'W' ||
+      this->getLayerCell(0, nextPacmanPos.first + 29, nextPacmanPos.second + 29) == 'W')
   {
     nextPacmanPos = layers[4][0].position;
   }
@@ -518,14 +535,26 @@ std::vector<std::vector<arcade::entity>> arcade::Pacman::moveEntities(std::vecto
   }
 
   // Move pacman
-  if (direction == arcade::KeyboardInput::UP)
+  if (direction == arcade::KeyboardInput::UP && nextPacmanPos.first % 30 == 0)
+  {
     layers[4][0] = arcade::entity{'U', nextPacmanPos};
-  else if (direction == arcade::KeyboardInput::DOWN)
+    this->_oldDirection = this->_direction;
+  }
+  else if (direction == arcade::KeyboardInput::DOWN && nextPacmanPos.first % 30 == 0)
+  {
     layers[4][0] = arcade::entity{'D', nextPacmanPos};
-  else if (direction == arcade::KeyboardInput::LEFT)
+    this->_oldDirection = this->_direction;
+  }
+  else if (direction == arcade::KeyboardInput::LEFT && nextPacmanPos.second % 30 == 0)
+  {
     layers[4][0] = arcade::entity{'L', nextPacmanPos};
-  else if (direction == arcade::KeyboardInput::RIGHT)
+    this->_oldDirection = this->_direction;
+  }
+  else if (direction == arcade::KeyboardInput::RIGHT && nextPacmanPos.second % 30 == 0)
+  {
     layers[4][0] = arcade::entity{'R', nextPacmanPos};
+    this->_oldDirection = this->_direction;
+  }
 
   // Move the ghosts
   for (int i = 0; i < newGhosts.size(); i++)
