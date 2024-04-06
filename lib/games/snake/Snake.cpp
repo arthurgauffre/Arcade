@@ -78,7 +78,7 @@ void arcade::Snake::init()
   }
   int x = rand() % 20;
   int y = rand() % 20;
-  while (mapGen[x][y] != ' ') {
+  while (mapGen[x][y] != ' ' && x * 30 != 300 && x * 30 != 270 && x * 30 != 240 && x * 30 != 210 && y * 30 != 300) {
     x = rand() % 20;
     y = rand() % 20;
   }
@@ -160,7 +160,7 @@ arcade::GameData arcade::Snake::moveSnake()
   }
 
   // Check if the snake eats apple; elongate body if yes
-  if (snake[0].position == data.entities[2][0].position) {
+  if (snake[0].position == data.entities[1][0].position) {
     this->getCoreModule()->updateScore(this->getCoreModule()->getGameData().score + 10);
     is_eating = true;
 
@@ -247,7 +247,7 @@ arcade::GameData arcade::Snake::moveSnake()
   if (is_eating == true) {
     int x = rand() % 20;
     int y = rand() % 20;
-    while (this->getLayerCell(0, x, y) != ' ') {
+    while (this->getLayerCell(0, x * 30, y * 30) != ' ' && this->getLayerCell(2, x * 30, y * 30) == -1) {
       x = rand() % 20;
       y = rand() % 20;
     }
