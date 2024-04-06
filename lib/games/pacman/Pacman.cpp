@@ -116,9 +116,6 @@ void arcade::Pacman::init()
   // Set the coins
   data.entities.push_back(coins);
 
-  // Set the template map
-  this->_templateMap = mapGen;
-
   // Set the initial position of the pacgums
   data.entities.push_back(pacGums);
 
@@ -384,19 +381,6 @@ arcade::Node pairToNode(std::pair<int, int> pair)
   return node;
 }
 
-// take a layer and a position and return the char at this position
-char getCharAt(std::vector<arcade::entity> layer, std::pair<int, int> pos)
-{
-  for (int i = 0; i < layer.size(); i++)
-  {
-    if (layer[i].position == pos)
-    {
-      return layer[i].sprite;
-    }
-  }
-  return 'N';
-}
-
 bool isValidPosition(const arcade::Node &node)
 {
   return node.position.first != 0 || node.position.second != 0;
@@ -416,8 +400,8 @@ std::vector<std::vector<arcade::entity>> arcade::Pacman::moveEntities(std::vecto
   std::vector<arcade::Node> newGhosts = ghosts;
 
   // replace pacman in other side of the map
-  nextPacmanPos.first = nextPacmanPos.first % 18;
-  nextPacmanPos.second = nextPacmanPos.second % 19;
+  nextPacmanPos.first = nextPacmanPos.first % 540;
+  nextPacmanPos.second = nextPacmanPos.second % 570;
 
   // Move pacman
   if (direction == arcade::KeyboardInput::UP)
@@ -430,7 +414,7 @@ std::vector<std::vector<arcade::entity>> arcade::Pacman::moveEntities(std::vecto
     nextPacmanPos.first++;
 
   if (nextPacmanPos.second < 0)
-    nextPacmanPos.second = 18;
+    nextPacmanPos.second = 18 * 30;
 
   // Check if pacman is hitting a pacgum
   if (this->isPacgumEaten(nextPacmanPos, layers))
@@ -497,8 +481,9 @@ std::vector<std::vector<arcade::entity>> arcade::Pacman::moveEntities(std::vecto
     }
   }
 
+
   // Check if pacman is hitting a wall
-  if (this->_templateMap[nextPacmanPos.first][nextPacmanPos.second] == 'W')
+  if (this->getLayerCell(0, nextPacmanPos.first, nextPacmanPos.second) == 'W')
   {
     nextPacmanPos = layers[4][0].position;
   }
@@ -506,7 +491,7 @@ std::vector<std::vector<arcade::entity>> arcade::Pacman::moveEntities(std::vecto
   // eat the coin
   if (nextPacmanPos != layers[4][0].position)
   {
-    if (getCharAt(layers[1], nextPacmanPos) == '*')
+    if (this->getLayerCell(1, nextPacmanPos.first, nextPacmanPos.second) == '*')
     {
       for (int i = 0; i < layers[1].size(); i++)
       {

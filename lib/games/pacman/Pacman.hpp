@@ -52,7 +52,6 @@ protected:
 private:
   arcade::DataPacman _pacmanData;
   std::vector<arcade::DataGhost> _ghostData;
-  std::vector<std::vector<int>> _templateMap;
 };
 }; // namespace arcade
 
