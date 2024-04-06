@@ -28,8 +28,9 @@ void arcade::Pacman::init()
   data.sprite_value['D'] = "assets/pacman/npc/pacman_down.png";  // Pacman down
   data.sprite_value['L'] = "assets/pacman/npc/pacman_left.png";  // Pacman left
   data.sprite_value['R'] = "assets/pacman/npc/pacman_right.png"; // Pacman right
-  data.sprite_value['S'] = "assets/pacman/npc/ghost_0.png";      // Ghost Scared
+  data.sprite_value['S'] = "assets/pacman/npc/scaredGhost.png";      // Ghost Scared
   data.sprite_value['G'] = "assets/pacman/npc/ghost_1.png";      // Ghost
+  data.sprite_value['E'] = "assets/pacman/npc/eyes.png";      // Eyes
   data.sprite_value[' '] = "assets/default/png/black.png";       // Floor
 
   std::pair pacman = std::make_pair(9 * 30, 10 * 30);
@@ -247,16 +248,16 @@ std::vector<std::vector<int>> layersToMap(std::vector<arcade::entity> layer)
   int max_y = 0;
   for (const auto &pair : layer)
   {
-    max_x = std::max(max_x, pair.position.first);
-    max_y = std::max(max_y, pair.position.second);
+    max_x = std::max(max_x, pair.position.first) / 30;
+    max_y = std::max(max_y, pair.position.second) / 30;
   }
 
   std::vector<std::vector<int>> map(max_y + 1, std::vector<int>(max_x + 1, 0));
 
   for (const auto &pair : layer)
   {
-    int x = pair.position.first;
-    int y = pair.position.second;
+    int x = pair.position.first / 30;
+    int y = pair.position.second / 30;
     map[y][x] = pair.sprite;
   }
 
@@ -293,6 +294,7 @@ arcade::Node aStar(std::vector<std::vector<arcade::entity>> layers, arcade::Node
   while (!stockNodes.empty())
   {
     arcade::Node current = stockNodes.top();
+    current.position = std::make_pair(current.position.first / 30, current.position.second / 30);
     stockNodes.pop();
 
     if (current.position.first == end.position.first && current.position.second == end.position.second)
@@ -366,7 +368,6 @@ bool arcade::Pacman::isPacgumEaten(std::pair<int, int> pos, std::vector<std::vec
   {
     if (layers[2][i].position == pos)
     {
-
       return true;
     }
   }
@@ -470,32 +471,37 @@ std::vector<std::vector<arcade::entity>> arcade::Pacman::moveEntities(std::vecto
     if (this->_ghostData[i].isDead)
     {
       layers[3][i].position = this->_ghostData[i].initialPos;
+      layers[3][i].sprite = 'E';
     }
   }
 
   // Move the ghosts
-  // for (int i = 0; i < ghosts.size(); i++)
-  // {
-  //   arcade::Node path;
-  //   if (this->_pacmanData.isBoosted)
-  //   {
-  //     layers[3][i].sprite = 'S';
-  //     this->_ghostData[i].isScared = true;
-  //     path = aStar(layers, ghosts[i], {std::make_pair(1, 1), 0, 0, 0});
-  //   }
-  //   else
-  //   {
-  //     if (this->_ghostData[i].isDead)
-  //       continue;
-  //     arcade::Node pacmanPos = {layers[4][0].position, 0, 0, 0};
-  //     path = aStar(layers, ghosts[i], pacmanPos);
-  //   }
-  //   // Check if the path is valid
-  //   if (!isValidPosition(path))
-  //     path = ghosts[i];
+  for (int i = 0; i < ghosts.size(); i++)
+  {
+    arcade::Node path;
+    if (this->_pacmanData.isBoosted)
+    {
+      layers[3][i].sprite = 'S';
+      this->_ghostData[i].isScared = true;
+      path = aStar(layers, ghosts[i], {std::make_pair(1, 1), 0, 0, 0});
+    }
+    else
+    {
+      if (this->_ghostData[i].isDead)
+        continue;
+      arcade::Node pacmanPos = {layers[4][0].position, 0, 0, 0};
+      path = aStar(layers, ghosts[i], pacmanPos);
+      // print path coordinates
+      printf("ghost %d: %d %d\n", i, path.position.first, path.position.second);
 
-  //   newGhosts[i] = path;
-  // }
+
+    }
+    // Check if the path is valid
+    if (!isValidPosition(path))
+      path = ghosts[i];
+
+    newGhosts[i] = path;
+  }
 
   // Check if ghosts are in superposed positions
   for (int i = 0; i < ghosts.size(); i++)
@@ -519,17 +525,17 @@ std::vector<std::vector<arcade::entity>> arcade::Pacman::moveEntities(std::vecto
   }
 
   // eat the coin
-  if (nextPacmanPos != layers[4][0].position)
+  if (this->getLayerCell(1, nextPacmanPos.first, nextPacmanPos.second) == '*' ||
+      this->getLayerCell(1, nextPacmanPos.first + 29, nextPacmanPos.second) == '*' ||
+      this->getLayerCell(1, nextPacmanPos.first, nextPacmanPos.second + 29) == '*' ||
+      this->getLayerCell(1, nextPacmanPos.first + 29, nextPacmanPos.second + 29) == '*')
   {
-    if (this->getLayerCell(1, nextPacmanPos.first, nextPacmanPos.second) == '*')
+    for (int i = 0; i < layers[1].size(); i++)
     {
-      for (int i = 0; i < layers[1].size(); i++)
+      if (layers[1][i].position == nextPacmanPos)
       {
-        if (layers[1][i].position == nextPacmanPos)
-        {
-          layers[1].erase(layers[1].begin() + i);
-          break;
-        }
+        layers[1].erase(layers[1].begin() + i);
+        break;
       }
     }
   }
