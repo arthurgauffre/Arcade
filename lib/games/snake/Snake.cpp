@@ -153,7 +153,7 @@ arcade::GameData arcade::Snake::moveSnake()
   }
 
   // Check if the snake hits a wall
-  if (this->getLayerCell(0, snake[0].position.first, snake[0].position.second) == 'W') {
+  if (this->getLayerCell(0, snake[0].position.first, snake[0].position.second) == 'W' || this->getLayerCell(0, snake[0].position.first + 29, snake[0].position.second) == 'W' || this->getLayerCell(0, snake[0].position.first - 29, snake[0].position.second) == 'W' || this->getLayerCell(0, snake[0].position.first, snake[0].position.second + 29) == 'W' || this->getLayerCell(0, snake[0].position.first, snake[0].position.second - 29) == 'W'){
     this->getCoreModule()->updateScore(this->getCoreModule()->getGameData().score);
     this->setGameStatus(arcade::IGameModule::GameStatus::GAMEOVER);
     return data;
