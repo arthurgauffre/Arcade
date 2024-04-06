@@ -184,21 +184,21 @@ arcade::GameData arcade::Snake::moveSnake()
 
   // update body position
   for (int i = 1; i < snake.size(); i ++) {
-    if (snake[i].position.first < snake[i - 1].position.first && snake[i].position.second == snake[i - 1].position.second)
+    if (snake[i].position.first + 30 < snake[i - 1].position.first && snake[i].position.second == snake[i - 1].position.second)
       snake[i].position = std::make_pair(snake[i].position.first + SPEED_SNAKE, snake[i].position.second);
-    else if (snake[i].position.first > snake[i - 1].position.first && snake[i].position.second == snake[i - 1].position.second)
+    else if (snake[i].position.first - 30 > snake[i - 1].position.first && snake[i].position.second == snake[i - 1].position.second)
       snake[i].position = std::make_pair(snake[i].position.first - SPEED_SNAKE, snake[i].position.second);
-    else if (snake[i].position.second < snake[i - 1].position.second && snake[i].position.first == snake[i - 1].position.first)
+    else if (snake[i].position.second + 30 < snake[i - 1].position.second && snake[i].position.first == snake[i - 1].position.first)
       snake[i].position = std::make_pair(snake[i].position.first, snake[i].position.second + SPEED_SNAKE);
-    else if (snake[i].position.second > snake[i - 1].position.second && snake[i].position.first == snake[i - 1].position.first)
+    else if (snake[i].position.second - 30 > snake[i - 1].position.second && snake[i].position.first == snake[i - 1].position.first)
       snake[i].position = std::make_pair(snake[i].position.first, snake[i].position.second - SPEED_SNAKE);
     else {
-      if (snake[i - 1].position.second % 30 != 0) {
+      if (snake[i - 1].position.second % 30 != 0 || snake[i].position.first % 30 != 0) {
         if (snake[i].position.first < snake[i - 1].position.first)
           snake[i].position = std::make_pair(snake[i].position.first + SPEED_SNAKE, snake[i].position.second);
         else
           snake[i].position = std::make_pair(snake[i].position.first - SPEED_SNAKE, snake[i].position.second);
-      } else if (snake[i - 1].position.first % 30 != 0) {
+      } else if (snake[i - 1].position.first % 30 != 0 || snake[i].position.second % 30 != 0) {
         if (snake[i].position.second < snake[i - 1].position.second)
           snake[i].position = std::make_pair(snake[i].position.first, snake[i].position.second + SPEED_SNAKE);
         else
