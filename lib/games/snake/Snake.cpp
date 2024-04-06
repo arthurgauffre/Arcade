@@ -266,19 +266,19 @@ void arcade::Snake::handdleKeyEvents(arcade::KeyboardInput key)
 {
   switch (key) {
     case arcade::KeyboardInput::UP:
-      if (this->getDirection() != arcade::KeyboardInput::DOWN)
+      if (this->getDirection() != arcade::KeyboardInput::DOWN && this->_oldDirection != arcade::KeyboardInput::DOWN)
         this->setDirection(arcade::KeyboardInput::UP);
       break;
     case arcade::KeyboardInput::DOWN:
-      if (this->getDirection() != arcade::KeyboardInput::UP)
+      if (this->getDirection() != arcade::KeyboardInput::UP && this->_oldDirection != arcade::KeyboardInput::UP)
         this->setDirection(arcade::KeyboardInput::DOWN);
       break;
     case arcade::KeyboardInput::LEFT:
-      if (this->getDirection() != arcade::KeyboardInput::RIGHT)
+      if (this->getDirection() != arcade::KeyboardInput::RIGHT && this->_oldDirection != arcade::KeyboardInput::RIGHT)
         this->setDirection(arcade::KeyboardInput::LEFT);
       break;
     case arcade::KeyboardInput::RIGHT:
-      if (this->getDirection() != arcade::KeyboardInput::LEFT)
+      if (this->getDirection() != arcade::KeyboardInput::LEFT && this->_oldDirection != arcade::KeyboardInput::LEFT)
         this->setDirection(arcade::KeyboardInput::RIGHT);
       break;
     default:
