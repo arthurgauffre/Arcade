@@ -404,14 +404,27 @@ std::vector<std::vector<arcade::entity>> arcade::Pacman::moveEntities(std::vecto
   nextPacmanPos.second = nextPacmanPos.second % 570;
 
   // Move pacman
-  if (direction == arcade::KeyboardInput::UP)
-    nextPacmanPos.second--;
-  else if (direction == arcade::KeyboardInput::DOWN)
-    nextPacmanPos.second++;
-  else if (direction == arcade::KeyboardInput::LEFT)
-    nextPacmanPos.first--;
-  else if (direction == arcade::KeyboardInput::RIGHT)
-    nextPacmanPos.first++;
+  if (direction == arcade::KeyboardInput::UP && nextPacmanPos.first % 30 == 0) {
+    nextPacmanPos.second -= SPEED_PACMAN;
+    this->_oldDirection = this->_direction;
+  } else if (direction == arcade::KeyboardInput::DOWN && nextPacmanPos.first % 30 == 0) {
+    nextPacmanPos.second += SPEED_PACMAN;
+    this->_oldDirection = this->_direction;
+  } else if (direction == arcade::KeyboardInput::LEFT && nextPacmanPos.first % 30 == 0) {
+    nextPacmanPos.first -= SPEED_PACMAN;
+    this->_oldDirection = this->_direction;
+  } else if (direction == arcade::KeyboardInput::RIGHT && nextPacmanPos.first % 30 == 0) {
+    nextPacmanPos.first += SPEED_PACMAN;
+    this->_oldDirection = this->_direction;
+  } else if (this->_oldDirection == arcade::KeyboardInput::UP) {
+    nextPacmanPos.second -= SPEED_PACMAN;
+  } else if (this->_oldDirection == arcade::KeyboardInput::DOWN) {
+    nextPacmanPos.second += SPEED_PACMAN;
+  } else if (this->_oldDirection == arcade::KeyboardInput::LEFT) {
+    nextPacmanPos.first -= SPEED_PACMAN;
+  } else if (this->_oldDirection == arcade::KeyboardInput::RIGHT) {
+    nextPacmanPos.first += SPEED_PACMAN;
+  }
 
   if (nextPacmanPos.second < 0)
     nextPacmanPos.second = 18 * 30;
@@ -507,7 +520,6 @@ std::vector<std::vector<arcade::entity>> arcade::Pacman::moveEntities(std::vecto
   // Move pacman
   if (direction == arcade::KeyboardInput::UP)
     layers[4][0] = arcade::entity{'U', nextPacmanPos};
-    // layers[4][0] = std::make_pair('U', nextPacmanPos);
   else if (direction == arcade::KeyboardInput::DOWN)
     layers[4][0] = arcade::entity{'D', nextPacmanPos};
   else if (direction == arcade::KeyboardInput::LEFT)
