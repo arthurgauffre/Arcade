@@ -20,6 +20,8 @@ namespace arcade
 
     virtual void updateGame() = 0;
 
+    virtual std::string getName() = 0;
+
     void setGameStatus(GameStatus status);
     GameStatus getGameStatus() const;
 

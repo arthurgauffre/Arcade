@@ -86,6 +86,7 @@ void arcade::Snake::init()
   data.entities.push_back({(arcade::entity){.sprite = 'A', .position = std::make_pair(x * 30, y * 30)}});
   data.entities.push_back(snake);
   data.score = 0;
+  data.description = "Eat the apple to grow your snake";
   this->getCoreModule()->setGameData(data);
   this->setDirection(arcade::KeyboardInput::RIGHT);
   return;
@@ -309,6 +310,16 @@ void arcade::Snake::updateGame()
     data = this->moveSnake();
   this->getCoreModule()->setGameData(data);
   return;
+}
+
+/**
+ * @brief get the name of the game
+ *
+ * @return std::string
+ */
+std::string arcade::Snake::getName()
+{
+  return "snake";
 }
 
 /**

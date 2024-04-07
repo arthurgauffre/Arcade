@@ -86,6 +86,7 @@ void arcade::Pacman::init()
   data.entities.push_back({(arcade::entity){.sprite = 'A', .position = std::make_pair(x, y)}});
   data.entities.push_back(snake);
   data.score = 0;
+  data.description = "Eat the apple to grow your snake";
   this->getCoreModule()->setGameData(data);
   this->setDirection(arcade::KeyboardInput::RIGHT);
   return;
@@ -272,6 +273,13 @@ void arcade::Pacman::updateGame()
   this->getCoreModule()->setGameData(data);
   return;
 }
+
+/**
+ * @brief get the name of the game
+ *
+ * @return std::string
+ */
+std::string arcade::Pacman::getName() { return "pacman"; }
 
 /**
  * @brief generate entry point for the game library

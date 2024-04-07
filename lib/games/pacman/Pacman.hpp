@@ -18,6 +18,7 @@ public:
   ~Pacman();
   void init();
   void updateGame();
+  std::string getName();
   arcade::GameData movePacman();
   void handdleKeyEvents(arcade::KeyboardInput key);
 

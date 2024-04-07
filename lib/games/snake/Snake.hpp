@@ -17,6 +17,7 @@ class Snake : virtual public arcade::AGameModule {
 public:
   Snake();
   ~Snake();
+  std::string getName();
   void init();
   void updateGame();
   arcade::GameData moveSnake();
