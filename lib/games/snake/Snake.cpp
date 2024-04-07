@@ -183,7 +183,6 @@ arcade::GameData arcade::Snake::moveSnake()
 
   // check if snake reach the max size
   if (snake.size() == MAX_SNAKE_SIZE) {
-    this->getCoreModule()->updateScore(this->getCoreModule()->getGameData().score);
     this->setGameStatus(arcade::IGameModule::GameStatus::GAMEOVER);
     return data;
   }
