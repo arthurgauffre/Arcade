@@ -239,7 +239,6 @@ std::vector<arcade::Node> getNeighbors(const std::vector<std::vector<int>> map, 
     if (isValid(map, neighbor))
       neighbors.push_back(neighbor);
   }
-  printf("neighbors size %d\n", neighbors.size());
   return neighbors;
 }
 
@@ -323,11 +322,8 @@ std::vector<arcade::Node> aStar(std::vector<std::vector<arcade::entity>> layers,
 
     visited[current.position.second][current.position.first] = true;
 
-    printf("current %d %d\n", current.position.first, current.position.second);
-
     for (const auto &neighbor : getNeighbors(map, current))
     {
-      printf("neighbor %d %d\n", neighbor.position.first, neighbor.position.second);
       int newGScore = current.g + 1;
 
       if (newGScore < gScore[neighbor.position.first][neighbor.position.second])
@@ -534,7 +530,6 @@ std::vector<std::vector<arcade::entity>> arcade::Pacman::moveEntities(std::vecto
         this->_ghostData[i].path = aStar(layers, ghosts[i], pacmanPos);
       }
     }
-    printf("size path %d\n", this->_ghostData[i].path.size());
   }
 
   // // Check if ghosts are supperposed
@@ -589,7 +584,6 @@ std::vector<std::vector<arcade::entity>> arcade::Pacman::moveEntities(std::vecto
   {
     if (this->_ghostData[i].isDead)
       continue;
-    std::cout << "" << this->_ghostData[i].isScared << std::endl; /////////////////////////////
     if (this->_ghostData[i].isScared)
     {
       if (this->_ghostData[i].path.size() != 0)
