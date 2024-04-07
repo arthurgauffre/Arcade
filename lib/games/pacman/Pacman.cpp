@@ -177,7 +177,7 @@ void arcade::Pacman::updateTimers(std::vector<std::vector<arcade::entity>> layer
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
     if (duration.count() >= 10000)
     {
-      this->_ghostData[i].isScared = false;
+      this->_ghostData[i].isDead = false; /////////////// is scared og
       this->_ghostData[i].ghostTimer = end;
     }
   }
@@ -492,7 +492,7 @@ std::vector<std::vector<arcade::entity>> arcade::Pacman::moveEntities(std::vecto
     for (int i = 0; i < this->_ghostData.size(); i++)
     {
       this->_ghostData[i].isScared = true;
-      this->_ghostData[i].ghostTimer = std::chrono::system_clock::now();
+      this->_pacmanData._pacmanTimer = std::chrono::system_clock::now();
     }
     // remove the pacgum from the map
     for (int i = 0; i < layers[2].size(); i++)
@@ -524,9 +524,8 @@ std::vector<std::vector<arcade::entity>> arcade::Pacman::moveEntities(std::vecto
       this->_ghostData[i].isScared = true;
       if (this->_ghostData[i].actualPathIndex == 0)
         this->_ghostData[i].path = aStar(layers, ghosts[i], {std::make_pair(30, 30), 0, 0, 0});
-    }
-    else
-    {
+    } else {
+      layers[3][i].sprite = 'G'; ///////////////////////////////:
       if (this->_ghostData[i].isDead)
         continue;
       if (this->_ghostData[i].actualPathIndex == 0)
@@ -585,16 +584,17 @@ std::vector<std::vector<arcade::entity>> arcade::Pacman::moveEntities(std::vecto
   }
   layers[4][0].position = nextPacmanPos;
 
-  // Move the ghosts
+  // Update the ghosts
   for (int i = 0; i < ghosts.size(); i++)
   {
     if (this->_ghostData[i].isDead)
       continue;
+    std::cout << "" << this->_ghostData[i].isScared << std::endl; /////////////////////////////
     if (this->_ghostData[i].isScared)
     {
       if (this->_ghostData[i].path.size() != 0)
       {
-        layers[3][i] = arcade::entity{'G', this->_ghostData[i].path[this->_ghostData[i].actualPathIndex].position};
+        layers[3][i] = arcade::entity{'S', this->_ghostData[i].path[this->_ghostData[i].actualPathIndex].position};
         this->_ghostData[i].actualPathIndex++;
       }
     }
