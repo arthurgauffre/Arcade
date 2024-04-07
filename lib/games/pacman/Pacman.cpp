@@ -99,6 +99,11 @@ void arcade::Pacman::init()
         arcade::entity cell = {mapGen[i][j], std::make_pair(j * 30, i * 30)};
         map.push_back(cell);
       }
+      else if (mapGen[i][j] == '*')
+      {
+        arcade::entity cell = {' ', std::make_pair(j * 30, i * 30)};
+        map.push_back(cell);
+      }
     }
   }
 
@@ -226,17 +231,15 @@ bool isValid(const std::vector<std::vector<int>> map, arcade::Node p)
 std::vector<arcade::Node> getNeighbors(const std::vector<std::vector<int>> map, arcade::Node p)
 {
   std::vector<arcade::Node> neighbors;
-  int dx[] = {0, 0, -30, 30};
-  int dy[] = {-30, 30, 0, 0};
-  for (int i = 0; i < 4; ++i)
+  std::vector<std::pair<int, int>> directions = {{0, 30}, {0, -30}, {30, 0}, {-30, 0}};
+  for (const auto &dir : directions)
   {
     arcade::Node neighbor;
-    neighbor.position = std::make_pair((p.position.first / 30)+ dx[i], (p.position.second / 30) + dy[i]);
+    neighbor.position = std::make_pair(p.position.first + dir.first, p.position.second + dir.second);
     if (isValid(map, neighbor))
-    {
       neighbors.push_back(neighbor);
-    }
   }
+  printf("neighbors size %d\n", neighbors.size());
   return neighbors;
 }
 
@@ -262,15 +265,13 @@ std::vector<std::vector<int>> layersToMap(std::vector<arcade::entity> layer)
 
   for (const auto &pair : layer)
   {
-    int x = pair.position.first / 30;
-    int y = pair.position.second / 30;
-    map[y][x] = pair.sprite;
+    map[pair.position.second / 30][pair.position.first / 30] = pair.sprite;
   }
 
   return map;
 }
 
-arcade::Node aStar(std::vector<std::vector<arcade::entity>> layers, arcade::Node start, arcade::Node end)
+std::vector<arcade::Node> aStar(std::vector<std::vector<arcade::entity>> layers, arcade::Node start, arcade::Node end)
 {
   std::vector<std::vector<int>> map = layersToMap(layers[0]);
   std::priority_queue<arcade::Node, std::vector<arcade::Node>, CompareNode> stockNodes;
@@ -317,13 +318,16 @@ arcade::Node aStar(std::vector<std::vector<arcade::entity>> layers, arcade::Node
         current = cameFrom[current.position.first][current.position.second];
       }
       std::reverse(path.begin(), path.end());
-      return path[0];
+      return path;
     }
 
     visited[current.position.second][current.position.first] = true;
 
+    printf("current %d %d\n", current.position.first, current.position.second);
+
     for (const auto &neighbor : getNeighbors(map, current))
     {
+      printf("neighbor %d %d\n", neighbor.position.first, neighbor.position.second);
       int newGScore = current.g + 1;
 
       if (newGScore < gScore[neighbor.position.first][neighbor.position.second])
@@ -343,7 +347,7 @@ arcade::Node aStar(std::vector<std::vector<arcade::entity>> layers, arcade::Node
       }
     }
   }
-  return arcade::Node();
+  return {};
 }
 
 bool arcade::Pacman::isOver(std::vector<std::vector<arcade::entity>> layers)
@@ -402,11 +406,6 @@ arcade::Node pairToNode(std::pair<int, int> pair)
   return node;
 }
 
-bool isValidPosition(const arcade::Node &node)
-{
-  return node.position.first != 0 || node.position.second != 0;
-}
-
 std::vector<std::vector<arcade::entity>> arcade::Pacman::moveEntities(std::vector<std::vector<arcade::entity>> layers)
 {
   std::pair<int, int> nextPacmanPos = layers[4][0].position;
@@ -416,9 +415,6 @@ std::vector<std::vector<arcade::entity>> arcade::Pacman::moveEntities(std::vecto
   // fill ghosts
   for (int i = 0; i < layers[3].size(); i++)
     ghosts.push_back(pairToNode(layers[3][i].position));
-
-  // copy ghosts in newGhosts
-  std::vector<arcade::Node> newGhosts = ghosts;
 
   // replace pacman in other side of the map
   nextPacmanPos.first = nextPacmanPos.first % 570;
@@ -522,38 +518,38 @@ std::vector<std::vector<arcade::entity>> arcade::Pacman::moveEntities(std::vecto
   // Move the ghosts
   for (int i = 0; i < ghosts.size(); i++)
   {
-    arcade::Node path;
     if (this->_pacmanData.isBoosted)
     {
       layers[3][i].sprite = 'S';
       this->_ghostData[i].isScared = true;
-      path = aStar(layers, ghosts[i], {std::make_pair(30, 30), 0, 0, 0});
+      if (this->_ghostData[i].actualPathIndex == 0)
+        this->_ghostData[i].path = aStar(layers, ghosts[i], {std::make_pair(30, 30), 0, 0, 0});
     }
     else
     {
       if (this->_ghostData[i].isDead)
         continue;
-      arcade::Node pacmanPos = {layers[4][0].position, 0, 0, 0};
-      path = aStar(layers, ghosts[i], pacmanPos);
-    }
-    // Check if the path is valid
-    if (!isValidPosition(path))
-      path = ghosts[i];
-
-    newGhosts[i] = path;
-  }
-
-  // Check if ghosts are in superposed positions
-  for (int i = 0; i < ghosts.size(); i++)
-  {
-    for (int j = 0; j < ghosts.size(); j++)
-    {
-      if (i != j && newGhosts[i].position == newGhosts[j].position)
+      if (this->_ghostData[i].actualPathIndex == 0)
       {
-        newGhosts[i] = ghosts[i];
+        arcade::Node pacmanPos = {layers[4][0].position, 0, 0, 0};
+        this->_ghostData[i].path = aStar(layers, ghosts[i], pacmanPos);
       }
     }
+    printf("size path %d\n", this->_ghostData[i].path.size());
   }
+
+  // // Check if ghosts are supperposed
+  // for (int i = 0; i < this->_ghostData.size(); i++)
+  // {
+  //   for (int j = 0; j < this->_ghostData.size(); j++)
+  //   {
+  //     if (i != j && layers[3][i].position == layers[3][j].position)
+  //     {
+  //       layers[3][i].position = this->_ghostData[i].initialPos;
+  //       layers[3][j].position = this->_ghostData[j].initialPos;
+  //     }
+  //   }
+  // }
 
   // Check if pacman is hitting a wall or a door
   if (this->getLayerCell(0, nextPacmanPos.first, nextPacmanPos.second) == 'W' ||
@@ -569,7 +565,6 @@ std::vector<std::vector<arcade::entity>> arcade::Pacman::moveEntities(std::vecto
   {
     nextPacmanPos = layers[4][0].position;
   }
-
 
   // Move pacman
   if (direction == arcade::KeyboardInput::UP && nextPacmanPos.first % 30 == 0)
@@ -591,14 +586,35 @@ std::vector<std::vector<arcade::entity>> arcade::Pacman::moveEntities(std::vecto
   layers[4][0].position = nextPacmanPos;
 
   // Move the ghosts
-  for (int i = 0; i < newGhosts.size(); i++)
+  for (int i = 0; i < ghosts.size(); i++)
   {
     if (this->_ghostData[i].isDead)
       continue;
     if (this->_ghostData[i].isScared)
-      layers[3][i] = arcade::entity{'S', newGhosts[i].position};
+    {
+      if (this->_ghostData[i].path.size() != 0)
+      {
+        layers[3][i] = arcade::entity{'G', this->_ghostData[i].path[this->_ghostData[i].actualPathIndex].position};
+        this->_ghostData[i].actualPathIndex++;
+      }
+    }
     else
-      layers[3][i] = arcade::entity{'G', newGhosts[i].position};
+    {
+      if (this->_ghostData[i].path.size() != 0)
+      {
+        layers[3][i] = arcade::entity{'G', this->_ghostData[i].path[this->_ghostData[i].actualPathIndex].position};
+        this->_ghostData[i].actualPathIndex++;
+      }
+    }
+  }
+
+  // check if ghosts are arrived to the destination of path
+  for (int i = 0; i < ghosts.size(); i++)
+  {
+    if (this->_ghostData[i].actualPathIndex == this->_ghostData[i].path.size())
+    {
+      this->_ghostData[i].actualPathIndex = 0;
+    }
   }
 
   this->updateTimers(layers);

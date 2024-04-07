@@ -33,6 +33,8 @@ struct DataGhost {
   bool isScared;
   bool isDead;
   std::pair<int, int> initialPos;
+  std::vector<arcade::Node> path;
+  int actualPathIndex;
   std::chrono::time_point<std::chrono::system_clock> ghostTimer;
 };
 
@@ -47,7 +49,7 @@ public:
   bool isOver(std::vector<std::vector<arcade::entity>> layers);
   void updateTimers(std::vector<std::vector<arcade::entity>> layers);
   bool isPacgumEaten(std::pair<int, int> pos, std::vector<std::vector<arcade::entity>> layers);
-  bool isCoinEaten(std::pair<int, int> pos, std::vector<std::vector<arcade::entity>> layers);
+  bool isCoinEaten(std::pair<int, int> pos, std::vector<std::vector<arcade::entity>> layers); 
 
 protected:
 private:
