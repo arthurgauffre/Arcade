@@ -7,7 +7,7 @@
 
 #ifndef PACMAN_HPP_
 #define PACMAN_HPP_
-#define SPEED_PACMAN 10
+#define SPEED_PACMAN 1
 
 #include "../AGameModule.hpp"
 #include <queue>
@@ -47,6 +47,7 @@ public:
   bool isOver(std::vector<std::vector<arcade::entity>> layers);
   void updateTimers(std::vector<std::vector<arcade::entity>> layers);
   bool isPacgumEaten(std::pair<int, int> pos, std::vector<std::vector<arcade::entity>> layers);
+  bool isCoinEaten(std::pair<int, int> pos, std::vector<std::vector<arcade::entity>> layers);
 
 protected:
 private:

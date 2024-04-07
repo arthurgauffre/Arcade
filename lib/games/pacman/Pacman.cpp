@@ -93,8 +93,11 @@ void arcade::Pacman::init()
   {
     for (int j = 0; j < mapGen[i].size(); j++)
     {
-      arcade::entity cell = {mapGen[i][j], std::make_pair(j * 30, i * 30)};
-      map.push_back(cell);
+      if (mapGen[i][j] == ' ' || mapGen[i][j] == 'W')
+      {
+        arcade::entity cell = {mapGen[i][j], std::make_pair(j * 30, i * 30)};
+        map.push_back(cell);
+      }
     }
   }
 
@@ -150,8 +153,9 @@ void arcade::Pacman::updateGame()
   int speedVector = timers[0].duration.count() / 10;
   if (speedVector > 0)
     this->getCoreModule()->resetTimers(0);
-  for (int i = 0; i < speedVector; i++)
+  for (int i = 0; i < speedVector; i++) {
     data.entities = this->moveEntities(this->getCoreModule()->getGameData().entities);
+  }
   this->getCoreModule()->setGameData(data);
   return;
 }
@@ -367,9 +371,18 @@ bool arcade::Pacman::isPacgumEaten(std::pair<int, int> pos, std::vector<std::vec
   for (int i = 0; i < layers[2].size(); i++)
   {
     if (layers[2][i].position == pos)
-    {
       return true;
-    }
+  }
+  return false;
+}
+
+bool arcade::Pacman::isCoinEaten(std::pair<int, int> pos, std::vector<std::vector<arcade::entity>> layers)
+{
+
+  for (int i = 0; i < layers[1].size(); i++)
+  {
+    if (layers[1][i].position == pos)
+      return true;
   }
   return false;
 }
@@ -401,26 +414,37 @@ std::vector<std::vector<arcade::entity>> arcade::Pacman::moveEntities(std::vecto
   std::vector<arcade::Node> newGhosts = ghosts;
 
   // replace pacman in other side of the map
-  nextPacmanPos.first = nextPacmanPos.first % 540;
-  nextPacmanPos.second = nextPacmanPos.second % 570;
+  nextPacmanPos.first = nextPacmanPos.first % 570;
+  nextPacmanPos.second = nextPacmanPos.second % 600;
+  if (nextPacmanPos.first == 0)
+  {
+    for (int i = 0; i < layers[1].size(); i++)
+    {
+      if (layers[1][i].position == nextPacmanPos)
+      {
+        layers[1].erase(layers[1].begin() + i);
+        break;
+      }
+    }
+  }
 
   // Move pacman
-  if (direction == arcade::KeyboardInput::UP)
+  if (direction == arcade::KeyboardInput::UP && nextPacmanPos.first % 30 == 0)
   {
     nextPacmanPos.second -= SPEED_PACMAN;
     this->_oldDirection = this->_direction;
   }
-  else if (direction == arcade::KeyboardInput::DOWN)
+  else if (direction == arcade::KeyboardInput::DOWN && nextPacmanPos.first % 30 == 0)
   {
     nextPacmanPos.second += SPEED_PACMAN;
     this->_oldDirection = this->_direction;
   }
-  else if (direction == arcade::KeyboardInput::LEFT)
+  else if (direction == arcade::KeyboardInput::LEFT && nextPacmanPos.second % 30 == 0)
   {
     nextPacmanPos.first -= SPEED_PACMAN;
     this->_oldDirection = this->_direction;
   }
-  else if (direction == arcade::KeyboardInput::RIGHT)
+  else if (direction == arcade::KeyboardInput::RIGHT && nextPacmanPos.second % 30 == 0)
   {
     nextPacmanPos.first += SPEED_PACMAN;
     this->_oldDirection = this->_direction;
@@ -442,10 +466,23 @@ std::vector<std::vector<arcade::entity>> arcade::Pacman::moveEntities(std::vecto
     nextPacmanPos.first += SPEED_PACMAN;
   }
 
-  if (nextPacmanPos.second < 0)
-    nextPacmanPos.second = 18 * 30;
+  if (nextPacmanPos.first == -1)
+    nextPacmanPos.first = 18 * 30;
 
-  // Check if pacman is hitting a pacgum
+  // Check if pacman is eating the coin
+  if (this->isCoinEaten(nextPacmanPos, layers))
+  {
+    for (int i = 0; i < layers[1].size(); i++)
+    {
+      if (layers[1][i].position == nextPacmanPos)
+      {
+        layers[1].erase(layers[1].begin() + i);
+        break;
+      }
+    }
+  }
+
+  // Check if pacman is eating a pacgum
   if (this->isPacgumEaten(nextPacmanPos, layers))
   {
     this->_pacmanData.isBoosted = true;
@@ -491,10 +528,6 @@ std::vector<std::vector<arcade::entity>> arcade::Pacman::moveEntities(std::vecto
         continue;
       arcade::Node pacmanPos = {layers[4][0].position, 0, 0, 0};
       path = aStar(layers, ghosts[i], pacmanPos);
-      // print path coordinates
-      printf("ghost %d: %d %d\n", i, path.position.first, path.position.second);
-
-
     }
     // Check if the path is valid
     if (!isValidPosition(path))
@@ -517,50 +550,32 @@ std::vector<std::vector<arcade::entity>> arcade::Pacman::moveEntities(std::vecto
 
   // Check if pacman is hitting a wall
   if (this->getLayerCell(0, nextPacmanPos.first, nextPacmanPos.second) == 'W' ||
-      this->getLayerCell(0, nextPacmanPos.first + 29, nextPacmanPos.second) == 'W' ||
-      this->getLayerCell(0, nextPacmanPos.first, nextPacmanPos.second + 29) == 'W' ||
-      this->getLayerCell(0, nextPacmanPos.first + 29, nextPacmanPos.second + 29) == 'W')
-  {
+  this->getLayerCell(0, nextPacmanPos.first + 29, nextPacmanPos.second) == 'W' ||
+  this->getLayerCell(0, nextPacmanPos.first - 29, nextPacmanPos.second) == 'W' ||
+  this->getLayerCell(0, nextPacmanPos.first, nextPacmanPos.second + 29) == 'W' ||
+  this->getLayerCell(0, nextPacmanPos.first, nextPacmanPos.second - 29) == 'W'){
     nextPacmanPos = layers[4][0].position;
   }
 
-  // eat the coin
-  if (this->getLayerCell(1, nextPacmanPos.first, nextPacmanPos.second) == '*' ||
-      this->getLayerCell(1, nextPacmanPos.first + 29, nextPacmanPos.second) == '*' ||
-      this->getLayerCell(1, nextPacmanPos.first, nextPacmanPos.second + 29) == '*' ||
-      this->getLayerCell(1, nextPacmanPos.first + 29, nextPacmanPos.second + 29) == '*')
-  {
-    for (int i = 0; i < layers[1].size(); i++)
-    {
-      if (layers[1][i].position == nextPacmanPos)
-      {
-        layers[1].erase(layers[1].begin() + i);
-        break;
-      }
-    }
-  }
 
   // Move pacman
   if (direction == arcade::KeyboardInput::UP && nextPacmanPos.first % 30 == 0)
   {
-    layers[4][0] = arcade::entity{'U', nextPacmanPos};
-    this->_oldDirection = this->_direction;
+    layers[4][0].sprite = 'U';
   }
   else if (direction == arcade::KeyboardInput::DOWN && nextPacmanPos.first % 30 == 0)
   {
-    layers[4][0] = arcade::entity{'D', nextPacmanPos};
-    this->_oldDirection = this->_direction;
+    layers[4][0].sprite = 'D';
   }
   else if (direction == arcade::KeyboardInput::LEFT && nextPacmanPos.second % 30 == 0)
   {
-    layers[4][0] = arcade::entity{'L', nextPacmanPos};
-    this->_oldDirection = this->_direction;
+    layers[4][0].sprite = 'L';
   }
   else if (direction == arcade::KeyboardInput::RIGHT && nextPacmanPos.second % 30 == 0)
   {
-    layers[4][0] = arcade::entity{'R', nextPacmanPos};
-    this->_oldDirection = this->_direction;
+    layers[4][0].sprite = 'R';
   }
+  layers[4][0].position = nextPacmanPos;
 
   // Move the ghosts
   for (int i = 0; i < newGhosts.size(); i++)
@@ -573,7 +588,7 @@ std::vector<std::vector<arcade::entity>> arcade::Pacman::moveEntities(std::vecto
       layers[3][i] = arcade::entity{'G', newGhosts[i].position};
   }
 
-  this->updateTimers(layers);
+  // this->updateTimers(layers);
 
   // Check win condition
   if (this->isOver(layers))
