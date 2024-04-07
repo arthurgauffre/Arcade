@@ -139,7 +139,7 @@ if(DOXYGEN_FOUND)
       COMMAND
         ${CMAKE_COMMAND} -E copy
         ${CMAKE_CURRENT_SOURCE_DIR}/doc_doxygen/latex/refman.pdf
-        ${CMAKE_CURRENT_SOURCE_DIR}/doc/documentation.pdf
+        ${CMAKE_CURRENT_SOURCE_DIR}/doc/Documentation.pdf
       COMMENT
         "Building PDF documentation with LaTeX and copying to doc directory")
   else()
