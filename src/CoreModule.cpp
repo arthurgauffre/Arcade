@@ -18,7 +18,13 @@ arcade::CoreModule::CoreModule() : arcade::ICoreModule()
   this->_graphicModule = nullptr;
   this->_menuData._description = "\nLegend:\nPress UP/DOWN to navigate\n\
 Press ENTER to confirm the choice\n\
-Press TAB to switch between module selection";
+Press TAB to switch between module selection\n\n\
+In game:\n\
+Press G to switch to the next game library\n\
+Press L to switch to the next graphic library\n\
+Press R to reload the game\n\
+Press M to go back to the menu\n\
+Press ESCAPE to exit";
   this->_menuData.indexGame = 0;
   this->_menuData.indexGraphic = 0;
   this->_menuData._type = arcade::ModuleType::NAME;
