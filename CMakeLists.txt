@@ -123,6 +123,29 @@ if(DOXYGEN_FOUND)
     WORKING_DIRECTORY ${MAKE_CURRENT_BINARY_DIR}
     COMMENT "Generating API documentation with Doxygen"
     VERBATIM)
+
+  # Conditionally compile LaTeX to PDF and copy it
+  # Ensure Doxygen and LaTeX are available
+  find_package(LATEX) # This check is optional and serves to ensure Latex is
+                      # installed
+  if(LATEX_FOUND)
+    add_custom_command(
+      TARGET doc_doxygen
+      POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E make_directory
+              ${CMAKE_CURRENT_SOURCE_DIR}/doc_doxygen/latex
+      COMMAND ${CMAKE_COMMAND} -E chdir
+              ${CMAKE_CURRENT_SOURCE_DIR}/doc_doxygen/latex make
+      COMMAND
+        ${CMAKE_COMMAND} -E copy
+        ${CMAKE_CURRENT_SOURCE_DIR}/doc_doxygen/latex/refman.pdf
+        ${CMAKE_CURRENT_SOURCE_DIR}/doc/Documentation.pdf
+      COMMENT
+        "Building PDF documentation with LaTeX and copying to doc directory")
+  else()
+    message("LaTeX not found, PDF documentation will not be generated.")
+  endif()
+
 else(DOXYGEN_FOUND)
   message("Doxygen need to be installed to generate the doxygen documentation")
 endif(DOXYGEN_FOUND)

@@ -8,6 +8,7 @@
 #ifndef COREMODULE_HPP_
 #define COREMODULE_HPP_
 
+#include <ErrorHandling.hpp>
 #include <arcade/ICoreModule.hpp>
 
 namespace arcade
@@ -26,6 +27,7 @@ namespace arcade
         handle = dlopen(libPath.c_str(), RTLD_LAZY);
         if (!handle) {
           std::cerr << dlerror() << std::endl;
+          throw arcade::LibraryLoadException();
           exit(1);
         }
       }
@@ -38,6 +40,7 @@ namespace arcade
         void *sym = dlsym(handle, funcName.c_str());
         if (!sym) {
           std::cerr << dlerror() << std::endl;
+          throw arcade::NoEntryPointException();
           exit(1);
         }
         return reinterpret_cast<T (*)()>(sym)();

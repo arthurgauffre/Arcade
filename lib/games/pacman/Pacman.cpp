@@ -194,6 +194,13 @@ void arcade::Pacman::updateTimers(std::vector<std::vector<arcade::entity>> layer
 }
 
 /**
+ * @brief get the name of the game
+ *
+ * @return std::string
+ */
+std::string arcade::Pacman::getName() { return "pacman"; }
+
+/**
  * @brief generate entry point for the game library
  *
  */

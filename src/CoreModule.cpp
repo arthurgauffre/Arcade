@@ -558,8 +558,10 @@ void arcade::CoreModule::runningLoop()
   {
     this->updateTimers();
     this->updateRunning();
-    if (this->getGameModule()->getGameStatus() == arcade::IGameModule::GameStatus::GAMEOVER)
+    if (this->getGameModule()->getGameStatus() == arcade::IGameModule::GameStatus::GAMEOVER) {
+      this->updateScore(this->getGameData().score);
       this->_coreStatus = CoreStatus::SELECTION;
+    }
     input = this->getGraphicModule()->getInput();
     if (input != arcade::KeyboardInput::NONE) {
       this->handleKeyEvent(input);

@@ -17,7 +17,6 @@ arcade::Snake::Snake() : arcade::AGameModule()
 
 void arcade::Snake::init()
 {
-  int i = 0;
   // Initialize the game
   arcade::GameData data;
   // Define the sprite values
@@ -86,6 +85,7 @@ void arcade::Snake::init()
   data.entities.push_back({(arcade::entity){.sprite = 'A', .position = std::make_pair(x * 30, y * 30)}});
   data.entities.push_back(snake);
   data.score = 0;
+  data._description = "Eat the apple to grow your snake";
   this->getCoreModule()->setGameData(data);
   this->setDirection(arcade::KeyboardInput::RIGHT);
   return;
@@ -143,10 +143,10 @@ arcade::GameData arcade::Snake::moveSnake()
     snake[0] = (arcade::entity){.sprite = head.sprite, .position = std::make_pair(head.position.first + SPEED_SNAKE, head.position.second)};
     snake[0].sprite = 'R';
   }
+
   // Check if the snake eats itself
   for (int i = 1; i < snake.size(); i++) {
-    if (snake[0].position == snake[i].position) {
-      this->getCoreModule()->updateScore(this->getCoreModule()->getGameData().score);
+    if (snake[0].position == snake[i].position || (snake[0].position.first - 29 == snake[i].position.first && snake[0].position.second == snake[i].position.second) || (snake[0].position.first + 29 == snake[i].position.first && snake[0].position.second == snake[i].position.second) || (snake[0].position.first == snake[i].position.first && snake[0].position.second - 29 == snake[i].position.second) || (snake[0].position.first == snake[i].position.first && snake[0].position.second + 29 == snake[i].position.second)) {
       this->setGameStatus(arcade::IGameModule::GameStatus::GAMEOVER);
       return data;
     }
@@ -154,14 +154,13 @@ arcade::GameData arcade::Snake::moveSnake()
 
   // Check if the snake hits a wall
   if (this->getLayerCell(0, snake[0].position.first, snake[0].position.second) == 'W' || this->getLayerCell(0, snake[0].position.first + 29, snake[0].position.second) == 'W' || this->getLayerCell(0, snake[0].position.first - 29, snake[0].position.second) == 'W' || this->getLayerCell(0, snake[0].position.first, snake[0].position.second + 29) == 'W' || this->getLayerCell(0, snake[0].position.first, snake[0].position.second - 29) == 'W'){
-    this->getCoreModule()->updateScore(this->getCoreModule()->getGameData().score);
     this->setGameStatus(arcade::IGameModule::GameStatus::GAMEOVER);
     return data;
   }
 
   // Check if the snake eats apple; elongate body if yes
   if (snake[0].position == data.entities[1][0].position) {
-    this->getCoreModule()->updateScore(this->getCoreModule()->getGameData().score + 10);
+    data.score += 10;
     is_eating = true;
 
     // Convert previous tail to body
@@ -184,7 +183,6 @@ arcade::GameData arcade::Snake::moveSnake()
 
   // check if snake reach the max size
   if (snake.size() == MAX_SNAKE_SIZE) {
-    this->getCoreModule()->updateScore(this->getCoreModule()->getGameData().score);
     this->setGameStatus(arcade::IGameModule::GameStatus::GAMEOVER);
     return data;
   }
@@ -309,6 +307,16 @@ void arcade::Snake::updateGame()
     data = this->moveSnake();
   this->getCoreModule()->setGameData(data);
   return;
+}
+
+/**
+ * @brief get the name of the game
+ *
+ * @return std::string
+ */
+std::string arcade::Snake::getName()
+{
+  return "snake";
 }
 
 /**

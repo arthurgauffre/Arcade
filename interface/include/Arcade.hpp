@@ -46,6 +46,7 @@ struct timer {
  */
 struct GameData {
   int score;
+  std::string _description;
   std::map<unsigned int, std::string> sprite_value;
   std::vector<std::vector<entity>> entities;
 };
@@ -75,11 +76,12 @@ enum KeyboardInput {
   LEFT,
   RIGHT,
   SPACE,
-  ENTER,
+  ENTER,     // big enter key
+  BACKSPACE, // suppress left text
+  DELETE,    // suppress right text
   ESCAPE,
-  BACKSPACE,
   TAB,
-  CROSS,
+  CROSS, // window cross
   A,
   B,
   C,

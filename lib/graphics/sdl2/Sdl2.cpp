@@ -5,6 +5,7 @@
 ** SDL2
 */
 
+#include "ErrorHandling.hpp"
 #include "Sdl2.hpp"
 #include <iostream>
 
@@ -12,21 +13,23 @@ arcade::Sdl2::Sdl2() : ADisplayModule()
 {
     // Initialize SDL_ttf
     if (TTF_Init() < 0) {
-        std::cerr << "Failed to initialize SDL_ttf: " << TTF_GetError() << std::endl;
+        std::cerr << "SDL_ttf: " << TTF_GetError() << std::endl;
+        throw arcade::FailedToInitializeException();
         return;
     }
 
     // Initialize SDL_image
     if (IMG_Init(IMG_INIT_PNG) < 0) {
-        std::cerr << "Failed to initialize SDL_image: " << IMG_GetError() << std::endl;
+        std::cerr << "SDL_image: " << IMG_GetError() << std::endl;
+        throw arcade::FailedToInitializeException();
         return;
     }
 
     // Initialize SDL
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-        std::cerr << "SDL could not initialize! SDL_Error: " << SDL_GetError()
+        std::cerr << "SDL_Error: " << SDL_GetError()
                 << std::endl;
-        throw std::exception();
+        throw arcade::FailedToInitializeException();
     }
 
   // Create window
@@ -39,29 +42,29 @@ arcade::Sdl2::Sdl2() : ADisplayModule()
   );
 
   if (!window) {
-    std::cerr << "Window could not be created! SDL_Error: " << SDL_GetError()
+    std::cerr << "SDL_Error: " << SDL_GetError()
               << std::endl;
     SDL_Quit();
-    throw std::exception();
+    throw arcade::WindowCreationFailedException();
   }
 
   // Create renderer
   SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
   if (!renderer) {
-    std::cerr << "Renderer could not be created! SDL_Error: " << SDL_GetError()
+    std::cerr << "SDL_Error: " << SDL_GetError()
               << std::endl;
     SDL_DestroyWindow(window);
     SDL_Quit();
-    throw std::exception();
+    throw arcade::RendererCreationFailedException();
   }
 
   // Get window surface
   SDL_Surface *surface = SDL_GetWindowSurface(window);
   // Check if surface is null
   if (!surface) {
-    std::cerr << "Could not get window surface! SDL_Error: " << SDL_GetError()
+    std::cerr << "SDL_Error: " << SDL_GetError()
               << std::endl;
-    throw std::exception();
+    throw arcade::WindowSurfaceFailureException();
   } else {
     // Fill the surface white
     SDL_FillRect(surface,
@@ -121,14 +124,16 @@ void arcade::Sdl2::drawSprite(std::pair<char, std::string> sprite, int x, int y,
 {
     SDL_Surface* surface = IMG_Load(sprite.second.c_str());
     if (surface == nullptr) {
-        std::cerr << "Failed to load image: " << IMG_GetError() << std::endl;
+        std::cerr << "" << IMG_GetError() << std::endl;
+        throw arcade::FailedToLoadImageException();
         return;
     }
 
     SDL_Texture* texture = SDL_CreateTextureFromSurface(this->_renderer, surface);
     if (texture == nullptr) {
-        std::cerr << "Failed to create texture: " << SDL_GetError() << std::endl;
+        std::cerr << "" << SDL_GetError() << std::endl;
         SDL_FreeSurface(surface);
+        throw arcade::FailedToCreateTextureException();
         return;
     }
 
@@ -152,14 +157,16 @@ void arcade::Sdl2::drawAllSprite(std::pair<char, std::string> sprite, std::vecto
 {
     SDL_Surface* surface = IMG_Load(sprite.second.c_str());
     if (surface == nullptr) {
-        std::cerr << "Failed to load image: " << IMG_GetError() << std::endl;
+        std::cerr << "" << IMG_GetError() << std::endl;
+        throw arcade::FailedToLoadImageException();
         return;
     }
 
     SDL_Texture* texture = SDL_CreateTextureFromSurface(this->_renderer, surface);
     if (texture == nullptr) {
-        std::cerr << "Failed to create texture: " << SDL_GetError() << std::endl;
+        std::cerr << "" << SDL_GetError() << std::endl;
         SDL_FreeSurface(surface);
+        throw arcade::FailedToCreateTextureException();
         return;
     }
 
@@ -184,7 +191,8 @@ void arcade::Sdl2::drawText(const std::string text, int x, int y, int size)
 {
     TTF_Font* font = TTF_OpenFont("assets/default/font/font1.ttf", 24); // Replace with the actual path to your font file and desired font size
     if (font == nullptr) {
-        std::cerr << "Failed to load font: " << TTF_GetError() << std::endl;
+        std::cerr << "" << TTF_GetError() << std::endl;
+        throw arcade::FailedToLoadFontException();
         return;
     }
 
@@ -192,16 +200,18 @@ void arcade::Sdl2::drawText(const std::string text, int x, int y, int size)
 
     SDL_Surface* textSurface = TTF_RenderText_Blended_Wrapped(font, text.c_str(), textColor, 500);
     if (textSurface == nullptr) {
-        std::cerr << "Failed to create text surface: " << TTF_GetError() << std::endl;
+        std::cerr << "" << TTF_GetError() << std::endl;
         TTF_CloseFont(font);
+        throw arcade::FailedToCreateTextSurfaceException();
         return;
     }
 
     SDL_Texture* textTexture = SDL_CreateTextureFromSurface(this->_renderer, textSurface);
     if (textTexture == nullptr) {
-        std::cerr << "Failed to create text texture: " << SDL_GetError() << std::endl;
+        std::cerr << "" << SDL_GetError() << std::endl;
         SDL_FreeSurface(textSurface);
         TTF_CloseFont(font);
+        throw arcade::FailedToCreateTextTextureException();
         return;
     }
 
