@@ -20,6 +20,8 @@ void checkPath(const char *path)
     }
     if (!(dlsym(libpath, "entryPoint")))
         throw arcade::NoEntryPointException();
+    if (!(dlsym(libpath, "getType")))
+        throw arcade::InvalidLibraryException();
     dlclose(libpath);
 }
 
