@@ -51,6 +51,7 @@ public:
 
 protected:
 private:
+  int _levelSpeed = 0;
   arcade::DataPacman _pacmanData;
   std::vector<arcade::DataGhost> _ghostData;
 };
