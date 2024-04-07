@@ -28,10 +28,11 @@ void arcade::Pacman::init()
   data.sprite_value['D'] = "assets/pacman/npc/pacman_down.png";  // Pacman down
   data.sprite_value['L'] = "assets/pacman/npc/pacman_left.png";  // Pacman left
   data.sprite_value['R'] = "assets/pacman/npc/pacman_right.png"; // Pacman right
-  data.sprite_value['S'] = "assets/pacman/npc/scaredGhost.png";      // Ghost Scared
+  data.sprite_value['S'] = "assets/pacman/npc/scaredGhost.png";  // Ghost Scared
   data.sprite_value['G'] = "assets/pacman/npc/ghost_1.png";      // Ghost
-  data.sprite_value['E'] = "assets/pacman/npc/eyes.png";      // Eyes
+  data.sprite_value['E'] = "assets/pacman/npc/eyes.png";         // Eyes
   data.sprite_value[' '] = "assets/default/png/black.png";       // Floor
+  data.sprite_value['Z'] = "assets/default/map/map5.png";       // Entry
 
   std::pair pacman = std::make_pair(9 * 30, 10 * 30);
   std::vector<arcade::entity> ghosts;
@@ -50,10 +51,12 @@ void arcade::Pacman::init()
   arcade::entity pacGum2 = {'X', std::make_pair(510, 30)};
   arcade::entity pacGum3 = {'X', std::make_pair(30, 480)};
   arcade::entity pacGum4 = {'X', std::make_pair(510, 480)};
+  arcade::entity pacGum5 = {'X', std::make_pair(300, 300)};
   pacGums.push_back(pacGum1);
   pacGums.push_back(pacGum2);
   pacGums.push_back(pacGum3);
   pacGums.push_back(pacGum4);
+  pacGums.push_back(pacGum5);
 
   // Initialize the ghost data
   for (int i = 0; i < ghosts.size(); i++)
@@ -74,7 +77,7 @@ void arcade::Pacman::init()
       {'W', '*', 'W', 'W', '*', 'W', 'W', 'W', '*', 'W', '*', 'W', 'W', 'W', '*', 'W', 'W', '*', 'W'},
       {'W', '*', 'W', 'W', '*', 'W', 'W', 'W', '*', '*', '*', 'W', 'W', 'W', '*', 'W', 'W', '*', 'W'},
       {'W', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', 'W'},
-      {'W', 'W', 'W', 'W', '*', 'W', '*', 'W', 'W', ' ', 'W', 'W', '*', 'W', '*', 'W', 'W', 'W', 'W'},
+      {'W', 'W', 'W', 'W', '*', 'W', '*', 'W', 'W', 'Z', 'W', 'W', '*', 'W', '*', 'W', 'W', 'W', 'W'},
       {'*', '*', '*', '*', '*', 'W', '*', 'W', ' ', ' ', ' ', 'W', '*', 'W', '*', '*', '*', '*', '*'},
       {'W', 'W', 'W', 'W', '*', 'W', '*', 'W', ' ', ' ', ' ', 'W', '*', 'W', '*', 'W', 'W', 'W', 'W'},
       {'W', '*', '*', '*', '*', 'W', '*', 'W', 'W', 'W', 'W', 'W', '*', 'W', '*', '*', '*', '*', 'W'},
@@ -93,7 +96,7 @@ void arcade::Pacman::init()
   {
     for (int j = 0; j < mapGen[i].size(); j++)
     {
-      if (mapGen[i][j] == ' ' || mapGen[i][j] == 'W')
+      if (mapGen[i][j] == ' ' || mapGen[i][j] == 'W' || mapGen[i][j] == 'Z')
       {
         arcade::entity cell = {mapGen[i][j], std::make_pair(j * 30, i * 30)};
         map.push_back(cell);
@@ -153,7 +156,8 @@ void arcade::Pacman::updateGame()
   int speedVector = timers[0].duration.count() / 10;
   if (speedVector > 0)
     this->getCoreModule()->resetTimers(0);
-  for (int i = 0; i < speedVector; i++) {
+  for (int i = 0; i < speedVector; i++)
+  {
     data.entities = this->moveEntities(this->getCoreModule()->getGameData().entities);
   }
   this->getCoreModule()->setGameData(data);
@@ -275,6 +279,7 @@ arcade::Node aStar(std::vector<std::vector<arcade::entity>> layers, arcade::Node
   std::vector<std::vector<bool>> visited(map.size(), std::vector<bool>(map[0].size(), false));
   std::vector<std::vector<int>> gScore(map.size(), std::vector<int>(map[0].size(), map.size()));
   std::vector<std::vector<arcade::Node>> cameFrom(map.size(), std::vector<arcade::Node>(map[0].size()));
+
 
   for (size_t i = 0; i < map.size(); ++i)
   {
@@ -548,12 +553,18 @@ std::vector<std::vector<arcade::entity>> arcade::Pacman::moveEntities(std::vecto
     }
   }
 
-  // Check if pacman is hitting a wall
+  // Check if pacman is hitting a wall or a door
   if (this->getLayerCell(0, nextPacmanPos.first, nextPacmanPos.second) == 'W' ||
-  this->getLayerCell(0, nextPacmanPos.first + 29, nextPacmanPos.second) == 'W' ||
-  this->getLayerCell(0, nextPacmanPos.first - 29, nextPacmanPos.second) == 'W' ||
-  this->getLayerCell(0, nextPacmanPos.first, nextPacmanPos.second + 29) == 'W' ||
-  this->getLayerCell(0, nextPacmanPos.first, nextPacmanPos.second - 29) == 'W'){
+      this->getLayerCell(0, nextPacmanPos.first + 29, nextPacmanPos.second) == 'W' ||
+      this->getLayerCell(0, nextPacmanPos.first - 29, nextPacmanPos.second) == 'W' ||
+      this->getLayerCell(0, nextPacmanPos.first, nextPacmanPos.second + 29) == 'W' ||
+      this->getLayerCell(0, nextPacmanPos.first, nextPacmanPos.second - 29) == 'W' ||
+      this->getLayerCell(0, nextPacmanPos.first, nextPacmanPos.second) == 'Z' ||
+      this->getLayerCell(0, nextPacmanPos.first + 29, nextPacmanPos.second) == 'Z' ||
+      this->getLayerCell(0, nextPacmanPos.first - 29, nextPacmanPos.second) == 'Z' ||
+      this->getLayerCell(0, nextPacmanPos.first, nextPacmanPos.second + 29) == 'Z' ||
+      this->getLayerCell(0, nextPacmanPos.first, nextPacmanPos.second - 29) == 'Z')
+  {
     nextPacmanPos = layers[4][0].position;
   }
 
@@ -588,7 +599,7 @@ std::vector<std::vector<arcade::entity>> arcade::Pacman::moveEntities(std::vecto
       layers[3][i] = arcade::entity{'G', newGhosts[i].position};
   }
 
-  // this->updateTimers(layers);
+  this->updateTimers(layers);
 
   // Check win condition
   if (this->isOver(layers))
