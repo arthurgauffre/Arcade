@@ -1,0 +1,6 @@
+tpt 10
+toto 0
+toto 0
+toto 10
+toto 0
+toto 0
