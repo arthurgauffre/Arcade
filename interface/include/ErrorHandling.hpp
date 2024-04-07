@@ -34,6 +34,13 @@
                     return ("Entry point not found");
                 }
         };
+        class InvalidLibraryException : public std::exception {
+            public:
+                const char *what() const noexcept override
+                {
+                    return ("Invalid library");
+                }
+        };
     };
 
 #endif /* !ERRORHANDLING_HPP_ */
