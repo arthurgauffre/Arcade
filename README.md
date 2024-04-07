@@ -13,6 +13,16 @@ After pressing enter, you will be able to see boxes showing you the available gr
 You may then select a game and/or change the graphics library if you deisre. Another box will also be present, allowing you to enter your name.
 In case of confusion or curiosity, a document detailing the ins and outs of this program is available in the doc directory: ./doc/Documentation.pdf
 
+## Documentation:
+You can find the documentation in the doc/Documentation.pdf. This doc is rebuilded by ./rebuild.sh.
+You need to install Latex 
+
+```bash
+sudo dnf install texlive-scheme-basic
+sudo dnf install texlive-scheme-medium
+sudo dnf install texlive-scheme-full
+```
+
 ## Dependencies:
 #### SDL2
 ```bash
