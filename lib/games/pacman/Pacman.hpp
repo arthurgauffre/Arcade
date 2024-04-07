@@ -49,7 +49,8 @@ public:
   bool isOver(std::vector<std::vector<arcade::entity>> layers);
   void updateTimers(std::vector<std::vector<arcade::entity>> layers);
   bool isPacgumEaten(std::pair<int, int> pos, std::vector<std::vector<arcade::entity>> layers);
-  bool isCoinEaten(std::pair<int, int> pos, std::vector<std::vector<arcade::entity>> layers); 
+  bool isCoinEaten(std::pair<int, int> pos, std::vector<std::vector<arcade::entity>> layers);
+  std::string getName(); 
 
 protected:
 private:
