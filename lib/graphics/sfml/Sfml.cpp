@@ -5,6 +5,7 @@
 ** Sfml
 */
 
+#include <ErrorHandling.hpp>
 #include "Sfml.hpp"
 
 arcade::Sfml::Sfml() : ADisplayModule()
@@ -37,7 +38,8 @@ void arcade::Sfml::drawSprite(std::pair<char, std::string> sprite, int x, int y,
     sf::Texture texture;
     if (!texture.loadFromFile(sprite.second)) {
         // Handle error
-        std::cerr << "Failed to load texture: " << sprite.second << std::endl;
+        std::cerr << "" << sprite.second << std::endl;
+        throw arcade::FailedToLoadTextureException();
         return;
     }
 
@@ -61,7 +63,8 @@ void arcade::Sfml::drawAllSprite(std::pair<char, std::string> sprite, std::vecto
     sf::Texture texture;
     if (!texture.loadFromFile(sprite.second)) {
         // Handle error
-        std::cerr << "Failed to load texture: " << sprite.second << std::endl;
+        std::cerr << "" << sprite.second << std::endl;
+        throw arcade::FailedToLoadTextureException();
         return;
     }
 
@@ -89,7 +92,8 @@ void arcade::Sfml::drawText(const std::string text, int x, int y, int size)
 {
   sf::Font font;
   if (!font.loadFromFile("assets/default/font/font1.ttf")) {
-    std::cerr << "Failed to load font" << std::endl;
+    std::cerr << "" << std::endl;
+    throw arcade::FailedToLoadFontException();
     return;
   }
   sf::Text sfText;
