@@ -76,11 +76,12 @@ enum KeyboardInput {
   LEFT,
   RIGHT,
   SPACE,
-  ENTER,
+  ENTER,     // big enter key
+  BACKSPACE, // suppress left text
+  DELETE,    // suppress right text
   ESCAPE,
-  BACKSPACE,
   TAB,
-  CROSS,
+  CROSS, // window cross
   A,
   B,
   C,
