@@ -15,8 +15,17 @@ In case of confusion or curiosity, a document detailing the ins and outs of this
 
 ## Dependencies:
 #### SDL2
+```bash
+sudo dnf install SDL2-devel
+```
 #### SDL2_ttf
+```bash
+sudo dnf install SDL2_ttf-devel
+```
 #### SDL2_image
+```bash
+sudo dnf install SDL2_image-devel
+```
 
 ## Execution:
 #### cmake -S. -B build
