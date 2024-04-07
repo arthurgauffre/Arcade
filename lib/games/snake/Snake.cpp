@@ -17,7 +17,6 @@ arcade::Snake::Snake() : arcade::AGameModule()
 
 void arcade::Snake::init()
 {
-  int i = 0;
   // Initialize the game
   arcade::GameData data;
   // Define the sprite values
