@@ -86,7 +86,7 @@ void arcade::Pacman::init()
   data.entities.push_back({(arcade::entity){.sprite = 'A', .position = std::make_pair(x, y)}});
   data.entities.push_back(snake);
   data.score = 0;
-  data.description = "Eat the apple to grow your snake";
+  data._description = "Eat the apple to grow your snake";
   this->getCoreModule()->setGameData(data);
   this->setDirection(arcade::KeyboardInput::RIGHT);
   return;
@@ -127,23 +127,21 @@ arcade::GameData arcade::Pacman::movePacman()
 
   // Check if the snake eats itself
   for (int i = 1; i < snake.size(); i++) {
-    if (new_head.position == snake[i].position) {
-      this->getCoreModule()->updateScore(this->getCoreModule()->getGameData().score);
+    if (snake[0].position == snake[i].position) {
       this->setGameStatus(arcade::IGameModule::GameStatus::GAMEOVER);
       return data;
     }
   }
 
   // Check if the snake hits a wall
-  if (this->getLayerCell(0, new_head.position.first, new_head.position.second) == 'W') {
-    this->getCoreModule()->updateScore(this->getCoreModule()->getGameData().score);
+  if (this->getLayerCell(0, snake[0].position.first, snake[0].position.second) == 'W' || this->getLayerCell(0, snake[0].position.first + 29, snake[0].position.second) == 'W' || this->getLayerCell(0, snake[0].position.first - 29, snake[0].position.second) == 'W' || this->getLayerCell(0, snake[0].position.first, snake[0].position.second + 29) == 'W' || this->getLayerCell(0, snake[0].position.first, snake[0].position.second - 29) == 'W'){
     this->setGameStatus(arcade::IGameModule::GameStatus::GAMEOVER);
     return data;
   }
 
   // Check if the snake eats apple; elongate body if yes
-  if (new_head.position == data.entities[2][0].position) {
-    this->getCoreModule()->updateScore(this->getCoreModule()->getGameData().score + 10);
+  if (snake[0].position == data.entities[1][0].position) {
+    this->getCoreModule()->setScore(this->getCoreModule()->getGameData().score + 10);
     is_eating = true;
 
     // Convert previous tail to body

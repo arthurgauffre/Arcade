@@ -46,7 +46,7 @@ struct timer {
  */
 struct GameData {
   int score;
-  std::string description;
+  std::string _description;
   std::map<unsigned int, std::string> sprite_value;
   std::vector<std::vector<entity>> entities;
 };
